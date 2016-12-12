@@ -1,0 +1,11 @@
+{
+  "name": "deliciousbrains/mergebot-schema-generator",
+  "description": "Generate Mergebot schema files for WordPress plugins, themes, or core.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Delicious Brains",
+      "email": "nom@deliciousbrains.com"
+    }
+  ]
+}
