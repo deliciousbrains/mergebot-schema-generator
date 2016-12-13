@@ -17,10 +17,10 @@ class Installer {
 	 * @var string
 	 */
 	protected $slug;
+
 	/**
 	 * @var string
 	 */
-
 	protected $version;
 
 	/**
