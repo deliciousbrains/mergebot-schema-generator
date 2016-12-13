@@ -18,7 +18,6 @@ At the moment the plugin you are generating the schema for needs to be installed
 
 ### TODO
 
-* Install and activate plugins if not installed
 * More intelligent handling of foreign keys
 * More intelligent handling of shortcodes
 * Relationships - deal with custom plugin meta tables
