@@ -14,8 +14,6 @@ For WordPress core use:
 
 `wp mergebot-schema generate`
 
-At the moment the plugin you are generating the schema for needs to be installed gitand activated.
-
 ### TODO
 
 * More intelligent handling of foreign keys
