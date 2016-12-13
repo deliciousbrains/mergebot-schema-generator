@@ -16,6 +16,11 @@ namespace DeliciousBrains\MergebotSchemaGenerator;
 class Command extends \WP_CLI_Command {
 
 	/**
+	 * @var string Type of thing we are generating a schema for.
+	 */
+	protected $type = 'plugin';
+
+	/**
 	 * Generates a schema for a plugin
 	 *
 	 * ## OPTIONS
@@ -28,67 +33,77 @@ class Command extends \WP_CLI_Command {
 	 *
 	 * [--scratch]
 	 * : Create schema from scratch even if one exists
-	 * 
+	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp mergebot schema generate --plugin=woocommerce
-	 *     wp mergebot schema generate --plugin=woocommerce --version=2.5.5
-	 *     wp mergebot schema generate --plugin=woocommerce --version=2.5.5 --scratch
+	 *     wp mergebot-schema generate
+	 *     wp mergebot-schema generate --version=4.1
+	 *     wp mergebot-schema generate --plugin=woocommerce
+	 *     wp mergebot-schema generate --plugin=woocommerce --version=2.5.5
+	 *     wp mergebot-schema generate --plugin=woocommerce --version=2.5.5 --scratch
 	 *
 	 */
 	public function generate( $args, $assoc_args ) {
-		$type = 'plugin';
-		if ( ! isset( $assoc_args['plugin'] ) ) {
-			$type = $slug = 'wordpress';
-		} else {
-			$slug = $assoc_args['plugin'];
-		}
-
-		if ( isset( $assoc_args['version'] ) ) {
-			$version = $assoc_args['version'];
-		} else {
-			if ( 'wordpress' === $type ) {
-				global $wp_version;
-				$version = $wp_version;
-			} else {
-				$version = $this->get_plugin_version_from_slug( $slug );
-			}
-		}
-
-		if ( ! $version ) {
-			$version = 'latest';
-		}
+		$slug    = $this->get_slug( $assoc_args );
+		$version = $this->get_version( $assoc_args, $slug );
 
 		$create_from_scratch = isset( $assoc_args['scratch'] );
 
-		$generator = new Generator( $slug, $version, $type );
+		// Handle installing the thing we want to generate a schema for.
+		$installer = new Installer( $slug, $version, $this->type );
+		$installer->init();
+
+		// Generate the schema.
+		$generator = new Generator( $slug, $version, $this->type );
 		$generator->generate( $create_from_scratch );
+
+		// Clean up the install
+		$installer->clean_up();
 
 		\WP_CLI::success( ucfirst( $slug ) . ' schema generated!' );
 	}
 
-	protected function get_plugin_version_from_slug( $slug ) {
-		if ( ! file_exists( WP_PLUGIN_DIR . '/' . $slug ) ) {
-			return false;
+	/**
+	 * Get the slug of the object we are creating a schema for.
+	 *
+	 * @param array $assoc_args
+	 *
+	 * @return string
+	 */
+	protected function get_slug( $assoc_args ) {
+		if ( isset( $assoc_args['plugin'] ) && ! empty( $assoc_args['plugin'] ) ) {
+			return $assoc_args['plugin'];
 		}
 
-		$active_plugins = get_option( 'active_plugins' );
-		$length         = strlen( $slug );
-		$basename       = false;
-		foreach ( $active_plugins as $active_plugin ) {
-			if ( $slug . '/' === substr( $active_plugin, 0, $length + 1 ) ) {
-				$basename = $active_plugin;
-				break;
-			}
+		$slug       = 'wordpress';
+		$this->type = $slug;
+
+		return $slug;
+	}
+
+	/**
+	 * Get the version of the object we are creating a schema for.
+	 *
+	 * @param array $assoc_args
+	 * @param array $slug
+	 *
+	 * @return bool|string
+	 */
+	protected function get_version( $assoc_args, $slug ) {
+		if ( isset( $assoc_args['version'] ) ) {
+			return $assoc_args['version'];
 		}
 
-		if ( $basename ) {
-			$data = get_plugin_data( WP_PLUGIN_DIR . '/' . $basename );
-
-			return $data['Version'];
+		if ( 'wordpress' === $this->type ) {
+			return Installer::get_latest_core_version();
 		}
 
-		return false;
+		$latest_version = Installer::get_latest_plugin_version( $slug );
+		if ( false === $latest_version ) {
+			$latest_version = 'latest';
+		}
+
+		return $latest_version;
 	}
 
 	/**
@@ -122,10 +137,11 @@ class Command extends \WP_CLI_Command {
 	 * eg. id,ids
 	 * eg. comments:id,comments:ids
 	 * n
-	 * @param string   $entity
-	 * @param string   $key
-	 * @param string   $value
-	 * @param array    $assoc_args
+	 *
+	 * @param string $entity
+	 * @param string $key
+	 * @param string $value
+	 * @param array  $assoc_args
 	 *
 	 * @return bool|string
 	 */

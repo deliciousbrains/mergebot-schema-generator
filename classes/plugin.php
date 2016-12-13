@@ -98,11 +98,6 @@ class Mergebot_Schema_Generator {
 
 		$this->set_schema_path();
 		$this->set_wp_data();
-		$this->load_cli();
-	}
-
-	protected function load_cli() {
-		
 	}
 
 	protected function set_schema_path() {
