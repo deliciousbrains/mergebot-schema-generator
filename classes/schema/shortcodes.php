@@ -12,9 +12,12 @@ namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 use DeliciousBrains\MergebotSchemaGenerator\Command;
 use DeliciousBrains\MergebotSchemaGenerator\Mergebot_Schema_Generator;
 
-class Shortcodes {
+class Shortcodes extends Abstract_Element {
 
-	public static function get_shortcodes( Schema $schema ) {
+	protected static $element = 'Shortcode';
+	protected static $colour = 'B';
+
+	protected static function find_elements( Schema $schema ) {
 		global $shortcode_tags;
 
 		$shortcodes = array();
@@ -43,28 +46,41 @@ class Shortcodes {
 					continue;
 				}
 
-				Mergebot_Schema_Generator::log( '[' . $tag . ']' );
-				Mergebot_Schema_Generator::log( $body );
-				$result = Command::shortcode( $tag );
-
-				if ( ! $result ) {
-					continue;
-				}
-
-				$parameters = array( 'parameters' => array() );
-
-				$attributes = explode( ',', $result );
-				foreach ( $attributes as $attribute ) {
-					$parts = explode( ':', $attribute );
-					$data  = $parts[0];
-					if ( isset( $parts[1] ) ) {
-						$data = array( 'name' => $parts[1], 'table' => $parts[0] );
-					}
-					$parameters['parameters'][] = $data;
-				}
-
-				$shortcodes[ $tag ] = $parameters;;
+				$shortcodes[ $tag ] = $body;
 			}
+		}
+
+		return $shortcodes;
+	}
+
+	public static function ask_elements( $all_shortcodes, $progress_bar ) {
+		$shortcodes = array();
+
+		foreach( $all_shortcodes as $tag => $body ) {
+			$progress_bar->tick();
+
+			Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%B' . 'Shortcode' . ':%n' . '[' . $tag . ']' ) );
+			Mergebot_Schema_Generator::log_code( $body );
+
+			$result = Command::shortcode( $tag );
+
+			if ( ! $result ) {
+				continue;
+			}
+
+			$parameters = array( 'parameters' => array() );
+
+			$attributes = explode( ',', $result );
+			foreach ( $attributes as $attribute ) {
+				$parts = explode( ':', $attribute );
+				$data  = $parts[0];
+				if ( isset( $parts[1] ) ) {
+					$data = array( 'name' => $parts[1], 'table' => $parts[0] );
+				}
+				$parameters['parameters'][] = $data;
+			}
+
+			$shortcodes[ $tag ] = $parameters;
 		}
 
 		return $shortcodes;

@@ -11,14 +11,15 @@ namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 
 use DeliciousBrains\MergebotSchemaGenerator\Command;
 
-class Relationships {
+class Relationships extends Abstract_Element {
 
-	public static function get_relationships( Schema $schema ) {
+	protected static $element = 'Relationships';
+	protected static $colour = 'G';
+
+	protected static function find_elements( Schema $schema ) {
 		$meta_tables = self::get_meta_tables();
 
-		$entities = self::get_meta_data( $meta_tables );
-
-		$relationships  = array();
+		$entities       = self::get_meta_data( $meta_tables );
 		$processed_meta = array();
 
 		foreach ( $schema->files as $file ) {
@@ -47,7 +48,7 @@ class Relationships {
 						if ( ! isset( $args[ $value_pos ] ) ) {
 							error_log( 'Could not get arguments for ' . $args );
 						}
-						$value = trim( $args[$value_pos] );
+						$value = trim( $args[ $value_pos ] );
 
 						if ( isset( $processed_meta[ $entity ][ $key ] ) ) {
 							// Already processed this piece of meta
@@ -56,50 +57,60 @@ class Relationships {
 
 						// record the key so we ignore it if used in other places
 						$processed_meta[ $entity ][ $key ] = $value;
-
-						// ask if we are interested in the key/value
-						$result = Command::meta( $entity, $key, $value );
-
-						if ( ! $result ) {
-							continue;
-						}
-
-						$result_parts = explode( ',', $result );
-						$target_table = $result_parts[0];
-
-						$relationship_data = array(
-							$data['columns']['key']   => $key,
-							$data['columns']['value'] => $target_table,
-						);
-
-						if ( isset( $result_parts[1]) ) {
-							$serialized_data = array(
-								'key' => 'ignore',
-								'val' => 'ignore',
-							);
-
-							// Used for serialized data
-							$serialized_parts = explode( '|', $result_parts[1] );
-							foreach ( $serialized_parts as $serialized_part ) {
-								$row = explode( ':', $serialized_part );
-								if ( isset( $row[0] ) && isset( $row[1] ) ) {
-									$serialized_data[ $row[0] ] = $row[1];
-								}
-							}
-
-							$relationship_data['serialized'] = $serialized_data;
-						}
-
-						// If so, record the response in the format for the json
-						$relationships[ $entity ][] = $relationship_data;
 					}
 				}
 			}
 
 		}
-		
 		// TODO deal with custom plugin meta tables
 		// update_metadata( 'woocommerce_term',
+
+		return $processed_meta;
+	}
+
+	protected static function ask_elements( $elements, $progress_bar ) {
+		$relationships = array();
+
+		foreach ( $elements as $entity => $data ) {
+			foreach ( $data as $key => $value ) {
+				$progress_bar->tick();
+				// ask if we are interested in the key/value
+				$result = Command::meta( $entity, $key, $value );
+
+				if ( ! $result ) {
+					continue;
+				}
+
+				$result_parts = explode( ',', $result );
+				$target_table = $result_parts[0];
+
+				$relationship_data = array(
+					$data['columns']['key']   => $key,
+					$data['columns']['value'] => $target_table,
+				);
+
+				if ( isset( $result_parts[1] ) ) {
+					$serialized_data = array(
+						'key' => 'ignore',
+						'val' => 'ignore',
+					);
+
+					// Used for serialized data
+					$serialized_parts = explode( '|', $result_parts[1] );
+					foreach ( $serialized_parts as $serialized_part ) {
+						$row = explode( ':', $serialized_part );
+						if ( isset( $row[0] ) && isset( $row[1] ) ) {
+							$serialized_data[ $row[0] ] = $row[1];
+						}
+					}
+
+					$relationship_data['serialized'] = $serialized_data;
+				}
+
+				// If so, record the response in the format for the json
+				$relationships[ $entity ][] = $relationship_data;
+			}
+		}
 
 		return $relationships;
 	}
@@ -205,5 +216,14 @@ class Relationships {
 		}
 
 		return array( 'key' => $key, 'value' => $value );
+	}
+
+	protected static function get_total_elements( $elements ) {
+		$count = 0;
+		foreach ( $elements as $entity => $data ) {
+			$count += count( $data );
+		}
+
+		return $count;
 	}
 }

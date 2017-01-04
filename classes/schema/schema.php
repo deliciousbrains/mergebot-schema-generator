@@ -10,6 +10,7 @@
 namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 
 use DeliciousBrains\MergebotSchemaGenerator\Installer;
+use DeliciousBrains\MergebotSchemaGenerator\Mergebot_Schema_Generator;
 
 class Schema {
 
@@ -131,9 +132,9 @@ class Schema {
 		$this->table_columns = Mergebot_Schema_Generator()->get_table_columns( $this->tables );
 		$this->primary_keys  = Primary_Keys::get_primary_keys( $this->table_columns );
 		$this->foreign_keys  = Foreign_Keys::get_foreign_keys( $this );
-		$this->shortcodes    = Shortcodes::get_shortcodes( $this );
-		$this->relationships = Relationships::get_relationships( $this );
-		
+		$this->shortcodes    = Shortcodes::get_elements( $this );
+		$this->relationships = Relationships::get_elements( $this );
+
 		$this->save();
 	}
 
@@ -146,8 +147,8 @@ class Schema {
 		$this->table_columns = Mergebot_Schema_Generator()->get_table_columns( $this->tables );
 		$primary_keys        = Primary_Keys::get_primary_keys( $this->table_columns );
 		$foreign_keys        = Foreign_Keys::get_foreign_keys( $this );
-		$shortcodes          = Shortcodes::get_shortcodes( $this );
-		$relationships       = Relationships::get_relationships( $this );
+		$shortcodes          = Shortcodes::get_elements( $this );
+		$relationships       = Relationships::get_elements( $this );
 
 		$this->primary_keys  = array_merge( $this->primary_keys, $primary_keys );
 		$this->foreign_keys  = array_merge( $this->foreign_keys, $foreign_keys );
@@ -169,6 +170,8 @@ class Schema {
 		);
 
 		$this->write( json_encode( $file_contents, JSON_PRETTY_PRINT ) );
+
+		\WP_CLI::success( 'Schema generated!' );
 	}
 
 	/**
@@ -189,6 +192,7 @@ class Schema {
 		$schema_file = $this->file_path();
 
 		if ( file_exists( $schema_file ) ) {
+			// TODO duplicate or merge?
 			//return;
 		}
 

@@ -152,7 +152,12 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function meta( $entity, $key, $value, $assoc_args = array() ) {
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
-			fwrite( STDOUT, 'Does the ' . $entity . ' with key: ' . $key . ' and value: ' . $value . " contain ID attributes? [attributes/n] " );
+
+			$entity = \WP_CLI::colorize( '%G' . $entity . '%n' );
+			$key    = \WP_CLI::colorize( '%B' . $key . '%n' );
+			$value  = \WP_CLI::colorize( '%R' . $value . '%n' );
+
+			fwrite( STDOUT, "\n" . 'Does the ' . $entity . ' with key: ' . $key . ' and value: ' . $value . " contain ID attributes?\n[attributes/n] " );
 
 			$answer = trim( fgets( STDIN ) );
 

@@ -192,18 +192,78 @@ class Mergebot_Schema_Generator {
 
 	/**
 	 * Log helper
-	 * 
-	 * @param $message
+	 *
+	 * @param string $message
+	 * @param null $color
+	 *
+	 * @return bool
 	 */
-	public static function log( $message ) {
-		if( is_array( $message ) || is_object( $message ) ){
+	public static function log( $message, $color = null ) {
+		if ( is_array( $message ) || is_object( $message ) ) {
 			$message = print_r( $message, true );
 		}
 
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			\WP_CLI::log( $message );
-		} else {
-			error_log( $message );
+		if ( ! defined( 'WP_CLI' ) && WP_CLI ) {
+			return error_log( $message );
 		}
+
+		if ( $color ) {
+			$message = \WP_CLI::colorize( $color . $message . '%n' );
+		}
+
+		\WP_CLI::log( $message );
+	}
+
+	/**
+	 * Log PHP code
+	 *
+	 * @param string $code
+	 *
+	 * @return bool
+	 */
+	public static function log_code( $code, $highlight = true ) {
+		// Strip leading tabs
+		$code = ltrim( $code, "\t" );
+		$code = rtrim( $code, "\t}" ) . '}';
+		$code = str_replace( "\t\t", "\t", $code );
+
+		if ( false === $highlight ) {
+			return Mergebot_Schema_Generator::log( $code );
+		}
+
+		// Add opening PHP tag
+		$code = '<?php' . "\n" . $code;
+
+		$highlighted = highlight_string( $code, true );
+
+		// Remove <code>
+		$highlighted = str_replace( array( '<code>', '</code>' ), '', $highlighted );
+		// Replace <br /> with \n
+		$highlighted = str_replace( '<br />', "\n", $highlighted );
+		// Replace &nbsp;&nbsp;&nbsp;&nbsp; with \t
+		$highlighted = str_replace( '&nbsp;&nbsp;&nbsp;&nbsp;', "\t", $highlighted );
+		// Replace &nbsp; with ' ';
+		$highlighted = str_replace( '&nbsp;', ' ', $highlighted );
+		// Replace </span> with  '%n'
+		$highlighted = str_replace( '</span>', '%n', $highlighted );
+		// Replace HTML characters
+		$highlighted = htmlspecialchars_decode( $highlighted );
+
+		$color_mapping = array(
+			'0000BB' => 'B',
+			'007700' => 'G',
+			'DD0000' => 'R',
+			'FF8000' => 'M',
+			'000000' => 'n',
+		);
+
+		foreach ( $color_mapping as $find => $replace ) {
+			// <span style="color: #0000BB"> with color %B
+			$highlighted = str_replace( '<span style="color: #' . $find . '">', '%' . $replace, $highlighted );
+		}
+
+		$highlighted = \WP_CLI::colorize( $highlighted );
+
+		Mergebot_Schema_Generator::log( $highlighted );
 	}
 }
