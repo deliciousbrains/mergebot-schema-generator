@@ -78,15 +78,15 @@ class Installer {
 	 * Rollback the plugin directories in case the command was aborted previously.
 	 */
 	protected function pre_clean() {
-		if ( ! file_exists( $this->get_bk_dir() ) ) {
+		if ( ! file_exists( $this->get_plugin_bk_dir() ) ) {
 			return;
 		}
 
-		if ( file_exists( $this->get_dir() ) ) {
+		if ( file_exists( $this->get_plugin_dir() ) ) {
 			WP_CLI::run_command( array( 'plugin', 'uninstall', $this->slug ), array( 'deactivate' => true ) );
 		}
 
-		rename( $this->get_bk_dir(), $this->get_dir() );
+		rename( $this->get_plugin_bk_dir(), $this->get_plugin_dir() );
 	}
 
 	/**
@@ -109,10 +109,10 @@ class Installer {
 			WP_CLI::run_command( array( 'plugin', 'deactivate', $this->slug ) );
 		}
 
-		if ( $this->rollback && file_exists( $this->get_bk_dir() ) ) {
+		if ( $this->rollback && file_exists( $this->get_plugin_bk_dir() ) ) {
 			// Rollback to backup
 			WP_CLI::run_command( array( 'plugin', 'uninstall', $this->slug ), array( 'deactivate' => true ) );
-			rename( $this->get_bk_dir(), $this->get_dir() );
+			rename( $this->get_plugin_bk_dir(), $this->get_plugin_dir() );
 			WP_CLI::success( 'Plugin rolled back.' );
 			if ( ! $this->deactivate ) {
 				WP_CLI::run_command( array( 'plugin', 'activate', $this->slug ) );
@@ -151,7 +151,7 @@ class Installer {
 		$this->rollback = true;
 
 		// Backup existing plugin
-		rename( $this->get_dir(), $this->get_bk_dir() );
+		rename( $this->get_plugin_dir(), $this->get_plugin_bk_dir() );
 
 		return true;
 	}
@@ -310,7 +310,7 @@ class Installer {
 	 *
 	 * @return string
 	 */
-	protected function get_dir() {
+	protected function get_plugin_dir() {
 		return self::dir( $this->slug );
 	}
 
@@ -321,7 +321,7 @@ class Installer {
 	 *
 	 * @return string
 	 */
-	protected static function dir( $slug ) {
+	public static function dir( $slug ) {
 		return WP_PLUGIN_DIR . '/' . $slug;
 	}
 
@@ -330,7 +330,7 @@ class Installer {
 	 *
 	 * @return string
 	 */
-	protected function get_bk_dir() {
+	protected function get_plugin_bk_dir() {
 		return self::dir( $this->slug ) . '.msg_bak';
 	}
 }

@@ -9,6 +9,8 @@
 
 namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 
+use DeliciousBrains\MergebotSchemaGenerator\Installer;
+
 class Schema {
 
 	/**
@@ -199,7 +201,7 @@ class Schema {
 	 * @return string
 	 */
 	protected function get_files_path() {
-		$path = WP_PLUGIN_DIR . '/' . $this->slug;
+		$path = Installer::dir( $this->slug );
 
 		if ( 'wordpress' === $this->type ) {
 			$path = ABSPATH;
