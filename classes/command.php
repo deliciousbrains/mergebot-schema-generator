@@ -34,6 +34,9 @@ class Command extends \WP_CLI_Command {
 	 * [--scratch]
 	 * : Create schema from scratch even if one exists
 	 *
+	 * [--skip-install]
+	 * : Generate the schema from an already installed plugin
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp mergebot-schema generate
@@ -49,9 +52,11 @@ class Command extends \WP_CLI_Command {
 
 		$create_from_scratch = isset( $assoc_args['scratch'] );
 
-		// Handle installing the thing we want to generate a schema for.
-		$installer = new Installer( $slug, $version, $this->type );
-		$installer->init();
+		if ( ! isset( $assoc_args['skip-install'] ) ) {
+			// Handle installing the thing we want to generate a schema for.
+			$installer = new Installer( $slug, $version, $this->type );
+			$installer->init();
+		}
 
 		// Generate the schema.
 		$generator = new Generator( $slug, $version, $this->type );
