@@ -100,7 +100,7 @@ class Installer {
 		}
 
 		if ( $this->uninstall ) {
-			WP_CLI::run_command( array( 'plugin', 'uninstall', $this->slug ) );
+			WP_CLI::run_command( array( 'plugin', 'uninstall', $this->slug ), array( 'deactivate' => true ) );
 
 			return;
 		}
