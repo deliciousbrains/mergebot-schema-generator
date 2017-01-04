@@ -168,11 +168,15 @@ class Installer {
 			return;
 		}
 
-
 		// Install plugin version
 		$args = array( 'force' => true );
 		if ( 'latest' !== $this->version ) {
 			$args['version'] = $this->version;
+		}
+
+		if ( false === $this->deactivate ) {
+			// Activate if not already
+			$args['activate'] = true;
 		}
 
 		WP_CLI::run_command( array( 'plugin', 'install', $this->slug ), $args );
