@@ -62,8 +62,10 @@ class Command extends \WP_CLI_Command {
 		$generator = new Generator( $slug, $version, $this->type );
 		$generator->generate( $create_from_scratch );
 
-		// Clean up the install
-		$installer->clean_up();
+		if ( ! isset( $assoc_args['skip-install'] ) ) {
+			// Clean up the install
+			$installer->clean_up();
+		}
 
 		\WP_CLI::success( ucfirst( $slug ) . ' schema generated!' );
 	}
