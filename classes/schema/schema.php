@@ -10,7 +10,6 @@
 namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 
 use DeliciousBrains\MergebotSchemaGenerator\Installer;
-use DeliciousBrains\MergebotSchemaGenerator\Mergebot_Schema_Generator;
 
 class Schema {
 

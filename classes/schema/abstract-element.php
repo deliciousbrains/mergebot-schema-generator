@@ -30,9 +30,9 @@ abstract class Abstract_Element {
 		return $elements;
 	}
 
-	protected static abstract function find_elements( Schema $schema );
+	protected static function find_elements( Schema $schema ) {}
 
-	protected static abstract function ask_elements( $elements, $progress_bar );
+	protected static function ask_elements( $elements, $progress_bar ) {}
 
 	protected static function get_total_elements( $elements ) {
 		return count( $elements );
