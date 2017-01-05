@@ -8,6 +8,9 @@ Symlink the `src/mergebot-schema-generator` dir to your `wp-content/plugins` dir
 
 Generate a schema with the WP-CLI command:
 
+First of all the command must be run from the plugin directory:
+`cd wp-content/plugins/mergebot-schema-generator`
+
 `wp mergebot-schema generate --plugin=woocommerce`
 
 For WordPress core use:
