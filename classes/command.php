@@ -47,6 +47,11 @@ class Command extends \WP_CLI_Command {
 	 *
 	 */
 	public function generate( $args, $assoc_args ) {
+		if ( ! defined( 'WP_ADMIN' ) || false === WP_ADMIN ) {
+			$path = WP_CONTENT_DIR . '/' . basename( mergebot_schema_generator()->file_path, '.php' );
+			\WP_CLI::error( sprintf( 'This command must be run from inside %s', $path ) );
+		}
+
 		$slug    = $this->get_slug( $assoc_args );
 		$version = $this->get_version( $assoc_args, $slug );
 
@@ -57,6 +62,10 @@ class Command extends \WP_CLI_Command {
 			$installer = new Installer( $slug, $version, $this->type );
 			$installer->init();
 		}
+
+		// Bootstrap admin hooks where plugins might install tables
+		do_action( 'admin_init' );
+		do_action( 'admin_menu' );
 
 		// Generate the schema.
 		$generator = new Generator( $slug, $version, $this->type );
