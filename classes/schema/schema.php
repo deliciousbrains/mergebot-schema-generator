@@ -176,7 +176,7 @@ class Schema {
 	 * @param mixed $value
 	 */
 	protected function set_property( $key, $value ) {
-		$this->{$key}  = array_merge( $this->{$key}, $value );
+		$this->{$key} = array_merge( $this->{$key}, $value );
 	}
 
 	/**
@@ -216,8 +216,6 @@ class Schema {
 		);
 
 		$this->write( json_encode( $file_contents, JSON_PRETTY_PRINT ) );
-
-		\WP_CLI::success( 'Schema generated!' );
 	}
 
 	/**
