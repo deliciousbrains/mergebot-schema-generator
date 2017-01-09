@@ -35,12 +35,23 @@ class Primary_Keys {
 					continue;
 				}
 
-				if ( 'PRI' === $column->Key || 'auto_increment' === $column->Extra ) {
+				if ( self::is_pk_column( $column ) ) {
 					$primary_keys[ $table ] = $column->Field;
 				}
 			}
 		}
 
 		return $primary_keys;
+	}
+
+	/**
+	 * Is a MySQL table column a Primary Key?
+	 *
+	 * @param object $column
+	 *
+	 * @return bool
+	 */
+	public static function is_pk_column( $column ) {
+		return 'auto_increment' === $column->Extra;
 	}
 }

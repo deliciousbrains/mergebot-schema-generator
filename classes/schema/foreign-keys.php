@@ -23,7 +23,7 @@ class Foreign_Keys {
 					continue;
 				}
 
-				if ( 'PRI' === $column->Key || 'auto_increment' === $column->Extra ) {
+				if ( Primary_Keys::is_pk_column( $column ) ) {
 					continue;
 				}
 
