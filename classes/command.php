@@ -37,6 +37,9 @@ class Command extends \WP_CLI_Command {
 	 * [--skip-install]
 	 * : Generate the schema from an already installed plugin
 	 *
+	 * [--load-admin]
+	 * : Load admin hooks for plugin, eg. for table installing
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp mergebot-schema generate
@@ -63,9 +66,11 @@ class Command extends \WP_CLI_Command {
 			$installer->init();
 		}
 
-		// Bootstrap admin hooks where plugins might install tables
-		do_action( 'admin_init' );
-		do_action( 'admin_menu' );
+		if ( isset( $assoc_args['load-admin'] ) ) {
+			// Bootstrap admin hooks where plugins might install tables
+			do_action( 'admin_init' );
+			do_action( 'admin_menu' );
+		}
 
 		// Generate the schema.
 		$generator = new Generator( $slug, $version, $this->type );
