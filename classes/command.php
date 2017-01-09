@@ -136,7 +136,8 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function shortcode( $tag, $assoc_args = array() ) {
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
-			fwrite( STDOUT, 'Does [' . $tag . "] contain ID attributes? [attributes/n] " );
+			$tag = \WP_CLI::colorize( '%B[' . $tag . ']%n' );
+			fwrite( STDOUT, 'Does the shortcode ' . $tag . " contain ID attributes?\n[attributes/n] Comma separated list of attributes. [table]:[attribute] format for non-post tables\n" );
 
 			$answer = trim( fgets( STDIN ) );
 
