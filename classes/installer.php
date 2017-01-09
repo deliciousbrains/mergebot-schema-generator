@@ -63,11 +63,13 @@ class Installer {
 
 	/**
 	 * Run the installer.
+	 *
+	 * @param bool $skip_install
 	 */
-	public function init() {
+	public function init( $skip_install = false ) {
 		$this->pre_clean();
 
-		if ( false === $this->needs_installing() ) {
+		if ( false === $this->needs_installing( $skip_install ) ) {
 			return;
 		}
 
@@ -123,9 +125,11 @@ class Installer {
 	/**
 	 * Does the thing need installing, or does it already exist as the correct version.
 	 *
+	 * @param bool $skip_install
+	 *
 	 * @return bool
 	 */
-	protected function needs_installing() {
+	protected function needs_installing( $skip_install = false ) {
 		if ( 'wordpress' === $this->type ) {
 			return $this->get_installed_core_version() != $this->version;
 		}
@@ -140,6 +144,10 @@ class Installer {
 			$this->deactivate = true;
 			WP_CLI::run_command( array( 'plugin', 'activate', $this->slug ) );
 			$basename = self::get_plugin_basename( $this->slug );
+		}
+
+		if ( $skip_install ) {
+			return false;
 		}
 
 		$existing_version = self::get_installed_plugin_version( $basename );

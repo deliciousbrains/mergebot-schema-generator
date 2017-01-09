@@ -60,11 +60,9 @@ class Command extends \WP_CLI_Command {
 
 		$create_from_scratch = isset( $assoc_args['scratch'] );
 
-		if ( ! isset( $assoc_args['skip-install'] ) ) {
-			// Handle installing the thing we want to generate a schema for.
-			$installer = new Installer( $slug, $version, $this->type );
-			$installer->init();
-		}
+		// Handle installing the thing we want to generate a schema for.
+		$installer = new Installer( $slug, $version, $this->type );
+		$installer->init( isset( $assoc_args['skip-install'] ) );
 
 		if ( isset( $assoc_args['load-admin'] ) ) {
 			// Bootstrap admin hooks where plugins might install tables
@@ -76,10 +74,8 @@ class Command extends \WP_CLI_Command {
 		$generator = new Generator( $slug, $version, $this->type );
 		$generator->generate( $create_from_scratch );
 
-		if ( ! isset( $assoc_args['skip-install'] ) ) {
-			// Clean up the install
-			$installer->clean_up();
-		}
+		// Clean up the install
+		$installer->clean_up();
 
 		\WP_CLI::success( ucfirst( $slug ) . ' schema generated!' );
 	}
