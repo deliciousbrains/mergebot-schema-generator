@@ -75,7 +75,7 @@ class Foreign_Keys {
 				// Single entity a plugin one
 				$plugin_tables = array_keys( $schema->table_columns );
 				$match         = self::table_match( $plugin_tables, $entity, $table );
-				if ( $match ) {
+				if ( $match && isset( $schema->primary_keys[ $match ] ) ) {
 					$pk = $schema->primary_keys[ $match ];
 
 					$foreign_keys[ $table . ':' . $column->Field ] = $match . ':' . $pk;
@@ -85,7 +85,7 @@ class Foreign_Keys {
 
 				// Plural entity a plugin one
 				$match = self::table_match( $plugin_tables, $plural_entity, $table );
-				if ( $match ) {
+				if ( $match && isset( $schema->primary_keys[ $match ] ) ) {
 					$pk = $schema->primary_keys[ $match ];
 
 					$foreign_keys[ $table . ':' . $column->Field ] = $match . ':' . $pk;
