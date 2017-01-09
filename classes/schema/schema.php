@@ -102,7 +102,7 @@ class Schema {
 	 * @return string
 	 */
 	public function file_path() {
-		return Mergebot_Schema_Generator()->schema_path . '/' . $this->filename();
+		return apply_filters( 'mergebot_schema_generator_path', Mergebot_Schema_Generator()->schema_path . '/' . $this->filename(), $this->filename(), $this->type ) ;
 	}
 
 	/**
