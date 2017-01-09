@@ -90,11 +90,14 @@ class Schema {
 	 * @return string
 	 */
 	public function filename() {
-		$basename = Installer::get_plugin_basename( $this->slug );
-		$basename = str_replace( '/', '-', $basename );
-		$basename = str_replace( '.php', '', $basename );
+		$filename = $this->slug;
+		if ( 'plugin' === $this->type ) {
+			$filename = Installer::get_plugin_basename( $this->slug );
+			$filename = str_replace( '/', '-', $filename );
+			$filename = str_replace( '.php', '', $filename );
+		}
 
-		return $basename . '-' . $this->version . '.json';
+		return $filename . '-' . $this->version . '.json';
 	}
 
 	/**
