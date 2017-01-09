@@ -77,6 +77,10 @@ class Relationships extends Abstract_Element {
 				// ask if we are interested in the key/value
 				$result = Command::meta( $entity, $key, $value );
 
+				if ( 'exit' === $result ) {
+					return $relationships;
+				}
+
 				if ( ! $result ) {
 					continue;
 				}

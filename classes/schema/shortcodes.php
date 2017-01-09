@@ -64,6 +64,10 @@ class Shortcodes extends Abstract_Element {
 
 			$result = Command::shortcode( $tag );
 
+			if ( 'exit' === $result ) {
+				return $shortcodes;
+			}
+
 			if ( ! $result ) {
 				continue;
 			}
