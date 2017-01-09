@@ -9,6 +9,7 @@
 
 namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 
+use DeliciousBrains\MergebotSchemaGenerator\Command;
 use DeliciousBrains\MergebotSchemaGenerator\Installer;
 
 class Schema {
@@ -116,6 +117,10 @@ class Schema {
 		$contents = $this->read();
 		$data     = json_decode( $contents );
 
+		$this->init_properties( $data );
+	}
+
+	protected function init_properties( $data ) {
 		$this->primary_keys  = isset( $data->primaryKeys ) ? (array) $data->primaryKeys : array();
 		$this->foreign_keys  = isset( $data->foreignKeys ) ? (array) $data->foreignKeys : array();
 		$this->shortcodes    = isset( $data->shortcodes ) ? (array) $data->shortcodes : array();
@@ -127,13 +132,8 @@ class Schema {
 	 */
 	public function create() {
 		$this->write();
-
-		$this->table_columns = Mergebot_Schema_Generator()->get_table_columns( $this->tables );
-		$this->primary_keys  = Primary_Keys::get_primary_keys( $this->table_columns );
-		$this->foreign_keys  = Foreign_Keys::get_foreign_keys( $this );
-		$this->shortcodes    = Shortcodes::get_elements( $this );
-		$this->relationships = Relationships::get_elements( $this );
-
+		$this->init_properties( new \stdClass() );
+		$this->set_properties();
 		$this->save();
 	}
 
@@ -142,19 +142,59 @@ class Schema {
 	 */
 	public function update() {
 		$this->load();
-
-		$this->table_columns = Mergebot_Schema_Generator()->get_table_columns( $this->tables );
-		$primary_keys        = Primary_Keys::get_primary_keys( $this->table_columns );
-		$foreign_keys        = Foreign_Keys::get_foreign_keys( $this );
-		$shortcodes          = Shortcodes::get_elements( $this );
-		$relationships       = Relationships::get_elements( $this );
-
-		$this->primary_keys  = array_merge( $this->primary_keys, $primary_keys );
-		$this->foreign_keys  = array_merge( $this->foreign_keys, $foreign_keys );
-		$this->shortcodes    = array_merge( $this->shortcodes, $shortcodes );
-		$this->relationships = array_merge( $this->relationships, $relationships );
-
+		$this->set_properties();
 		$this->save();
+	}
+
+	/**
+	 * Set the schema properties
+	 */
+	protected function set_properties() {
+		$this->table_columns = Mergebot_Schema_Generator()->get_table_columns( $this->tables );
+		$primary_keys        = $this->primary_keys();
+		$this->set_property( 'primary_keys', $primary_keys );
+
+		$foreign_keys        = Foreign_Keys::get_foreign_keys( $this );
+		$this->set_property( 'foreign_keys', $foreign_keys );
+
+		$shortcodes          = Shortcodes::get_elements( $this );
+		$this->set_property( 'shortcodes', $shortcodes );
+
+		$relationships       = Relationships::get_elements( $this );
+		$this->set_property( 'relationships', $relationships );
+	}
+
+	/**
+	 * @param string $key
+	 * @param mixed $value
+	 */
+	protected function set_property( $key, $value ) {
+		$this->{$key}  = array_merge( $this->{$key}, $value );
+	}
+
+	/**
+	 * Get primary keys
+	 *
+	 * @return array
+	 */
+	protected function primary_keys() {
+		if ( empty( $this->table_columns ) ) {
+			return array();
+		}
+
+		$primary_keys = Primary_Keys::get_elements( $this->table_columns );
+		if ( ! empty( $primary_keys ) ) {
+			return $primary_keys;
+		}
+
+		$prefixed_tables = $this->get_prefixed_tables();
+		if ( false === $prefixed_tables ) {
+			return array();
+		}
+
+		$this->table_columns = Mergebot_Schema_Generator()->get_table_columns( $prefixed_tables );
+
+		return Primary_Keys::get_primary_keys( $this->table_columns );
 	}
 
 	/**
@@ -285,5 +325,26 @@ class Schema {
 		}
 
 		return $all_tables;
+	}
+
+	/**
+	 * @return array|bool
+	 */
+	protected function get_prefixed_tables() {
+		// Ask for a prefix
+		$result = Command::table_prefix();
+
+		if ( ! $result ) {
+			// TODO handle warning - try again with a prefix?
+			return false;
+		}
+
+		$tables = Mergebot_Schema_Generator()->get_tables_by_prefix( $result );
+		if ( empty( $tables ) ) {
+			// TODO handle warning - try again with a prefix?
+			return false;
+		}
+
+		return $tables;
 	}
 }

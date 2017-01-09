@@ -179,6 +179,28 @@ class Command extends \WP_CLI_Command {
 			return $answer;
 		}
 	}
+
+	/**
+	 * Asks for the custom prefix of a plugin's tables
+	 *
+	 * @param array  $assoc_args
+	 *
+	 * @return bool|string
+	 */
+	public static function table_prefix( $assoc_args = array() ) {
+		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
+			fwrite( STDOUT, 'Tables cannot be parsed, but the plugin has custom tables. Do you know the custom prefix?' );
+
+			$answer = trim( fgets( STDIN ) );
+
+			if ( 'n' == $answer || empty( $answer ) ) {
+				return false;
+			}
+
+			return $answer;
+		}
+	}
+
 }
 
 \WP_CLI::add_command( 'mergebot-schema', 'DeliciousBrains\MergebotSchemaGenerator\Command' );

@@ -141,7 +141,7 @@ class Mergebot_Schema_Generator {
 		);
 
 		foreach ( $tables as $table ) {
-			$table = str_ireplace( array( '{', '}', '`', '([^', '$wpdb->prefix', '$wpdb->' ), '', $table );
+			$table = str_ireplace( array( '{', '}', '`', '([^', '$wpdb->prefix', '$wpdb->', $wpdb->prefix ), '', $table );
 
 			if ( in_array( $table, $excluded ) ) {
 				continue;
@@ -155,6 +155,22 @@ class Mergebot_Schema_Generator {
 		}
 
 		return $all_tables;
+	}
+
+	/**
+	 * Get all tables installed with a custom prefix
+	 *
+	 * @param string $prefix
+	 *
+	 * @return array
+	 */
+	public function get_tables_by_prefix( $prefix ) {
+		global $wpdb;
+		$sql = $wpdb->prepare( 'SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s', DB_NAME, '%' . $prefix . '%' );
+
+		$tables = $wpdb->get_col( $sql );
+
+		return $tables;
 	}
 
 	/**

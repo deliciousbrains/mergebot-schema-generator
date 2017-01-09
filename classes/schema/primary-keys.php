@@ -9,8 +9,17 @@
 
 namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 
+use DeliciousBrains\MergebotSchemaGenerator\Command;
+use DeliciousBrains\MergebotSchemaGenerator\Mergebot_Schema_Generator;
+
 class Primary_Keys {
 
+	public static function get_elements( $tables ) {
+		Mergebot_Schema_Generator::log( 'Primary Keys' , '%R');
+		$primary_keys = self::get_primary_keys( $tables );
+
+		return $primary_keys;
+	}
 	/**
 	 * Get the Primary keys for an array of tables
 	 * 
