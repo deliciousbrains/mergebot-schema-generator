@@ -215,6 +215,17 @@ class Schema {
 			'relationships' => $this->relationships,
 		);
 
+		foreach ( $file_contents as $key => $value ) {
+			if ( empty( $value ) ) {
+				unset( $file_contents[ $key ] );
+			}
+		}
+
+		if ( empty( $file_contents ) ) {
+			// Ensure an empty schema is in correct JSON format
+			$file_contents = new \stdClass();
+		}
+
 		$this->write( json_encode( $file_contents, JSON_PRETTY_PRINT ) );
 	}
 
