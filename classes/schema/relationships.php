@@ -10,6 +10,7 @@
 namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 
 use DeliciousBrains\MergebotSchemaGenerator\Command;
+use DeliciousBrains\MergebotSchemaGenerator\Mergebot_Schema_Generator;
 
 class Relationships extends Abstract_Element {
 
@@ -56,7 +57,7 @@ class Relationships extends Abstract_Element {
 						}
 
 						// record the key so we ignore it if used in other places
-						$processed_meta[ $entity ][ $key ] = $value;
+						$processed_meta[ $entity ][ $key ] = array( 'value' => $value, 'file' => $file->getRealPath() );
 					}
 				}
 			}
@@ -70,11 +71,17 @@ class Relationships extends Abstract_Element {
 
 	protected static function ask_elements( $elements, $progress_bar ) {
 		$relationships = array();
+		$meta_tables = self::get_meta_tables();
+
+		$entities       = self::get_meta_data( $meta_tables );
 
 		foreach ( $elements as $entity => $data ) {
-			foreach ( $data as $key => $value ) {
+			foreach ( $data as $key => $relationship ) {
+				$value = $relationship['value'];
+
 				$progress_bar->tick();
 				// ask if we are interested in the key/value
+				Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%G' . 'File' . ':%n' . $relationship['file'] ) );
 				$result = Command::meta( $entity, $key, $value );
 
 				if ( 'exit' === $result ) {
@@ -85,31 +92,60 @@ class Relationships extends Abstract_Element {
 					continue;
 				}
 
-				$result_parts = explode( ',', $result );
-				$target_table = $result_parts[0];
+				if ( 'y' !== strtolower( $result ) ) {
+					continue;
+				}
 
-				$relationship_data = array(
-					$data['columns']['key']   => $key,
-					$data['columns']['value'] => $target_table,
-				);
-
-				if ( isset( $result_parts[1] ) ) {
-					$serialized_data = array(
-						'key' => 'ignore',
-						'val' => 'ignore',
+				// Ask if simple reference to a table
+				// eg. add_post_meta( '_image_id', $id );
+				// which links to to the posts table
+				$target_table = Command::meta_table();
+				if ( $target_table ) {
+					$relationship_data = array(
+						$entities[$entity]['columns']['key']   => $key,
+						$entities[$entity]['columns']['value'] => $target_table,
 					);
 
-					// Used for serialized data
-					$serialized_parts = explode( '|', $result_parts[1] );
-					foreach ( $serialized_parts as $serialized_part ) {
-						$row = explode( ':', $serialized_part );
-						if ( isset( $row[0] ) && isset( $row[1] ) ) {
-							$serialized_data[ $row[0] ] = $row[1];
-						}
-					}
+					$relationships[ $entity ][] = $relationship_data;
 
-					$relationship_data['serialized'] = $serialized_data;
+					continue;
 				}
+
+				$target_table = Command::meta_table( false );
+				$relationship_data = array(
+					$entities[$entity]['columns']['key']   => $key,
+					$entities[$entity]['columns']['value'] => $target_table,
+				);
+
+				$serialized_data = array(
+					'key' => 'ignore',
+					'val' => 'ignore',
+				);
+
+				$serialized_key = Command::meta_serialized_key();
+				if ( $serialized_key ) {
+					$serialized_data['key'] = $serialized_key;
+				}
+
+				$serialized_value = Command::meta_serialized_value();
+				$serialized_parts = explode( '|', $serialized_value );
+
+				$serialized = array(
+					'key' => 'ignore',
+					'val' => 'ignore',
+				);
+				if ( 1 === count( $serialized_parts ) ) {
+					$serialized['val'] = $serialized_parts[0];
+				}
+
+				if ( 2 === count( $serialized_parts ) ) {
+					$serialized['key'] = $serialized_parts[0];
+					$serialized['val'] = $serialized_parts[1];
+				}
+
+				$serialized_data['val'] = $serialized;
+
+				$relationship_data['serialized'] = $serialized_data;
 
 				// If so, record the response in the format for the json
 				$relationships[ $entity ][] = $relationship_data;

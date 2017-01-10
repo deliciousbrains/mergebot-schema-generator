@@ -46,7 +46,7 @@ class Shortcodes extends Abstract_Element {
 					continue;
 				}
 
-				$shortcodes[ $tag ] = $body;
+				$shortcodes[ $tag ] = array( 'body' => $body, 'file' => $file->getRealPath() );
 			}
 		}
 
@@ -56,10 +56,12 @@ class Shortcodes extends Abstract_Element {
 	public static function ask_elements( $all_shortcodes, $progress_bar ) {
 		$shortcodes = array();
 
-		foreach( $all_shortcodes as $tag => $body ) {
+		foreach( $all_shortcodes as $tag => $shortcode ) {
 			$progress_bar->tick();
 
+			$body = $shortcode['body'];
 			Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%B' . 'Shortcode' . ':%n' . '[' . $tag . ']' ) );
+			Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%B' . 'File' . ':%n' . $shortcode['file'] ) );
 			Mergebot_Schema_Generator::log_code( $body );
 
 			$result = Command::shortcode( $tag );
