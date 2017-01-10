@@ -174,6 +174,30 @@ class Command extends \WP_CLI_Command {
 	/**
 	 * Asks if the a piece of meta data contains IDs in the value
 	 *
+	 * @param       $key
+	 * @param array $assoc_args
+	 *
+	 * @return bool|string
+	 */
+	public static function meta_key( $key, $assoc_args = array() ) {
+		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
+
+			$key = \WP_CLI::colorize( '%B' . $key . '%n' );
+			fwrite( STDOUT, "The meta key $key contains a variable, enter the string: " );
+
+			$answer = trim( fgets( STDIN ) );
+
+			if ( empty( $answer ) ) {
+				return false;
+			}
+
+			return $answer;
+		}
+	}
+
+	/**
+	 * Asks if the a piece of meta data contains IDs in the value
+	 *
 	 * @param bool  $simple
 	 * @param array $assoc_args
 	 *
@@ -183,7 +207,7 @@ class Command extends \WP_CLI_Command {
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 
 			if ( $simple ) {
-				fwrite( STDOUT, "\n" . "Is it a simple reference to a table ID? Which table (without prefix)?\n[table/n] " );
+				fwrite( STDOUT, "\n" . "Is it a simple reference to a table ID? Which table (without prefix)?\n[table/n/ignore] " );
 			} else {
 				fwrite( STDOUT, "\n" . "Which table does the serialized value relate to (without prefix)?\n[table] " );
 			}

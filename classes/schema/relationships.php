@@ -139,6 +139,14 @@ class Relationships extends Abstract_Element {
 					continue;
 				}
 
+				if ( false !== strpos( $key, '$' ) ) {
+					// Meta key contains a variable, need to ask for the key
+					$new_key = Command::meta_key( $key );
+					if ( $new_key ) {
+						$key = $new_key;
+					}
+				}
+
 				// Ask if simple reference to a table
 				// eg. add_post_meta( '_image_id', $id );
 				// which links to to the posts table
