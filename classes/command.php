@@ -274,7 +274,8 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function overwrite_property( $assoc_args = array() ) {
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
-			fwrite( STDOUT, 'This is already defined in the schema, edit it? [Y/n]' . "\n" );
+			$question = \WP_CLI::colorize( '%rThis is already defined in the schema, edit it?%n [Y/n]' );
+			fwrite( STDOUT, $question . "\n" );
 
 			$answer = strtolower( trim( fgets( STDIN ) ) );
 
