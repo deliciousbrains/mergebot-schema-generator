@@ -64,6 +64,8 @@ class Schema {
 	 */
 	public $relationships;
 
+	public $from_scratch = false;
+
 	/**
 	 * Schema constructor.
 	 *
@@ -138,6 +140,7 @@ class Schema {
 	 * Create schema
 	 */
 	public function create() {
+		$this->from_scratch = true;
 		$this->write();
 		$this->init_properties( new \stdClass() );
 		$this->set_properties();

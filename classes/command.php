@@ -152,21 +152,14 @@ class Command extends \WP_CLI_Command {
 	/**
 	 * Asks if the a piece of meta data contains IDs in the value
 	 *
-	 * @param string $entity
-	 * @param string $key
-	 * @param string $value
 	 * @param array  $assoc_args
 	 *
 	 * @return bool|string
 	 */
-	public static function meta( $entity, $key, $value, $assoc_args = array() ) {
+	public static function meta( $assoc_args = array() ) {
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 
-			$entity = \WP_CLI::colorize( '%G' . $entity . '%n' );
-			$key    = \WP_CLI::colorize( '%B' . $key . '%n' );
-			$value  = \WP_CLI::colorize( '%R' . $value . '%n' );
-
-			fwrite( STDOUT, "\n" . 'Does the ' . $entity . ' with key: ' . $key . ' and value: ' . $value . " contain ID data?\n[Y/n] " );
+			fwrite( STDOUT, "Does the meta contain ID data?\n[Y/n] " );
 
 			$answer = trim( fgets( STDIN ) );
 
@@ -269,6 +262,27 @@ class Command extends \WP_CLI_Command {
 			}
 
 			return $answer;
+		}
+	}
+
+	/**
+	 * Asks if we want to overwrite the saved schema property.
+	 *
+	 * @param array  $assoc_args
+	 *
+	 * @return bool|string
+	 */
+	public static function overwrite_property( $assoc_args = array() ) {
+		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
+			fwrite( STDOUT, 'This is already defined in the schema, edit it? [Y/n]' . "\n" );
+
+			$answer = strtolower( trim( fgets( STDIN ) ) );
+
+			if ( 'n' == $answer || empty( $answer ) ) {
+				return false;
+			}
+
+			return true;
 		}
 	}
 

@@ -24,7 +24,7 @@ abstract class Abstract_Element {
 		$message        = sprintf( 'Processing %s %s', $total_elements, static::$element );
 		$progress_bar   = \WP_CLI\Utils\make_progress_bar( \WP_CLI::colorize( '%' . static::$colour . $message . ':%n' ), $total_elements );
 
-		$elements = static::ask_elements( $elements, $progress_bar );
+		$elements = static::ask_elements( $schema, $elements, $progress_bar );
 		$progress_bar->finish();
 
 		return $elements;
@@ -32,7 +32,7 @@ abstract class Abstract_Element {
 
 	protected static function find_elements( Schema $schema ) {}
 
-	protected static function ask_elements( $elements, $progress_bar ) {}
+	protected static function ask_elements( $schema, $elements, $progress_bar ) {}
 
 	protected static function get_total_elements( $elements ) {
 		return count( $elements );

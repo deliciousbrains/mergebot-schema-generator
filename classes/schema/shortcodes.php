@@ -30,11 +30,6 @@ class Shortcodes extends Abstract_Element {
 			}
 			
 			foreach ( $shortcode_tags as $tag => $callback ) {
-				if ( isset( $schema->shortcodes[ $tag ] ) ) {
-					// Shortcode already defined in schema, ignore
-					continue;
-				}
-
 				if ( ! self::shortcode_search( $content, $tag ) ) {
 					continue;
 				}
@@ -65,14 +60,25 @@ class Shortcodes extends Abstract_Element {
 		return $shortcodes;
 	}
 
-	public static function ask_elements( $all_shortcodes, $progress_bar ) {
+	public static function ask_elements( Schema $schema, $all_shortcodes, $progress_bar ) {
 		$shortcodes = array();
 
 		foreach( $all_shortcodes as $tag => $shortcode ) {
 			$progress_bar->tick();
 
-			$body = $shortcode['body'];
 			Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%B' . 'Shortcode' . ':%n' . '[' . $tag . ']' ) );
+			if ( false === $schema->from_scratch && isset( $schema->shortcodes[ $tag ] ) ) {
+				// Shortcode already defined in schema, ask to overwrite
+				$result = Command::overwrite_property();
+
+				if ( ! $result ) {
+					$shortcodes[ $tag ] = $schema->shortcodes[ $tag ];
+					continue;
+				}
+			}
+
+
+			$body = $shortcode['body'];
 			Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%B' . 'File' . ':%n' . $shortcode['file'] ) );
 			Mergebot_Schema_Generator::log_code( $body );
 

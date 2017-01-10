@@ -76,7 +76,25 @@ class Relationships extends Abstract_Element {
 		return $processed_meta;
 	}
 
-	protected static function ask_elements( $elements, $progress_bar ) {
+	protected static function meta_exists_in_schema( $schema, $entity, $key ) {
+		if ( ! isset( $schema->relationships[ $entity ] ) ) {
+			return false;
+		}
+
+		foreach ( $schema->relationships[ $entity ] as $data ) {
+			foreach ( $data as $meta_key => $meta_value ) {
+				if ( $key === $meta_value ) {
+					return $data;
+				} else {
+					continue;
+				}
+			}
+		}
+
+		return false;
+ 	}
+
+	protected static function ask_elements( Schema $schema, $elements, $progress_bar ) {
 		$relationships = array();
 		$meta_tables = self::get_meta_tables();
 
@@ -89,7 +107,25 @@ class Relationships extends Abstract_Element {
 				$progress_bar->tick();
 				// ask if we are interested in the key/value
 				Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%G' . 'File' . ':%n' . $relationship['file'] ) );
-				$result = Command::meta( $entity, $key, $value );
+
+				$_entity = \WP_CLI::colorize( '%G' . $entity . '%n' );
+				$_key    = \WP_CLI::colorize( '%B' . $key . '%n' );
+				$_value  = \WP_CLI::colorize( '%R' . $value . '%n' );
+
+				fwrite( STDOUT, "\n" . $_entity . ' with key: ' . $_key . ' and value: ' . $_value . "\n" );
+
+				if ( false === $schema->from_scratch && ( bool) ( $existing_data = self::meta_exists_in_schema( $schema, $entity, $key ) ) ) {
+					// Relationship already defined in schema, ask to overwrite
+					$result = Command::overwrite_property();
+
+					if ( ! $result ) {
+						$relationships[ $entity ][] = $existing_data;
+
+						continue;
+					}
+				}
+
+				$result = Command::meta();
 
 				if ( 'exit' === $result ) {
 					return $relationships;
