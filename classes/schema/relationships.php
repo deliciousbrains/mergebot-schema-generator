@@ -23,6 +23,8 @@ class Relationships extends Abstract_Element {
 		$entities       = self::get_meta_data( $meta_tables );
 		$processed_meta = array();
 
+		$ignored_values = self::get_ignored_values();
+
 		foreach ( $schema->files as $file ) {
 			$content = strtolower( file_get_contents( $file->getRealPath() ) );
 
@@ -53,6 +55,11 @@ class Relationships extends Abstract_Element {
 
 						if ( isset( $processed_meta[ $entity ][ $key ] ) ) {
 							// Already processed this piece of meta
+							continue;
+						}
+
+						if ( self::is_ignored_value( $value, $ignored_values ) ) {
+							// Not a value that can contain ID data.
 							continue;
 						}
 
@@ -265,5 +272,46 @@ class Relationships extends Abstract_Element {
 		}
 
 		return $count;
+	}
+
+	/**
+	 * @param $value
+	 * @param $ignore_values
+	 *
+	 * @return bool
+	 */
+	protected static function is_ignored_value( $value, $ignore_values ) {
+		if ( is_string( $value ) && '$' !== substr( $value, 0, 1 ) ) {
+			return true;
+		}
+
+		if ( is_numeric( $value ) ) {
+			return true;
+		}
+
+		foreach ( $ignore_values as $ignore_value ) {
+			if ( $value === $ignore_value ) {
+				return true;
+			}
+		}
+
+
+		return false;
+	}
+
+	/**
+	 * Get the values to ignore, ones that can't contain ID data.
+	 *
+	 * @return array
+	 */
+	protected static function get_ignored_values() {
+		return array(
+			'0',
+			'1',
+			true,
+			false,
+			'$counts',
+			'$count',
+		);
 	}
 }

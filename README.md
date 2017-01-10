@@ -24,5 +24,4 @@ For WordPress core use:
 * Relationships - deal with custom plugin meta tables
 * Content
 * Clean up and doc blocks
-* If schema empty, delete scheme file
 * Don't duplicate core relationships, eg. a plugin adds '_thumbnail_id'
