@@ -41,7 +41,19 @@ class Shortcodes extends Abstract_Element {
 
 				$body = self::get_callback_code( $file, $callback );
 
-				if ( false === stripos( $body, '$atts[' ) ) {
+				$method = self::get_method_from_callback( $callback );
+
+				$pattern = '/function\s+' . $method . '\s*\(\s*([^)]+?)\s*\)/i';
+				preg_match_all( $pattern, $body, $matches );
+
+				if ( empty( $matches ) || ! isset( $matches[1][0] ) ) {
+					// Shortcode has no attributes
+					continue;
+				}
+
+				$attribute_name = $matches[1][0];
+
+				if ( false === stripos( $body, $attribute_name . '[' ) ) {
 					// Shortcode callback must use an $atts parameter
 					continue;
 				}
@@ -139,5 +151,22 @@ class Shortcodes extends Abstract_Element {
 		$body   = implode( "", array_slice( $source, $start_line, $length ) );
 
 		return $body;
+	}
+
+	protected static function get_method_from_callback( $callback ) {
+		if ( false !== strpos( $callback, '::' ) ) {
+			$parts = explode( '::', $callback );
+
+			return $parts[1];
+		}
+
+		if ( false !== strpos( $callback, 'array' ) ) {
+			$callback = str_replace( 'array', '', $callback );
+			$parts = explode( ',', $callback );
+
+			return $parts[1];
+		}
+
+		return $callback;
 	}
 }
