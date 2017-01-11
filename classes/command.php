@@ -313,7 +313,7 @@ class Command extends \WP_CLI_Command {
 				return false;
 			}
 
-			return true;
+			return $answer;
 		}
 	}
 

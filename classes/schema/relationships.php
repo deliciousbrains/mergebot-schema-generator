@@ -99,6 +99,7 @@ class Relationships extends Abstract_Element {
 		$meta_tables   = self::get_meta_tables();
 
 		$entities = self::get_meta_data( $meta_tables );
+		$exit     = false;
 
 		foreach ( $elements as $entity => $data ) {
 			foreach ( $data as $key => $relationship ) {
@@ -115,14 +116,25 @@ class Relationships extends Abstract_Element {
 				fwrite( STDOUT, "\n" . $_entity . ' with key: ' . $_key . ' and value: ' . $_value . "\n" );
 
 				if ( false === $schema->from_scratch && ( bool) ( $existing_data = self::meta_exists_in_schema( $schema, $entity, $key ) ) ) {
-					// Relationship already defined in schema, ask to overwrite
-					$result = Command::overwrite_property();
+					$result = true;
+					if ( ! $exit ) {
+						// Relationship already defined in schema, ask to overwrite
+						$result = Command::overwrite_property();
+					}
 
-					if ( ! $result ) {
+					if ( $exit || false !== $result ) {
 						$relationships[ $entity ][] = $existing_data;
+
+						if ( ! $exit && 'exit' === $result ) {
+							$exit = true;
+						}
 
 						continue;
 					}
+				}
+
+				if ( $exit ) {
+					continue;
 				}
 
 				$result = Command::meta();
