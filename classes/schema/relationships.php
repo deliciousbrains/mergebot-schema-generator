@@ -29,13 +29,13 @@ class Relationships extends Abstract_Element {
 			$content = strtolower( file_get_contents( $file->getRealPath() ) );
 
 			foreach ( $entities as $entity => $data ) {
-				foreach ( $data['functions'] as $function ) {
+				foreach ( $data['functions'] as $function_regex => $function ) {
 					if ( false === strpos( $content, $function ) ) {
 						continue;
 					}
 
-					$pattern = '/' . $function . '\((.*)(?=[\n|\r]*\)[\s]*;)/i';
-					preg_match_all( $pattern, $content, $matches );
+					$pattern = '/' . $function_regex . '(.*)(?=[\n|\r]*\)[\s]*;)/i';
+					preg_match_all( $pattern, $content , $matches );
 
 					if ( ! $matches || ! isset( $matches[1] ) || ! is_array( $matches[1] ) || empty( $matches[1][0] ) ) {
 						continue;
@@ -92,13 +92,13 @@ class Relationships extends Abstract_Element {
 		}
 
 		return false;
- 	}
+	}
 
 	protected static function ask_elements( Schema $schema, $elements, $progress_bar ) {
 		$relationships = array();
-		$meta_tables = self::get_meta_tables();
+		$meta_tables   = self::get_meta_tables();
 
-		$entities       = self::get_meta_data( $meta_tables );
+		$entities = self::get_meta_data( $meta_tables );
 
 		foreach ( $elements as $entity => $data ) {
 			foreach ( $data as $key => $relationship ) {
@@ -106,7 +106,7 @@ class Relationships extends Abstract_Element {
 
 				$progress_bar->tick();
 				// ask if we are interested in the key/value
-				Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%G' . 'File' . ':%n' . $relationship['file'] ) );
+				Mergebot_Schema_Generator::log( \WP_CLI::colorize( "\n" . '%G' . 'File' . ':%n' . $relationship['file'] ) );
 
 				$_entity = \WP_CLI::colorize( '%G' . $entity . '%n' );
 				$_key    = \WP_CLI::colorize( '%B' . $key . '%n' );
@@ -153,8 +153,8 @@ class Relationships extends Abstract_Element {
 				$target_table = Command::meta_table();
 				if ( $target_table ) {
 					$relationship_data = array(
-						$entities[$entity]['columns']['key']   => $key,
-						$entities[$entity]['columns']['value'] => $target_table,
+						$entities[ $entity ]['columns']['key']   => $key,
+						$entities[ $entity ]['columns']['value'] => $target_table,
 					);
 
 					$relationships[ $entity ][] = $relationship_data;
@@ -162,10 +162,10 @@ class Relationships extends Abstract_Element {
 					continue;
 				}
 
-				$target_table = Command::meta_table( false );
+				$target_table      = Command::meta_table( false );
 				$relationship_data = array(
-					$entities[$entity]['columns']['key']   => $key,
-					$entities[$entity]['columns']['value'] => $target_table,
+					$entities[ $entity ]['columns']['key']   => $key,
+					$entities[ $entity ]['columns']['value'] => $target_table,
 				);
 
 				$serialized_data = array(
@@ -257,20 +257,19 @@ class Relationships extends Abstract_Element {
 	 * @return array
 	 */
 	protected static function get_meta_functions( $entity ) {
-		$suffix    = ( 'options' === $entity ) ? 'option' : $entity . '_meta';
 		$functions = array();
+		if ( 'options' === $entity ) {
+			$functions['add_option\s*\(']    = 'add_option';
+			$functions['update_option\s*\('] = 'update_option';
 
-		$function = 'add_' . $suffix;
-		if ( ! function_exists( $function ) ) {
-			$function = 'add_metadata(' . $entity;
+			return $functions;
 		}
-		$functions[] = $function;
 
-		$function = 'update_' . $suffix;
-		if ( ! function_exists( $function ) ) {
-			$function = 'update_metadata(' . $entity;
-		}
-		$functions[] = $function;
+		$suffix = $entity . '_meta';
+
+		$functions[ 'add_' . $suffix . '\(' ]                                         = 'add_' . $suffix;
+		$functions[ 'update_' . $suffix . '\(' ]                                      = 'update_' . $suffix;
+		$functions[ 'update_metadata\s*\(\s*(?:\'|")' . $entity . '(?:\'|")\s*,\s+' ] = 'update_metadata';
 
 		return $functions;
 	}
