@@ -81,7 +81,7 @@ class Shortcodes extends Abstract_Element {
 					$result = Command::overwrite_property();
 				}
 
-				if ( $exit || false !== $result ) {
+				if ( $exit || false === $result || 'exit' === $result ) {
 					$shortcodes[ $tag ] = $schema->shortcodes[ $tag ];
 
 					if ( ! $exit && 'exit' === $result ) {
