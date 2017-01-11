@@ -134,10 +134,16 @@ class Command extends \WP_CLI_Command {
 	 *
 	 * @return bool|string
 	 */
-	public static function shortcode( $tag, $assoc_args = array() ) {
+	public static function shortcode( $tag, $attribute_name, $attributes, $assoc_args = array() ) {
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 			$tag = \WP_CLI::colorize( '%B[' . $tag . ']%n' );
-			fwrite( STDOUT, 'Does the shortcode ' . $tag . " contain ID attributes?\n[attributes/n] Comma separated list of attributes. [table]:[attribute] format for non-post tables\n" );
+
+			$attributes = array_map( function ( $attr ) use ( $attribute_name ) {
+				return $attribute_name . "[" . $attr . "]";
+			}, $attributes );
+
+			$atts = implode( ', ' , $attributes );
+			fwrite( STDOUT, 'Does the shortcode ' . $tag . " contain ID attributes?\nUsed Attributes: {$atts}\n[attributes/n] Comma separated list of attributes. [table]:[attribute] format for non-post tables\n" );
 
 			$answer = trim( fgets( STDIN ) );
 

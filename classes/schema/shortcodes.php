@@ -48,12 +48,18 @@ class Shortcodes extends Abstract_Element {
 
 				$attribute_name = $matches[1][0];
 
-				if ( false === stripos( $body, $attribute_name . '[' ) ) {
+				preg_match_all( '/\$atts\[\s*(.*?)\s*\]/', $body, $matches );
+				if ( ! $matches || ! isset( $matches[1] ) || empty( $matches[1] )  ) {
 					// Shortcode callback must use an $atts parameter
 					continue;
 				}
 
-				$shortcodes[ $tag ] = array( 'body' => $body, 'file' => $file->getRealPath() );
+				$shortcodes[ $tag ] = array(
+					'body'           => $body,
+					'file'           => $file->getRealPath(),
+					'attribute_name' => $attribute_name,
+					'attributes'     => array_unique( $matches[1] ),
+			);
 			}
 		}
 
@@ -82,7 +88,7 @@ class Shortcodes extends Abstract_Element {
 			Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%B' . 'File' . ':%n' . $shortcode['file'] ) );
 			Mergebot_Schema_Generator::log_code( $body );
 
-			$result = Command::shortcode( $tag );
+			$result = Command::shortcode( $tag, $shortcode['attribute_name'], $shortcode['attributes'] );
 
 			if ( 'exit' === $result ) {
 				return $shortcodes;
