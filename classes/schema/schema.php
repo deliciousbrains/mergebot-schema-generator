@@ -64,6 +64,29 @@ class Schema {
 	 */
 	public $relationships;
 
+	/**
+	 * @var array
+	 */
+	public $content;
+
+	/**
+	 * @var array
+	 */
+	public $table_prefixes;
+
+	/**
+	 * @var array
+	 */
+	public $ignore;
+
+	/**
+	 * @var array
+	 */
+	public $file_types;
+
+	/**
+	 * @var bool
+	 */
 	public $from_scratch = false;
 
 	/**
@@ -130,10 +153,14 @@ class Schema {
 	}
 
 	protected function init_properties( $data ) {
-		$this->primary_keys  = isset( $data->primaryKeys ) ? (array) $data->primaryKeys : array();
-		$this->foreign_keys  = isset( $data->foreignKeys ) ? (array) $data->foreignKeys : array();
-		$this->shortcodes    = isset( $data->shortcodes ) ? (array) $data->shortcodes : array();
-		$this->relationships = isset( $data->relationships ) ? (array) $data->relationships : array();
+		$this->primary_keys   = isset( $data->primaryKeys ) ? (array) $data->primaryKeys : array();
+		$this->foreign_keys   = isset( $data->foreignKeys ) ? (array) $data->foreignKeys : array();
+		$this->shortcodes     = isset( $data->shortcodes ) ? (array) $data->shortcodes : array();
+		$this->relationships  = isset( $data->relationships ) ? (array) $data->relationships : array();
+		$this->content        = isset( $data->content ) ? (array) $data->content : array();
+		$this->table_prefixes = isset( $data->tablePrefixes ) ? (array) $data->tablePrefixes : array();
+		$this->ignore         = isset( $data->ignore ) ? (array) $data->ignore : array();
+		$this->file_types     = isset( $data->files ) ? (array) $data->files : array();
 	}
 
 	/**
@@ -216,6 +243,10 @@ class Schema {
 			'foreignKeys'   => $this->foreign_keys,
 			'shortcodes'    => $this->shortcodes,
 			'relationships' => $this->relationships,
+			'content'       => $this->content,
+			'tablePrefixes' => $this->table_prefixes,
+			'ignore'        => $this->ignore,
+			'files'         => $this->file_types,
 		);
 
 		foreach ( $file_contents as $key => $value ) {
