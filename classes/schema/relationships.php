@@ -11,6 +11,8 @@ namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 
 use DeliciousBrains\MergebotSchemaGenerator\Command;
 use DeliciousBrains\MergebotSchemaGenerator\Mergebot_Schema_Generator;
+use PhpParser\Error;
+use PhpParser\ParserFactory;
 
 class Relationships extends Abstract_Element {
 
@@ -35,22 +37,27 @@ class Relationships extends Abstract_Element {
 					}
 
 					$pattern = '/' . $function_regex . '(.*)(?=[\n|\r]*\)[\s]*;)/i';
-					preg_match_all( $pattern, $content , $matches );
+					preg_match_all( $pattern, $content, $matches );
 
 					if ( ! $matches || ! isset( $matches[1] ) || ! is_array( $matches[1] ) || empty( $matches[1][0] ) ) {
 						continue;
 					}
 
-					foreach ( $matches[1] as $arguments ) {
-						$args = explode( ',', $arguments );
+					$key_pos   = self::get_key_pos( $entity, $function );
+					$value_pos = self::get_value_pos( $entity, $function );
 
-						$key_pos   = 'options' === $entity ? 0 : 1;
-						$value_pos = 'options' === $entity ? 1 : 2;
+					foreach ( $matches[1] as $arguments ) {
+						$args = self::get_function_args_from_string( $arguments );
+
 						// get meta key and value from code
-						$key = str_replace( array( '"', "'" ), '', trim( $args[ $key_pos ] ) );
+						$key = trim( $args[ $key_pos ] );
+						$key = ltrim( $key, '\'"' );
+						$key = rtrim( $key, '\'"' );
+
 						if ( ! isset( $args[ $value_pos ] ) ) {
-							error_log( 'Could not get arguments for ' . $args );
+							\WP_CLI::error( 'Could not get arguments for ' . $arguments );
 						}
+
 						$value = trim( $args[ $value_pos ] );
 
 						if ( isset( $processed_meta[ $entity ][ $key ] ) ) {
@@ -92,6 +99,55 @@ class Relationships extends Abstract_Element {
 		}
 
 		return false;
+	}
+
+	protected static function get_key_pos( $entity, $function ) {
+		if ( 'options' === $entity ) {
+			return 0;
+		}
+
+		if ( false !== strpos( $function, '_metadata' ) ) {
+			return 2;
+		}
+
+		return 1;
+	}
+
+	protected static function get_value_pos( $entity, $function ) {
+		if ( 'options' === $entity ) {
+			return 1;
+		}
+
+		if ( false !== strpos( $function, '_metadata' ) ) {
+			return 3;
+		}
+
+		return 2;
+	}
+
+	/**
+	 * Get the function arguments by spoofing the PHP code and parsing it.
+	 * Regex and explode too unreliable.
+	 *
+	 * @param string $string
+	 *
+	 * @return array
+	 */
+	protected static function get_function_args_from_string( $string ) {
+		$code   = '<?php test( ' . $string . ' );';
+		$parser = ( new ParserFactory )->create( ParserFactory::PREFER_PHP7 );
+
+		try {
+			$statements = $parser->parse( $code );
+
+			$printer = new Php_Parser_Printer();
+
+			$args = $printer->get_args_from_node( $statements[0]->args );
+		} catch ( Error $e ) {
+			$args = explode( ',', $string );
+		}
+
+		return $args;
 	}
 
 	protected static function ask_elements( Schema $schema, $elements, $progress_bar ) {
@@ -336,7 +392,7 @@ class Relationships extends Abstract_Element {
 	 * @return bool
 	 */
 	protected static function is_ignored_value( $value, $ignore_values ) {
-		if ( is_string( $value ) && '$' !== substr( $value, 0, 1 ) ) {
+		if ( is_string( $value ) && false === strpos( $value, '$' ) ) {
 			return true;
 		}
 
