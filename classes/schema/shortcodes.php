@@ -159,6 +159,13 @@ class Shortcodes extends Abstract_Element {
 		return $body;
 	}
 
+	/**
+	 * Get method name from a callback
+	 *
+	 * @param string $callback
+	 *
+	 * @return string
+	 */
 	protected static function get_method_from_callback( $callback ) {
 		if ( false !== strpos( $callback, '::' ) ) {
 			$parts = explode( '::', $callback );
@@ -167,10 +174,13 @@ class Shortcodes extends Abstract_Element {
 		}
 
 		if ( false !== strpos( $callback, 'array' ) ) {
-			$callback = str_replace( 'array', '', $callback );
-			$parts = explode( ',', $callback );
+			preg_match_all( '/array\s*\(\s*(.*)\)/', $callback, $matches );
+			if ( $matches && isset( $matches[1] ) && ! empty( $matches[1] ) ) {
+				$parts = explode( ',', $matches[1][0] );
+			}
 
-			return $parts[1];
+
+			return trim(str_replace( array( '\'', '"' ) , '', $parts[1] ) );
 		}
 
 		return $callback;
