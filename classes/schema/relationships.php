@@ -11,8 +11,6 @@ namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 
 use DeliciousBrains\MergebotSchemaGenerator\Command;
 use DeliciousBrains\MergebotSchemaGenerator\Mergebot_Schema_Generator;
-use PhpParser\Error;
-use PhpParser\ParserFactory;
 
 class Relationships extends Abstract_Element {
 
@@ -117,31 +115,6 @@ class Relationships extends Abstract_Element {
 		}
 
 		return 2;
-	}
-
-	/**
-	 * Get the function arguments by spoofing the PHP code and parsing it.
-	 * Regex and explode too unreliable.
-	 *
-	 * @param string $string
-	 *
-	 * @return array
-	 */
-	protected static function get_function_args_from_string( $string ) {
-		$code   = '<?php test( ' . $string . ' );';
-		$parser = ( new ParserFactory )->create( ParserFactory::PREFER_PHP7 );
-
-		try {
-			$statements = $parser->parse( $code );
-
-			$printer = new Php_Parser_Printer();
-
-			$args = $printer->get_args_from_node( $statements[0]->args );
-		} catch ( Error $e ) {
-			$args = explode( ',', $string );
-		}
-
-		return $args;
 	}
 
 	protected static function ask_elements( Schema $schema, $elements, $progress_bar ) {

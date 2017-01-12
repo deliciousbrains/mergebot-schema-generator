@@ -46,19 +46,25 @@ class Shortcodes extends Abstract_Element {
 					continue;
 				}
 
-				$attribute_name = $matches[1][0];
+				$callback_args = self::get_function_args_from_string( $matches[1][0] );
+				$attribute_name = str_replace( '$', '\$', $callback_args[0] );
 
-				preg_match_all( '/\$atts\[\s*(.*?)\s*\]/', $body, $matches );
+				preg_match_all( '/(extract\s*\()|' . $attribute_name . '\[\s*(.*?)\s*\]/', $body, $matches );
 				if ( ! $matches || ! isset( $matches[1] ) || empty( $matches[1] )  ) {
-					// Shortcode callback must use an $atts parameter
+					// Shortcode callback must use an $atts parameter or use the extract() method
 					continue;
+				}
+
+				$attributes = array();
+				if ( 'extract(' !== str_replace( ' ', '', $matches[1][0] ) ) {
+					$attributes = array_unique( $matches[1] );
 				}
 
 				$shortcodes[ $tag ] = array(
 					'body'           => $body,
 					'file'           => $file->getRealPath(),
 					'attribute_name' => $attribute_name,
-					'attributes'     => array_unique( $matches[1] ),
+					'attributes'     => $attributes,
 			);
 			}
 		}
