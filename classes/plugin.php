@@ -142,6 +142,8 @@ class Mergebot_Schema_Generator {
 
 		foreach ( $tables as $table ) {
 			$table = str_ireplace( array( '{', '}', '`', '([^', '$wpdb->prefix', '$wpdb->', $wpdb->prefix ), '', $table );
+			$table = ltrim( $table, '\'"' );
+			$table = rtrim( $table, '\'"' );
 
 			if ( in_array( $table, $excluded ) ) {
 				continue;
