@@ -186,20 +186,14 @@ class Shortcodes extends Abstract_Element {
 	 * @return string
 	 */
 	protected static function get_method_from_callback( $callback ) {
+		if ( is_array( $callback ) ) {
+			return $callback[1];
+		}
+
 		if ( false !== strpos( $callback, '::' ) ) {
 			$parts = explode( '::', $callback );
 
 			return $parts[1];
-		}
-
-		if ( false !== strpos( $callback, 'array' ) ) {
-			preg_match_all( '/array\s*\(\s*(.*)\)/', $callback, $matches );
-			if ( $matches && isset( $matches[1] ) && ! empty( $matches[1] ) ) {
-				$parts = explode( ',', $matches[1][0] );
-			}
-
-
-			return trim(str_replace( array( '\'', '"' ) , '', $parts[1] ) );
 		}
 
 		return $callback;
