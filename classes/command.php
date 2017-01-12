@@ -136,19 +136,18 @@ class Command extends \WP_CLI_Command {
 	 * eg. comments:id,comments:ids
 	 *
 	 * @param string $tag
+	 * @param array  $attributes
 	 * @param array  $assoc_args
 	 *
 	 * @return bool|string
 	 */
-	public static function shortcode( $tag, $attribute_name, $attributes, $assoc_args = array() ) {
+	public static function shortcode( $tag, $attributes, $assoc_args = array() ) {
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 			$tag = \WP_CLI::colorize( '%B[' . $tag . ']%n' );
 
-			$attributes = array_map( function ( $attr ) use ( $attribute_name ) {
-				return $attribute_name . "[" . $attr . "]";
-			}, $attributes );
 
 			$atts = \WP_CLI::colorize( '%B' . implode( ' ', $attributes ) . '%n' );
+
 			fwrite( STDOUT, 'Does the shortcode ' . $tag . " contain ID attributes? {$atts}\n[attributes/n] Comma separated list of attributes. [table]:[attribute] format for non-post tables\n" );
 
 			$answer = trim( fgets( STDIN ) );

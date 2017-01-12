@@ -57,13 +57,12 @@ class Shortcodes extends Abstract_Element {
 
 				$attributes = array();
 				if ( 'extract(' !== str_replace( ' ', '', $matches[1][0] ) ) {
-					$attributes = array_unique( $matches[1] );
+					$attributes = array_unique( $matches[0] );
 				}
 
 				$shortcodes[ $tag ] = array(
 					'body'           => $body,
 					'file'           => $file->getRealPath(),
-					'attribute_name' => $attribute_name,
 					'attributes'     => $attributes,
 			);
 			}
@@ -106,7 +105,7 @@ class Shortcodes extends Abstract_Element {
 			Mergebot_Schema_Generator::log( $shortcode['file'] );
 			Mergebot_Schema_Generator::log_code( $body );
 
-			$result = Command::shortcode( $tag, $shortcode['attribute_name'], $shortcode['attributes'] );
+			$result = Command::shortcode( $tag, $shortcode['attributes'] );
 
 			if ( 'exit' === $result ) {
 				$exit = true;
