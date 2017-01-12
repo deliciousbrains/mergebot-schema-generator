@@ -173,7 +173,7 @@ class Relationships extends Abstract_Element {
 					}
 
 					if ( $exit || false === $result || 'exit' === $result ) {
-						$relationships[ $entity ][] = $existing_data;
+						$relationships = self::save_relationship( $relationships, $entity, $existing_data );
 
 						if ( ! $exit && 'exit' === $result ) {
 							$exit = true;
@@ -222,7 +222,7 @@ class Relationships extends Abstract_Element {
 						$entities[ $entity ]['columns']['value'] => $target_table,
 					);
 
-					$relationships[ $entity ][] = $relationship_data;
+					$relationships = self::save_relationship( $relationships, $entity, $relationship_data );
 
 					continue;
 				}
@@ -264,9 +264,28 @@ class Relationships extends Abstract_Element {
 				$relationship_data['serialized'] = $serialized_data;
 
 				// If so, record the response in the format for the json
-				$relationships[ $entity ][] = $relationship_data;
+				$relationships = self::save_relationship( $relationships, $entity, $relationship_data );
 			}
 		}
+
+		return $relationships;
+	}
+
+	protected static function save_relationship( $relationships, $entity, $data ) {
+		if ( ! isset( $relationships[ $entity ] ) ) {
+			$relationships[ $entity ][] = $data;
+
+			return $relationships;
+		}
+
+		$json_data = json_encode( $data );
+		foreach ( $relationships[ $entity ] as $element ) {
+			if ( json_encode( $element ) === $json_data ) {
+				// Relationship element exists already in Schema, don't duplicate.
+				return $relationships;
+			}
+		}
+
 
 		return $relationships;
 	}
