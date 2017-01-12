@@ -166,7 +166,12 @@ class Mergebot_Schema_Generator {
 	 */
 	public function get_tables_by_prefix( $prefix ) {
 		global $wpdb;
-		$sql = $wpdb->prepare( 'SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s', DB_NAME, '%' . $prefix . '%' );
+
+		if ( false === strpos( $prefix, $wpdb->prefix ) ) {
+			$prefix = $wpdb->prefix . $prefix;
+		}
+
+		$sql = $wpdb->prepare( 'SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s', DB_NAME, $prefix . '%' );
 
 		$tables = $wpdb->get_col( $sql );
 
