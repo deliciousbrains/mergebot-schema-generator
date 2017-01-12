@@ -286,6 +286,7 @@ class Relationships extends Abstract_Element {
 			}
 		}
 
+		$relationships[ $entity ][] = $data;
 
 		return $relationships;
 	}
