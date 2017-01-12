@@ -90,6 +90,8 @@ class Relationships extends Abstract_Element {
 
 		foreach ( $schema->relationships[ $entity ] as $data ) {
 			foreach ( $data as $meta_key => $meta_value ) {
+				// Translate key from saved data
+				$key = self::get_key_translation( $schema->filename( false ),$entity, $key );
 				if ( $key === $meta_value ) {
 					return $data;
 				} else {
@@ -203,6 +205,9 @@ class Relationships extends Abstract_Element {
 					// Meta key contains a variable, need to ask for the key
 					$new_key = Command::meta_key( $key );
 					if ( $new_key ) {
+						// Store original key and new key
+						self::write_key_translation( $schema->filename( false), $entity, $entities[ $entity ]['columns']['key'] , $key, $new_key );
+
 						$key = $new_key;
 					}
 				}
@@ -416,5 +421,75 @@ class Relationships extends Abstract_Element {
 			'$counts',
 			'$count',
 		);
+	}
+
+	/**
+	 * @return string
+	 */
+	protected static function get_key_translation_file() {
+		return Mergebot_Schema_Generator()->schema_path . '/relationship-key-translation.json';
+	}
+
+	/**
+	 * @return array|mixed|object
+	 */
+	protected static function read_key_translation_file() {
+		if ( ! file_exists( self::get_key_translation_file() ) ) {
+			self::write_key_translation_file();
+		}
+
+		$contents = file_get_contents( self::get_key_translation_file() );
+		if ( empty( $contents ) ) {
+			return array();
+		}
+
+		return json_decode( $contents, true );
+	}
+
+	/**
+	 * @param $filename
+	 * @param $entity
+	 * @param $old_key
+	 *
+	 * @return mixed
+	 */
+	protected static function get_key_translation( $filename, $entity, $old_key ) {
+		$content = self::read_key_translation_file();
+
+		$columns = self::get_meta_columns( $entity );
+
+		if ( isset( $content[ $filename ][ $entity ][ $columns['key'] ][ $old_key ] ) ) {
+			return $content[ $filename ][ $entity ][ $columns['key'] ][ $old_key ];
+		}
+
+		return $old_key;
+	}
+
+	/**
+	 * @param array $content
+	 *
+	 * @return int
+	 */
+	protected static function write_key_translation_file( $content = array() ) {
+		$content = json_encode( $content, JSON_PRETTY_PRINT );
+
+		return file_put_contents( self::get_key_translation_file(), $content );
+	}
+
+	/**
+	 * @param $filename
+	 * @param $entity
+	 * @param $key_name
+	 * @param $old_key
+	 * @param $new_key
+	 *
+	 * @return int
+	 */
+	protected static function write_key_translation( $filename, $entity, $key_name, $old_key, $new_key ) {
+		$content = self::read_key_translation_file();
+
+		$content[$filename][$entity][$key_name][$old_key] = $new_key;
+
+		return self::write_key_translation_file( $content );
 	}
 }

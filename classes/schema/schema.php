@@ -112,9 +112,11 @@ class Schema {
 	/**
 	 * Get schema filename
 	 *
+	 * @param bool $ext
+	 *
 	 * @return string
 	 */
-	public function filename() {
+	public function filename( $ext = true ) {
 		$filename = $this->slug;
 		if ( 'plugin' === $this->type ) {
 			$filename = Installer::get_plugin_basename( $this->slug );
@@ -122,7 +124,12 @@ class Schema {
 			$filename = str_replace( '.php', '', $filename );
 		}
 
-		return $filename . '-' . $this->version . '.json';
+		$filename = $filename . '-' . $this->version;
+		if ( $ext ) {
+			$filename .= '.json';
+		}
+
+		return $filename;
 	}
 
 	/**
