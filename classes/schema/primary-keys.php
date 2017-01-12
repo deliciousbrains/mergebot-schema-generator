@@ -9,17 +9,17 @@
 
 namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 
-use DeliciousBrains\MergebotSchemaGenerator\Command;
 use DeliciousBrains\MergebotSchemaGenerator\Mergebot_Schema_Generator;
 
-class Primary_Keys {
+class Primary_Keys extends Abstract_Element {
 
-	public static function get_elements( $tables ) {
+	public static function get_pk_elements( $tables ) {
 		Mergebot_Schema_Generator::log( 'Primary Keys' , '%R');
 		$primary_keys = self::get_primary_keys( $tables );
 
 		return $primary_keys;
 	}
+
 	/**
 	 * Get the Primary keys for an array of tables
 	 * 
@@ -53,5 +53,42 @@ class Primary_Keys {
 	 */
 	public static function is_pk_column( $column ) {
 		return 'auto_increment' === $column->Extra;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected static function get_custom_prefix_file() {
+		return dirname( Mergebot_Schema_Generator()->file_path ) . '/data/table-custom-prefix.json';
+	}
+
+	/**
+	 * @param string $filename
+	 *
+	 * @return string|bool
+	 */
+	public static function get_custom_table_prefix( $filename ) {
+		$content = self::read_data_file( self::get_custom_prefix_file() );
+
+		if ( isset( $content[ $filename ] ) ) {
+			return $content[ $filename ];
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param string $filename
+	 * @param string $prefix
+	 *
+	 * @return int
+	 */
+	public static function write_custom_table_prefix( $filename, $prefix ) {
+		$file    = self::get_custom_prefix_file();
+		$content = self::read_data_file( $file );
+
+		$content[ $filename ] = $prefix;
+
+		return self::write_data_file( $file, $content );
 	}
 }

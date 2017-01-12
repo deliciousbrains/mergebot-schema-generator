@@ -64,4 +64,33 @@ abstract class Abstract_Element {
 
 		return $args;
 	}
+	/**
+	 * @return array|mixed|object
+	 */
+	protected static function read_data_file( $filename ) {
+		if ( ! file_exists( $filename ) ) {
+			self::write_data_file( $filename );
+
+			return array();
+		}
+
+		$contents = file_get_contents( $filename );
+		if ( empty( $contents ) ) {
+			return array();
+		}
+
+		return json_decode( $contents, true );
+	}
+
+	/**
+	 * @param string $filename
+	 * @param array  $content
+	 *
+	 * @return int
+	 */
+	protected static function write_data_file( $filename, $content = array() ) {
+		$content = json_encode( $content, JSON_PRETTY_PRINT );
+
+		return file_put_contents( $filename, $content );
+	}
 }

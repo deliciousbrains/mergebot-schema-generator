@@ -424,23 +424,6 @@ class Relationships extends Abstract_Element {
 	}
 
 	/**
-	 * @return array|mixed|object
-	 */
-	protected static function read_key_translation_file() {
-		$file = self::get_key_translation_file();
-		if ( ! file_exists( $file ) ) {
-			self::write_key_translation_file();
-		}
-
-		$contents = file_get_contents( $file );
-		if ( empty( $contents ) ) {
-			return array();
-		}
-
-		return json_decode( $contents, true );
-	}
-
-	/**
 	 * @param $filename
 	 * @param $entity
 	 * @param $old_key
@@ -448,7 +431,7 @@ class Relationships extends Abstract_Element {
 	 * @return mixed
 	 */
 	protected static function get_key_translation( $filename, $entity, $old_key ) {
-		$content = self::read_key_translation_file();
+		$content = self::read_data_file( self::get_key_translation_file() );
 
 		$columns = self::get_meta_columns( $entity );
 
@@ -457,17 +440,6 @@ class Relationships extends Abstract_Element {
 		}
 
 		return $old_key;
-	}
-
-	/**
-	 * @param array $content
-	 *
-	 * @return int
-	 */
-	protected static function write_key_translation_file( $content = array() ) {
-		$content = json_encode( $content, JSON_PRETTY_PRINT );
-
-		return file_put_contents( self::get_key_translation_file(), $content );
 	}
 
 	/**
@@ -480,10 +452,11 @@ class Relationships extends Abstract_Element {
 	 * @return int
 	 */
 	protected static function write_key_translation( $filename, $entity, $key_name, $old_key, $new_key ) {
-		$content = self::read_key_translation_file();
+		$file = self::get_key_translation_file();
+		$content = self::read_data_file( $file );
 
 		$content[$filename][$entity][$key_name][$old_key] = $new_key;
 
-		return self::write_key_translation_file( $content );
+		return self::write_data_file( $file, $content );
 	}
 }

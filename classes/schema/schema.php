@@ -226,7 +226,7 @@ class Schema {
 			return array();
 		}
 
-		$primary_keys = Primary_Keys::get_elements( $this->table_columns );
+		$primary_keys = Primary_Keys::get_pk_elements( $this->table_columns );
 		if ( ! empty( $primary_keys ) ) {
 			return $primary_keys;
 		}
@@ -388,20 +388,41 @@ class Schema {
 	 * @return array|bool
 	 */
 	protected function get_prefixed_tables() {
-		// Ask for a prefix
-		$result = Command::table_prefix();
+		$prefix = $this->get_custom_table_prefix();
 
-		if ( ! $result ) {
+		if ( false === $prefix ) {
 			// TODO handle warning - try again with a prefix?
 			return false;
 		}
 
-		$tables = Mergebot_Schema_Generator()->get_tables_by_prefix( $result );
+		$tables = Mergebot_Schema_Generator()->get_tables_by_prefix( $prefix );
 		if ( empty( $tables ) ) {
 			// TODO handle warning - try again with a prefix?
 			return false;
 		}
 
 		return $tables;
+	}
+
+	protected function get_custom_table_prefix() {
+		$filename = $this->filename( false );
+
+		// Check if prefix is saved
+		$saved_prefix = Primary_Keys::get_custom_table_prefix($filename  ) ;
+		if ( $saved_prefix ) {
+			return $saved_prefix;
+		}
+
+		// Ask for a prefix
+		$result = Command::table_prefix();
+
+		if ( ! $result ) {
+			return false;
+		}
+
+		// Save custom prefix
+		Primary_Keys::write_custom_table_prefix( $filename, $result );
+
+		return $result;
 	}
 }
