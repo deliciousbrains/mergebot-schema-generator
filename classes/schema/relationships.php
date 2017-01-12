@@ -55,7 +55,7 @@ class Relationships extends Abstract_Element {
 						$key = rtrim( $key, '\'"' );
 
 						if ( ! isset( $args[ $value_pos ] ) ) {
-							\WP_CLI::error( 'Could not get arguments for ' . $arguments );
+							\WP_CLI::error( 'Could not get meta value from ' . $arguments );
 						}
 
 						$value = trim( $args[ $value_pos ] );
@@ -106,20 +106,12 @@ class Relationships extends Abstract_Element {
 			return 0;
 		}
 
-		if ( false !== strpos( $function, '_metadata' ) ) {
-			return 2;
-		}
-
 		return 1;
 	}
 
 	protected static function get_value_pos( $entity, $function ) {
 		if ( 'options' === $entity ) {
 			return 1;
-		}
-
-		if ( false !== strpos( $function, '_metadata' ) ) {
-			return 3;
 		}
 
 		return 2;
