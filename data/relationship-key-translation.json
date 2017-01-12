@@ -10,5 +10,12 @@
                 "wpseo_meta::$meta_prefix . 'primary_' . $this->taxonomy_name": "_yoast_wpseo_primary_%"
             }
         }
+    },
+    "gravityforms-gravityforms-2.1.1": {
+        "options": {
+            "option_name": {
+                "{$taxonomy}_children": "(.*)_children"
+            }
+        }
     }
 }
