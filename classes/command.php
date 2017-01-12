@@ -70,6 +70,11 @@ class Command extends \WP_CLI_Command {
 			do_action( 'admin_menu' );
 		}
 
+		if ( 'plugin' === $this->type && 'latest' === $version ) {
+			// Get installed version if we don't know it.
+			$version = Installer::get_installed_plugin_version( Installer::get_plugin_basename( $slug ) );
+		}
+
 		// Generate the schema.
 		$generator = new Generator( $slug, $version, $this->type );
 		$generator->generate( $create_from_scratch );
@@ -117,6 +122,7 @@ class Command extends \WP_CLI_Command {
 
 		$latest_version = Installer::get_latest_plugin_version( $slug );
 		if ( false === $latest_version ) {
+			// Premium plugin, use plugin header version
 			$latest_version = 'latest';
 		}
 
