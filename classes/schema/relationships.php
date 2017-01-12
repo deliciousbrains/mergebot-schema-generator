@@ -446,18 +446,19 @@ class Relationships extends Abstract_Element {
 	 * @return string
 	 */
 	protected static function get_key_translation_file() {
-		return Mergebot_Schema_Generator()->schema_path . '/relationship-key-translation.json';
+		return dirname( Mergebot_Schema_Generator()->file_path ) . '/data/relationship-key-translation.json';
 	}
 
 	/**
 	 * @return array|mixed|object
 	 */
 	protected static function read_key_translation_file() {
-		if ( ! file_exists( self::get_key_translation_file() ) ) {
+		$file = self::get_key_translation_file();
+		if ( ! file_exists( $file ) ) {
 			self::write_key_translation_file();
 		}
 
-		$contents = file_get_contents( self::get_key_translation_file() );
+		$contents = file_get_contents( $file );
 		if ( empty( $contents ) ) {
 			return array();
 		}
