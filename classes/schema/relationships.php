@@ -157,13 +157,13 @@ class Relationships extends Abstract_Element {
 
 				$progress_bar->tick();
 				// ask if we are interested in the key/value
-				Mergebot_Schema_Generator::log( \WP_CLI::colorize( "\n" . '%G' . 'File' . ':%n' . $relationship['file'] ) );
+				Mergebot_Schema_Generator::log( "\n" . $relationship['file'] );
 
 				$_entity = \WP_CLI::colorize( '%G' . $entity . '%n' );
 				$_key    = \WP_CLI::colorize( '%B' . $key . '%n' );
 				$_value  = \WP_CLI::colorize( '%R' . $value . '%n' );
 
-				fwrite( STDOUT, "\n" . $_entity . ' with key: ' . $_key . ' and value: ' . $_value . "\n" );
+				fwrite( STDOUT, $_entity . ' with key: ' . $_key . ' and value: ' . $_value . "\n" );
 
 				if ( false === $schema->from_scratch && ( bool) ( $existing_data = self::meta_exists_in_schema( $schema, $entity, $key ) ) ) {
 					$result = true;

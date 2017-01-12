@@ -97,7 +97,7 @@ class Shortcodes extends Abstract_Element {
 			}
 
 			$body = $shortcode['body'];
-			Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%B' . 'File' . ':%n' . $shortcode['file'] ) );
+			Mergebot_Schema_Generator::log( $shortcode['file'] );
 			Mergebot_Schema_Generator::log_code( $body );
 
 			$result = Command::shortcode( $tag, $shortcode['attribute_name'], $shortcode['attributes'] );

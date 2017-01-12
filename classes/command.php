@@ -142,8 +142,8 @@ class Command extends \WP_CLI_Command {
 				return $attribute_name . "[" . $attr . "]";
 			}, $attributes );
 
-			$atts = implode( ', ' , $attributes );
-			fwrite( STDOUT, 'Does the shortcode ' . $tag . " contain ID attributes?\nUsed Attributes: {$atts}\n[attributes/n] Comma separated list of attributes. [table]:[attribute] format for non-post tables\n" );
+			$atts = \WP_CLI::colorize( '%B' . implode( ' ', $attributes ) . '%n' );
+			fwrite( STDOUT, 'Does the shortcode ' . $tag . " contain ID attributes? {$atts}\n[attributes/n] Comma separated list of attributes. [table]:[attribute] format for non-post tables\n" );
 
 			$answer = trim( fgets( STDIN ) );
 
@@ -165,7 +165,7 @@ class Command extends \WP_CLI_Command {
 	public static function meta( $assoc_args = array() ) {
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 
-			fwrite( STDOUT, "Does the meta contain ID data?\n[Y/n] " );
+			fwrite( STDOUT, "Does the meta contain ID data? [Y/n] " );
 
 			$answer = trim( fgets( STDIN ) );
 
