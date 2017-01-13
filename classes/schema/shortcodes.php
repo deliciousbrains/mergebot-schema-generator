@@ -38,7 +38,7 @@ class Shortcodes extends Abstract_Element {
 					return $arg;
 				}, $shortcode_args );
 
-				if ( false !== strpos( $shortcode_args[0], '$' ) ) {
+				if ( false !== strpos( $shortcode_args[0], '$' ) || false !== strpos( $shortcode_args[0], '::' ) ) {
 					// Shortcode tag is dynamic, rely on it being in wp global.
 					continue;
 				}
