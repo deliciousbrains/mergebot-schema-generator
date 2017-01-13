@@ -48,12 +48,18 @@ class Shortcodes extends Abstract_Element {
 
 				if ( false !== strpos( $callback, 'array' ) ) {
 					// Convert array string callback to actual array of class instance and method.
-					$method           = self::get_method_from_array_string( $callback );
-					$class_name       = self::get_class_for_method( $content, $method );
-					$reflection_class = new \ReflectionClass( $class_name );
-					$instance         = $reflection_class->newInstanceWithoutConstructor();
+					$method     = self::get_method_from_array_string( $callback );
+					$class = self::get_class_for_method( $schema->files, $content, $method );
 
-					$callback = array( new $instance, $method );
+					$callback_data             = new \stdClass();
+					$callback_data->method     = $method;
+					$callback_data->class_name = $class['name'];
+					$callback_data->file       = $file->getRealPath();
+					if ( isset( $class['file'] ) ) {
+						$callback_data->file = $class['file'];
+					}
+
+					$callback = $callback_data;
 				}
 
 				// $method = self::get_method_from_callback( $callback );
@@ -100,7 +106,7 @@ class Shortcodes extends Abstract_Element {
 
 				$shortcodes[ $registered_tag ] = array(
 					'body'       => $code['body'],
-					'line'       => $code['line'],
+					'line'       => isset( $code['line'] ) ? $code['line'] : '',
 					'file'       => $file->getRealPath(),
 					'attributes' => $attributes,
 				);
@@ -186,10 +192,23 @@ class Shortcodes extends Abstract_Element {
 	protected static function get_callback_code( $file, $callback ) {
 		if ( is_array( $callback ) ) {
 			$func = new \ReflectionMethod( $callback[0], $callback[1] );
+		} else if ( is_object( $callback ) ) {
+			$body = self::get_method_code_from_file( $callback->file, $callback->class_name, $callback->method );
+
+			return array(
+				'body' => $body,
+			);
 		} else if ( false !== strpos( $callback, '::' ) ) {
 			$callback_parts = explode( '::', $callback );
 			$func           = new \ReflectionMethod( $callback_parts[0], $callback_parts[1] );
 		} else {
+			if ( ! function_exists( $callback) ) {
+				$body = self::get_function_code_from_file( $file->getRealPath(), $callback );
+
+				return array(
+					'body' => $body,
+				);
+			}
 			$func = new \ReflectionFunction( $callback );
 		}
 
@@ -216,6 +235,10 @@ class Shortcodes extends Abstract_Element {
 	protected static function get_method_from_callback( $callback ) {
 		if ( is_array( $callback ) ) {
 			return $callback[1];
+		}
+
+		if ( is_object( $callback ) ) {
+			return $callback->method;
 		}
 
 		if ( false !== strpos( $callback, '::' ) ) {

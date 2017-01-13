@@ -24,4 +24,12 @@ class Php_Parser_Printer extends Standard {
 
 		return $args;
 	}
+
+	public function get_method_code( $node ) {
+		return $this->pStmt_ClassMethod( $node );
+	}
+
+	public function get_function_code( $node ) {
+		return $this->pStmt_Function( $node );
+	}
 }
