@@ -116,6 +116,8 @@ class Foreign_Keys {
 					continue;
 				}
 
+				// TODO ask user
+
 			}
 		}
 
@@ -133,12 +135,13 @@ class Foreign_Keys {
 	}
 
 	protected static function table_match( $tables, $partial, $current_table ) {
+		$length = strlen( $partial );
 		foreach ( $tables as $table ) {
 			if ( $table === $current_table ) {
 				continue;
 			}
 
-			if ( false !== stripos( $table, $partial ) ) {
+			if ( $partial === substr( $table, strlen( $table ) - $length ) ) {
 				return $table;
 			}
 		}
