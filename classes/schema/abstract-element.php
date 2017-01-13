@@ -19,7 +19,7 @@ abstract class Abstract_Element {
 	protected static $colour;
 
 	public static function get_elements( Schema $schema ) {
-		Mergebot_Schema_Generator::log( static::$element, '%' . static::$colour );
+		Mergebot_Schema_Generator::log( static::$element . 's', '%' . static::$colour );
 
 		$elements       = static::find_elements( $schema );
 		$total_elements = static::get_total_elements( $elements );
