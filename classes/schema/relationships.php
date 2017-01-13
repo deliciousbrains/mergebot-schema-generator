@@ -34,7 +34,7 @@ class Relationships extends Abstract_Element {
 						continue;
 					}
 
-					$pattern = '/' . $function_regex . '(.*)(?=[\n|\r]*\)[\s]*;)/i';
+					$pattern = '/(?<!function)\s+' . $function_regex . '(.*)(?=[\n|\r]*\)[\s]*;)/i';
 					preg_match_all( $pattern, $content, $matches );
 
 					if ( ! $matches || ! isset( $matches[1] ) || ! is_array( $matches[1] ) || empty( $matches[1][0] ) ) {
