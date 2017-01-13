@@ -34,9 +34,6 @@ class Command extends \WP_CLI_Command {
 	 * [--scratch]
 	 * : Create schema from scratch even if one exists
 	 *
-	 * [--skip-install]
-	 * : Generate the schema from an already installed plugin
-	 *
 	 * [--load-admin]
 	 * : Load admin hooks for plugin, eg. for table installing
 	 *
@@ -62,7 +59,7 @@ class Command extends \WP_CLI_Command {
 
 		// Handle installing the thing we want to generate a schema for.
 		$installer = new Installer( $slug, $version, $this->type );
-		$result = $installer->init( isset( $assoc_args['skip-install'] ) );
+		$result = $installer->init();
 
 		if ( ! $result ) {
 			\WP_CLI::error( sprintf( '%s not installed', $slug ) );
