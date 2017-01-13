@@ -62,16 +62,6 @@ class Foreign_Keys {
 					continue;
 				}
 
-				// Single entity a Post Type match = eg, order = shop_order
-				$match = self::post_type_match( $post_types, $entity );
-				if ( $match ) {
-					$pk = $wp_primary_keys['posts'];
-
-					$foreign_keys[ $table . ':' . $column->Field ] = 'posts:' . $pk;
-
-					continue;
-				}
-
 				// Single entity a plugin one
 				$plugin_tables = array_keys( $schema->table_columns );
 				$match         = self::table_match( $plugin_tables, $entity, $table );
@@ -89,6 +79,16 @@ class Foreign_Keys {
 					$pk = $schema->primary_keys[ $match ];
 
 					$foreign_keys[ $table . ':' . $column->Field ] = $match . ':' . $pk;
+
+					continue;
+				}
+
+				// Single entity a Post Type match = eg, order = shop_order
+				$match = self::post_type_match( $post_types, $entity );
+				if ( $match ) {
+					$pk = $wp_primary_keys['posts'];
+
+					$foreign_keys[ $table . ':' . $column->Field ] = 'posts:' . $pk;
 
 					continue;
 				}
