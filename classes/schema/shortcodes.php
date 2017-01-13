@@ -83,7 +83,7 @@ class Shortcodes extends Abstract_Element {
 
 			foreach ( $shortcodes_registered as $registered_tag => $registered_callback ) {
 				$method = self::get_method_from_callback( $registered_callback );
-				preg_match_all( '/function\s+' . $method . '\s*\(\s*([^)]+?)\s*\)/i', $content, $shortcode_matches );
+				preg_match_all( '/function\s+' . $method . '\s*\(\s*(.*)(?=\)\s*[\;|\{])/i', $content, $shortcode_matches );
 				if ( empty( $shortcode_matches ) || empty( $shortcode_matches[0] ) ) {
 					continue;
 				}
@@ -91,7 +91,8 @@ class Shortcodes extends Abstract_Element {
 				$code = self::get_callback_code( $file, $registered_callback );
 
 				$callback_args  = self::get_function_args_from_string( $shortcode_matches[1][0] );
-				$attribute_name = str_replace( '$', '\$', $callback_args[0] );
+				$attribute_name = explode( ' ', $callback_args[0] );
+				$attribute_name = str_replace( '$', '\$', $attribute_name[0] );
 
 				preg_match_all( '/(extract\s*\()|' . $attribute_name . '\[\s*(.*?)\s*\]/', $code['body'], $matches );
 				if ( ! $matches || ! isset( $matches[1] ) || empty( $matches[1] ) ) {
