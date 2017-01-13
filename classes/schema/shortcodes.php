@@ -17,40 +17,78 @@ class Shortcodes extends Abstract_Element {
 	protected static $element = 'Shortcode';
 	protected static $colour = 'B';
 
-	protected static function find_elements( Schema $schema ) {
-		global $shortcode_tags;
-
+	protected static function find_all_shortcode_registrations( Schema $schema ) {
 		$shortcodes = array();
+
 		// Shortcodes
 		$search = 'add_shortcode';
 		foreach ( $schema->files as $file ) {
 			$content = strtolower( file_get_contents( $file->getRealPath() ) );
-			if ( false === strpos( $content, $search ) ) {
+			preg_match_all( '/(?<!function\s)' . $search . '\s*\(\s*(.*)(?=\)\s*\;)/', $content, $shortcode_matches );
+			if ( empty( $shortcode_matches ) || empty( $shortcode_matches[0] ) ) {
 				continue;
 			}
-			
-			foreach ( $shortcode_tags as $tag => $callback ) {
-				if ( ! self::shortcode_search( $content, $tag ) ) {
+
+			foreach ( $shortcode_matches[1] as $shortcode_args ) {
+				$shortcode_args = self::get_function_args_from_string( $shortcode_args );
+				$shortcode_args = array_map( function ( $arg ) {
+					$arg = ltrim( $arg, '\'"' );
+					$arg = rtrim( $arg, '\'"' );
+
+					return $arg;
+				}, $shortcode_args );
+
+				if ( false !== strpos( $shortcode_args[0], '$' ) ) {
+					// Shortcode tag is dynamic, rely on it being in wp global.
 					continue;
 				}
 
-				$body = self::get_callback_code( $file, $callback );
+				$tag      = $shortcode_args[0];
+				$callback = $shortcode_args[1];
 
-				$method = self::get_method_from_callback( $callback );
+				if ( false !== strpos( $callback, 'array' ) ) {
+					// Convert array string callback to actual array of class instance and method.
+					$method           = self::get_method_from_array_string( $callback );
+					$class_name       = self::get_class_for_method( $content, $method );
+					$reflection_class = new \ReflectionClass( $class_name );
+					$instance         = $reflection_class->newInstanceWithoutConstructor();
 
-				$pattern = '/function\s+' . $method . '\s*\(\s*([^)]+?)\s*\)/i';
-				preg_match_all( $pattern, $body, $matches );
+					$callback = array( new $instance, $method );
+				}
 
-				if ( empty( $matches ) || ! isset( $matches[1][0] ) ) {
-					// Shortcode has no attributes
+				// $method = self::get_method_from_callback( $callback );
+				$shortcodes[$tag] = $callback;
+			}
+		}
+
+		return $shortcodes;
+	}
+
+	protected static function find_elements( Schema $schema ) {
+		$shortcodes = array();
+		$shortcodes_registered = self::find_all_shortcode_registrations( $schema );
+
+		// Merge with all regsitered shortcodes available in WP global.
+		global $shortcode_tags;
+		$shortcodes_registered = array_merge( $shortcode_tags, $shortcodes_registered );
+
+		foreach ( $schema->files as $file ) {
+			$content = strtolower( file_get_contents( $file->getRealPath() ) );
+
+			foreach ( $shortcodes_registered as $registered_tag => $registered_callback ) {
+				$method = self::get_method_from_callback( $registered_callback );
+				preg_match_all( '/function\s+' . $method . '\s*\(\s*([^)]+?)\s*\)/i', $content, $shortcode_matches );
+				if ( empty( $shortcode_matches ) || empty( $shortcode_matches[0] ) ) {
 					continue;
 				}
 
-				$callback_args = self::get_function_args_from_string( $matches[1][0] );
+				$code = self::get_callback_code( $file, $registered_callback );
+
+				$callback_args  = self::get_function_args_from_string( $shortcode_matches[1][0] );
 				$attribute_name = str_replace( '$', '\$', $callback_args[0] );
 
-				preg_match_all( '/(extract\s*\()|' . $attribute_name . '\[\s*(.*?)\s*\]/', $body, $matches );
-				if ( ! $matches || ! isset( $matches[1] ) || empty( $matches[1] )  ) {
+				preg_match_all( '/(extract\s*\()|' . $attribute_name . '\[\s*(.*?)\s*\]/', $code['body'], $matches );
+				if ( ! $matches || ! isset( $matches[1] ) || empty( $matches[1] ) ) {
 					// Shortcode callback must use an $atts parameter or use the extract() method
 					continue;
 				}
@@ -60,13 +98,15 @@ class Shortcodes extends Abstract_Element {
 					$attributes = array_unique( $matches[0] );
 				}
 
-				$shortcodes[ $tag ] = array(
-					'body'           => $body,
-					'file'           => $file->getRealPath(),
-					'attributes'     => $attributes,
-			);
+				$shortcodes[ $registered_tag ] = array(
+					'body'       => $code['body'],
+					'line'       => $code['line'],
+					'file'       => $file->getRealPath(),
+					'attributes' => $attributes,
+				);
 			}
 		}
+
 
 		return $shortcodes;
 	}
@@ -102,7 +142,7 @@ class Shortcodes extends Abstract_Element {
 			}
 
 			$body = $shortcode['body'];
-			Mergebot_Schema_Generator::log( $shortcode['file'] );
+			Mergebot_Schema_Generator::log( 'Line: ' . $shortcode['line'] . ' - ' . $shortcode['file'] );
 			Mergebot_Schema_Generator::log_code( $body );
 
 			$result = Command::shortcode( $tag, $shortcode['attributes'] );
@@ -135,34 +175,13 @@ class Shortcodes extends Abstract_Element {
 		return $shortcodes;
 	}
 
-	protected static function shortcode_search( $content, $tag ) {
-		$compressed_content = str_replace( ' ', '', $content );
-		if ( false !== strpos( $compressed_content, "add_shortcode('" . $tag . "')" ) ) {
-			return true;
-		}
-
-		if ( false !== strpos( $compressed_content, 'add_shortcode("' . $tag . '")' ) ) {
-			return true;
-		}
-
-		if ( false !== strpos( $compressed_content, "'" . $tag . "'" ) ) {
-			return true;
-		}
-
-		if ( false !== strpos( $compressed_content, '"' . $tag . '"' ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
 	/**
 	 * Get the code of the callback
 	 *
 	 * @param string $file
 	 * @param string $callback
 	 *
-	 * @return string
+	 * @return array
 	 */
 	protected static function get_callback_code( $file, $callback ) {
 		if ( is_array( $callback ) ) {
@@ -181,7 +200,10 @@ class Shortcodes extends Abstract_Element {
 		$source = file( $file );
 		$body   = implode( "", array_slice( $source, $start_line, $length ) );
 
-		return $body;
+		return array(
+			'body' => $body,
+			'line' => $start_line
+		);
 	}
 
 	/**
@@ -203,5 +225,16 @@ class Shortcodes extends Abstract_Element {
 		}
 
 		return $callback;
+	}
+
+	protected static function get_method_from_array_string( $string ) {
+		preg_match_all( '/array\s*\(\s*(.*)\)/', $string, $matches );
+		if ( $matches && isset( $matches[1] ) && ! empty( $matches[1] ) ) {
+			$parts = explode( ',', $matches[1][0] );
+
+			return trim( str_replace( array( '\'', '"' ), '', $parts[1] ) );
+		}
+
+		return false;
 	}
 }

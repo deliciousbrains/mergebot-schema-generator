@@ -93,4 +93,36 @@ abstract class Abstract_Element {
 
 		return file_put_contents( $filename, $content );
 	}
+
+	protected static function get_class_for_method( $file, $method ) {
+		$parser = ( new ParserFactory )->create( ParserFactory::PREFER_PHP7 );
+
+		try {
+			$statements = $parser->parse( $file );
+
+			foreach ( $statements as $section ) {
+				if ( ! is_a( $section, 'PhpParser\Node\Stmt\Class_' ) ) {
+					continue;
+				}
+
+				if ( ! isset( $section->stmts ) ) {
+					continue;
+				}
+
+				foreach ( $section->stmts as $class_section ) {
+					if ( ! is_a( $class_section, 'PhpParser\Node\Stmt\ClassMethod' ) ) {
+						continue;
+					}
+
+					if ( $method === $class_section->name ) {
+						return $section->name;
+					}
+				}
+			}
+		} catch ( Error $e ) {
+			return false;
+		}
+
+		return false;
+	}
 }
