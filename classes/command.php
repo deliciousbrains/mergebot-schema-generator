@@ -62,7 +62,11 @@ class Command extends \WP_CLI_Command {
 
 		// Handle installing the thing we want to generate a schema for.
 		$installer = new Installer( $slug, $version, $this->type );
-		$installer->init( isset( $assoc_args['skip-install'] ) );
+		$result = $installer->init( isset( $assoc_args['skip-install'] ) );
+
+		if ( ! $result ) {
+			\WP_CLI::error( sprintf( '%s does not installed', $slug ) );
+		}
 
 		if ( isset( $assoc_args['load-admin'] ) ) {
 			// Bootstrap admin hooks where plugins might install tables

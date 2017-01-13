@@ -65,15 +65,19 @@ class Installer {
 	 * Run the installer.
 	 *
 	 * @param bool $skip_install
+	 *
+	 * @return bool
 	 */
 	public function init( $skip_install = false ) {
 		$this->pre_clean();
 
 		if ( false === $this->needs_installing( $skip_install ) ) {
-			return;
+			return self::is_plugin_installed( $this->slug );
 		}
 
 		$this->install();
+
+		return self::is_plugin_installed( $this->slug );
 	}
 
 	/**
