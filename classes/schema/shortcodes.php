@@ -24,7 +24,7 @@ class Shortcodes extends Abstract_Element {
 		$search = 'add_shortcode';
 		foreach ( $schema->files as $file ) {
 			$content = strtolower( file_get_contents( $file->getRealPath() ) );
-			preg_match_all( '/(?<!function\s)' . $search . '\s*\(\s*(.*)(?=\)\s*\;)/', $content, $shortcode_matches );
+			preg_match_all( '/(?<!function)\s+' . $search . '\s*\(\s*(.*)(?=\)\s*\;)/', $content, $shortcode_matches );
 			if ( empty( $shortcode_matches ) || empty( $shortcode_matches[0] ) ) {
 				continue;
 			}
