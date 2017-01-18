@@ -168,6 +168,9 @@ class Shortcodes extends Abstract_Element {
 			$attributes = explode( ',', $result );
 			foreach ( $attributes as $attribute ) {
 				$attribute = trim( $attribute );
+				if ( empty( $attribute ) ) {
+					continue;
+				}
 				$parts     = explode( ':', $attribute );
 				$data      = $parts[0];
 				if ( isset( $parts[1] ) ) {
