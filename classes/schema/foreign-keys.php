@@ -34,6 +34,12 @@ class Foreign_Keys {
 				$entity = str_replace( 'id', '', $column->Field );
 				$entity = rtrim( $entity, '_' );
 
+				if ( false !== ( $match = self::handle_parent_id( $schema, $entity, $table ) ) ) {
+					$foreign_keys[ $table . ':' . $column->Field ] = $match;
+
+					continue;
+				}
+
 				// Single entity a WordPress one
 				if ( isset( $wp_tables[ $entity ] ) ) {
 					$pk = $wp_primary_keys[ $entity ];
@@ -63,22 +69,15 @@ class Foreign_Keys {
 				}
 
 				// Single entity a plugin one
-				$plugin_tables = array_keys( $schema->table_columns );
-				$match         = self::table_match( $plugin_tables, $entity, $table );
-				if ( $match && isset( $schema->primary_keys[ $match ] ) ) {
-					$pk = $schema->primary_keys[ $match ];
-
-					$foreign_keys[ $table . ':' . $column->Field ] = $match . ':' . $pk;
+				if ( false !== ( $match = self::is_plugin_table_fk( $schema, $entity, $table ) ) ) {
+					$foreign_keys[ $table . ':' . $column->Field ] = $match;
 
 					continue;
 				}
 
 				// Plural entity a plugin one
-				$match = self::table_match( $plugin_tables, $plural_entity, $table );
-				if ( $match && isset( $schema->primary_keys[ $match ] ) ) {
-					$pk = $schema->primary_keys[ $match ];
-
-					$foreign_keys[ $table . ':' . $column->Field ] = $match . ':' . $pk;
+				if ( false !== ( $match = self::is_plugin_table_fk( $schema, $plural_entity, $table ) ) ) {
+					$foreign_keys[ $table . ':' . $column->Field ] = $match;
 
 					continue;
 				}
@@ -144,6 +143,40 @@ class Foreign_Keys {
 			if ( $partial === substr( $table, strlen( $table ) - $length ) ) {
 				return $table;
 			}
+		}
+
+		return false;
+	}
+
+	protected static function is_plugin_table_fk( $schema, $entity, $table ) {
+		$plugin_tables = array_keys( $schema->table_columns );
+		$match         = self::table_match( $plugin_tables, $entity, $table );
+
+		if ( $match && isset( $schema->primary_keys[ $match ] ) ) {
+			$pk = $schema->primary_keys[ $match ];
+
+			return $match . ':' . $pk;
+		}
+
+		return false;
+	}
+
+	protected static function handle_parent_id( $schema, $entity, $table ) {
+		if ( 'parent' !== $entity ) {
+			return false;
+		}
+
+		$search_table = str_replace( '_meta', '', $table );
+		$search_table = rtrim( $search_table, 's' );
+
+		if ( false !== ( $match = self::is_plugin_table_fk( $schema, $search_table, $table ) ) ) {
+			return $match;
+		}
+
+		$search_table .= 's';
+
+		if ( false !== ( $match = self::is_plugin_table_fk( $schema, $search_table, $table ) ) ) {
+			return $match;
 		}
 
 		return false;
