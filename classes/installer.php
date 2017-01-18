@@ -179,6 +179,11 @@ class Installer {
 
 		$existing_version = self::get_installed_plugin_version( $basename );
 
+		if ( 'latest' === $this->version ) {
+			// Premium plugin, installed already
+			return false;
+		}
+
 		if ( $existing_version === $this->version ) {
 			return false;
 		}
