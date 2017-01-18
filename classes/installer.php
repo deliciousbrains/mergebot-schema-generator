@@ -29,7 +29,17 @@ class Installer {
 	protected $type;
 
 	/**
-	 * @var bool Plugin was originally deactivated, deactiavte after process.
+	 * @var bool Mergebot plugin was active, activate later.
+	 */
+	protected $mergebot_activated = false;
+
+	/**
+	 * @var string Slug of Mergebot plugin.
+	 */
+	protected $mergebot_slug = 'mergebot';
+
+	/**
+	 * @var bool Plugin was originally deactivated, deactivate after process.
 	 */
 	protected $deactivate = false;
 
@@ -82,6 +92,8 @@ class Installer {
 	 * Rollback the plugin directories in case the command was aborted previously.
 	 */
 	protected function pre_clean() {
+		$this->disable_mergebot();
+
 		if ( ! file_exists( $this->get_plugin_bk_dir() ) ) {
 			return;
 		}
@@ -93,10 +105,29 @@ class Installer {
 		rename( $this->get_plugin_bk_dir(), $this->get_plugin_dir() );
 	}
 
+	protected function disable_mergebot() {
+		if ( false === self::is_plugin_installed( $this->mergebot_slug ) ) {
+			// Mergebot plugin not installed
+			return;
+		}
+
+		if ( false === ( $basename = self::get_plugin_basename( $this->mergebot_slug ) ) ) {
+			// Mergebot plugin not activated
+			return;
+		}
+
+		WP_CLI::run_command( array( 'plugin', 'deactivate', $this->mergebot_slug ) );
+		$this->mergebot_activated = true;
+	}
+
 	/**
 	 * Reset anything that the installer does, to keep the WP install in tact after a schema generation.
 	 */
 	public function clean_up() {
+		if ( $this->mergebot_activated ) {
+			WP_CLI::run_command( array( 'plugin', 'activate', $this->mergebot_slug ) );
+		}
+
 		if ( $this->wp_version ) {
 			$this->install_wp( $this->wp_version );
 
