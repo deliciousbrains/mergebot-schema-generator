@@ -47,16 +47,23 @@ class Relationships extends Abstract_Element {
 					foreach ( $matches[1] as $arguments ) {
 						$args = self::get_function_args_from_string( $arguments );
 
+						if ( empty( $args ) ) {
+							\WP_CLI::error( 'Could not get args from string ' . $arguments );
+						}
+
 						// get meta key and value from code
 						$key = trim( $args[ $key_pos ] );
 						$key = ltrim( $key, '\'"' );
 						$key = rtrim( $key, '\'"' );
 
-						if ( ! isset( $args[ $value_pos ] ) ) {
+						if ( ! isset( $args[ $value_pos ] ) && 'add_option' !== $function ) {
 							\WP_CLI::error( 'Could not get meta value from ' . $arguments );
 						}
 
-						$value = trim( $args[ $value_pos ] );
+						$value = '';
+						if ( isset( $args[ $value_pos ] ) ) {
+							$value = trim( $args[ $value_pos ] );
+						}
 
 						if ( isset( $processed_meta[ $entity ][ $key ] ) ) {
 							// Already processed this piece of meta
