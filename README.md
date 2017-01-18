@@ -1,6 +1,6 @@
 ## Mergebot Schema Generator
 
-This is an internal plugin used to create custom data schemas to describe plugins used by the Mergebot app.
+This is an work in progress, rough round the edges plugin used to create custom data schemas to describe plugins used by the Mergebot app.
 
 ### Setup
 
@@ -13,15 +13,28 @@ First of all the command must be run from the plugin directory:
 
 `wp mergebot-schema generate --plugin=woocommerce`
 
+To run it for a specific version:
+
+`wp mergebot-schema generate --plugin=woocommerce --version=2.0`
+
 For WordPress core use:
 
 `wp mergebot-schema generate`
 
-### TODO
+### Scope
 
-* More intelligent handling of foreign keys
-* More intelligent handling of shortcodes
-* Relationships - deal with custom plugin meta tables
-* Content
-* Clean up and doc blocks
-* Don't duplicate core relationships, eg. a plugin adds '_thumbnail_id'
+The generator will attempt define the following:
+
+- Primary keys of custom tables
+- Foreign key of custom tables
+- Key / Value relationship data (CLI prompts)
+- Shortcode attributes (CLI prompts)
+
+When the command needs a human decision (eg. shortcodes) it will present helpful information and ask simple questions so the definition can be created.
+
+The generator cannot define:
+
+- Content that has IDs
+- Queries that need to be ignored
+- Custom shortcode search locations
+- Table prefixes in meta keys
