@@ -2,6 +2,8 @@
 
 This is an work in progress, rough round the edges plugin used to create custom data schemas to describe plugins used by the Mergebot app.
 
+The plugin should be run on a development WordPress install, please please not a production site. It will install plugins and programmatically interrogate them.
+
 ### Setup
 
 Symlink the `src/mergebot-schema-generator` dir to your `wp-content/plugins` dir
