@@ -31,7 +31,7 @@ class Foreign_Keys {
 					continue;
 				}
 
-				$entity = str_replace( 'id', '', $column->Field );
+				$entity = str_replace( array( 'ID', 'Id', 'id' ), '', $column->Field );
 				$entity = rtrim( $entity, '_' );
 
 				if ( false !== ( $match = self::handle_parent_id( $schema, $entity, $table ) ) ) {
