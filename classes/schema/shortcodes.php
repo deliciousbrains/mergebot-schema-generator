@@ -84,7 +84,7 @@ class Shortcodes extends Abstract_Element {
 			foreach ( $shortcodes_registered as $registered_tag => $registered_callback ) {
 				$method = self::get_method_from_callback( $registered_callback );
 				preg_match_all( '/function\s+' . $method . '\s*\(\s*(.*)(?=\)\s*[\;|\{])/i', $content, $shortcode_matches );
-				if ( empty( $shortcode_matches ) || empty( $shortcode_matches[0] ) ) {
+				if ( empty( $shortcode_matches ) || empty( $shortcode_matches[1][0] ) ) {
 					continue;
 				}
 
