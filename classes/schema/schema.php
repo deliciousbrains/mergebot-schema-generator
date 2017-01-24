@@ -12,7 +12,7 @@ namespace DeliciousBrains\MergebotSchemaGenerator\Schema;
 use DeliciousBrains\MergebotSchemaGenerator\Command;
 use DeliciousBrains\MergebotSchemaGenerator\Installer;
 
-class Schema {
+class Schema extends Abstract_Element {
 
 	/**
 	 * @var
@@ -124,9 +124,11 @@ class Schema {
 	 *
 	 * @param bool $ext
 	 *
+	 * @param bool $version
+	 *
 	 * @return string
 	 */
-	public function filename( $ext = true ) {
+	public function filename( $ext = true, $version = true ) {
 		$filename = $this->slug;
 		if ( 'plugin' === $this->type ) {
 			$filename = Installer::get_plugin_basename( $this->slug );
@@ -134,7 +136,9 @@ class Schema {
 			$filename = str_replace( '.php', '', $filename );
 		}
 
-		$filename = $filename . '-' . $this->version;
+		if ( $version) {
+			$filename = $filename . '-' . $this->version;
+		}
 		if ( $ext ) {
 			$filename .= '.json';
 		}
@@ -143,7 +147,8 @@ class Schema {
 	}
 
 	/**
-	 * Get the file path of scheme
+	 * Get the file path of schema
+	 *
 	 * @return string
 	 */
 	public function file_path() {
@@ -318,6 +323,53 @@ class Schema {
 		}
 
 		$this->write( json_encode( $file_contents, JSON_PRETTY_PRINT ) );
+
+		if ( 'wordpress' === $this->type ) {
+			return;
+		}
+
+		$schema = $this->filename( false, false );
+
+		self::write_slug_schema_prefix( $schema, $this->slug );
+	}
+
+	/**
+	 * @return string
+	 */
+	protected static function get_schema_slug_file() {
+		return dirname( Mergebot_Schema_Generator()->file_path ) . '/data/schema-slug.json';
+	}
+
+	/**
+	 * Get the slug from a schema file
+	 *
+	 * @param string $schema
+	 *
+	 * @return string|bool
+	 */
+	public static function get_slug_from_schema( $schema ) {
+		$content = self::read_data_file( self::get_schema_slug_file() );
+
+		if ( isset( $content[ $schema ] ) ) {
+			return $content[ $schema ];
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param string $schema
+	 * @param string $slug
+	 *
+	 * @return int
+	 */
+	public static function write_slug_schema_prefix( $schema, $slug ) {
+		$file    = self::get_schema_slug_file();
+		$content = self::read_data_file( $file );
+
+		$content[ $schema ] = $slug;
+
+		return self::write_data_file( $file, $content );
 	}
 
 	/**
