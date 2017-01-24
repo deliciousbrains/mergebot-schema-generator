@@ -20,6 +20,8 @@ class Command extends \WP_CLI_Command {
 	 */
 	protected $type = 'plugin';
 
+	protected static $skip = false;
+
 	/**
 	 * Generates a schema for a plugin
 	 *
@@ -37,6 +39,9 @@ class Command extends \WP_CLI_Command {
 	 * [--load-admin]
 	 * : Load admin hooks for plugin, eg. for table installing
 	 *
+	 * [--skip]
+	 * : Don't ask any questions, ie. load existing schema as is, or create bare miniumum
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp mergebot-schema generate
@@ -52,6 +57,9 @@ class Command extends \WP_CLI_Command {
 			\WP_CLI::error( sprintf( 'This command must be run from inside %s', $path ) );
 		}
 
+		if ( isset( $assoc_args['skip'] )  ) {
+			self::$skip = true;
+		}
 		$slug    = $this->get_slug( $assoc_args );
 		$version = $this->get_version( $assoc_args, $slug );
 
@@ -143,6 +151,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function shortcode( $tag, $attributes, $assoc_args = array() ) {
+		if ( self::$skip ) {
+			return 'exit';
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 			$tag = \WP_CLI::colorize( '%B[' . $tag . ']%n' );
 
@@ -169,6 +181,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function meta( $assoc_args = array() ) {
+		if ( self::$skip ) {
+			return 'exit';
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 
 			fwrite( STDOUT, "Does the meta contain ID data? [Y/n] " );
@@ -327,6 +343,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function overwrite_property( $assoc_args = array() ) {
+		if ( self::$skip ) {
+			return 'exit';
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 			$question = \WP_CLI::colorize( '%rThis is already defined in the schema, edit it?%n [Y/n]' );
 			fwrite( STDOUT, $question . "\n" );
