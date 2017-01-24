@@ -302,6 +302,24 @@ class Command extends \WP_CLI_Command {
 	}
 
 	/**
+	 * Asks for plugin info
+	 *
+	 * @param string $key
+	 * @param array  $assoc_args
+	 *
+	 * @return bool|string
+	 */
+	public static function info( $key = 'name', $assoc_args = array() ) {
+		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
+			fwrite( STDOUT, 'Enter plugin ' . $key . ": " );
+
+			$answer = trim( fgets( STDIN ) );
+
+			return $answer;
+		}
+	}
+
+	/**
 	 * Asks if we want to overwrite the saved schema property.
 	 *
 	 * @param array  $assoc_args

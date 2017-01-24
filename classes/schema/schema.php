@@ -15,6 +15,16 @@ use DeliciousBrains\MergebotSchemaGenerator\Installer;
 class Schema {
 
 	/**
+	 * @var
+	 */
+	public $name;
+
+	/**
+	 * @var
+	 */
+	public $url;
+
+	/**
 	 * @var string
 	 */
 	public $slug;
@@ -160,6 +170,11 @@ class Schema {
 	}
 
 	protected function init_properties( $data ) {
+		// Info
+		$this->name           = isset( $data->name ) ? $data->name : '';
+		$this->url            = isset( $data->url ) ? $data->url : '';
+
+		// Data
 		$this->primary_keys   = isset( $data->primaryKeys ) ? (array) $data->primaryKeys : array();
 		$this->foreign_keys   = isset( $data->foreignKeys ) ? (array) $data->foreignKeys : array();
 		$this->shortcodes     = isset( $data->shortcodes ) ? (array) $data->shortcodes : array();
@@ -190,10 +205,34 @@ class Schema {
 		$this->save();
 	}
 
+	protected function set_info() {
+		if ( 'wordpress' === $this->type ) {
+			return;
+		}
+
+		if ( ! empty( $this->name ) && ! empty( $this->url ) ) {
+			return;
+		}
+
+		$data = Installer::get_latest_plugin_data( $this->slug );
+		if ( false === $data ) {
+			// Ask for name and URL
+			$info       = Info::ask();
+			$this->name = $info->name;
+			$this->url  = $info->url;
+
+			return;
+		}
+
+		$this->name = $data->name;
+		$this->url  = 'https://wordpress.org/plugins/' . $this->slug;
+	}
+
 	/**
 	 * Set the schema properties
 	 */
 	protected function set_properties() {
+		$this->set_info();
 		$this->table_columns = Mergebot_Schema_Generator()->get_table_columns( $this->tables );
 		$primary_keys        = $this->primary_keys();
 		$this->set_property( 'primary_keys', $primary_keys );
@@ -245,6 +284,15 @@ class Schema {
 	 * Save schema data
 	 */
 	protected function save() {
+		$info = array();
+		if ( 'wordpress' !== $this->type ) {
+			$info = array(
+				'name'    => $this->name,
+				'version' => $this->version,
+				'url'     => $this->url,
+			);
+		}
+
 		$file_contents = array(
 			'primaryKeys'   => $this->primary_keys,
 			'foreignKeys'   => $this->foreign_keys,
@@ -255,6 +303,8 @@ class Schema {
 			'ignore'        => $this->ignore,
 			'files'         => $this->file_types,
 		);
+
+		$file_contents = array_merge( $info, $file_contents );
 
 		foreach ( $file_contents as $key => $value ) {
 			if ( empty( $value ) ) {

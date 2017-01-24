@@ -313,6 +313,12 @@ class Installer {
 		return self::get_object_version( $url );
 	}
 
+	public static function get_latest_plugin_data( $slug ) {
+		$url = 'https://api.wordpress.org/plugins/info/1.0/' . $slug . '.json';
+
+		return self::get_object( $url );
+	}
+
 	/**
 	 * Get the latest version number of WordPress core.
 	 *
@@ -332,6 +338,19 @@ class Installer {
 	 * @return bool|string
 	 */
 	protected static function get_object_version( $url ) {
+		$data = self::get_object( $url );
+		if ( false === $data ) {
+			return $data;
+		}
+
+		if ( isset( $data->version ) && ! empty( $data->version ) ) {
+			return $data->version;
+		}
+
+		return false;
+	}
+
+	protected static function get_object( $url ) {
 		$json = file_get_contents( $url );
 		if ( empty( $json ) ) {
 			return false;
@@ -342,11 +361,7 @@ class Installer {
 			return false;
 		}
 
-		if ( isset( $data->version ) && ! empty( $data->version ) ) {
-			return $data->version;
-		}
-
-		return false;
+		return $data;
 	}
 
 	/**
