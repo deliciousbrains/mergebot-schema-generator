@@ -60,6 +60,35 @@ class Command extends \WP_CLI_Command {
 		if ( isset( $assoc_args['skip'] )  ) {
 			self::$skip = true;
 		}
+
+		if ( isset( $assoc_args['plugin'] ) && 'all' === $assoc_args['plugin'] ) {
+			// Regenerate all plugin existing schemas.
+			return $this->generate_all();
+		}
+
+		$this->generate_one( $assoc_args );
+	}
+
+	protected function generate_all() {
+		$existing_schemas = Generator::get_generated_plugins();
+
+		foreach( $existing_schemas as $schema ) {
+			$slug = Generator::get_slug_from_filename( $schema );
+			if( empty( $slug ) ) {
+				$slug = Command::slug( $schema );
+			}
+
+			if ( empty( $slug ) ) {
+				\WP_CLI::error( 'No slug for ' . $schema );
+			}
+
+			$version = Generator::get_version_from_filename( $schema );
+
+			$this->generate_one( array( 'plugin' => $slug, 'version' => $version ) );
+		}
+	}
+
+	protected function generate_one( $assoc_args ) {
 		$slug    = $this->get_slug( $assoc_args );
 		$version = $this->get_version( $assoc_args, $slug );
 
@@ -328,6 +357,24 @@ class Command extends \WP_CLI_Command {
 	public static function info( $key = 'name', $assoc_args = array() ) {
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 			fwrite( STDOUT, 'Enter plugin ' . $key . ": " );
+
+			$answer = trim( fgets( STDIN ) );
+
+			return $answer;
+		}
+	}
+
+	/**
+	 * Asks for plugin info
+	 *
+	 * @param string $schema
+	 * @param array  $assoc_args
+	 *
+	 * @return bool|string
+	 */
+	public static function slug( $schema, $assoc_args = array() ) {
+		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
+			fwrite( STDOUT, 'Enter slug for schema file ' . $schema . ": " );
 
 			$answer = trim( fgets( STDIN ) );
 
