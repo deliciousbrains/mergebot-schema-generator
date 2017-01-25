@@ -116,15 +116,22 @@ class Mergebot_Schema_Generator {
 		$this->wp_primary_keys = Primary_Keys::get_primary_keys( $this->wp_tables );
 	}
 
+	public function strip_prefix_from_table( $table ) {
+		global $wpdb;
+		$table = str_ireplace( array( '{', '}', '`', '([^', '$wpdb->prefix', '$wpdb->', $wpdb->prefix ), '', $table );
+		$table = ltrim( $table, '\'"' );
+		$table = rtrim( $table, '\'"' );
+
+		return $table;
+	}
+
 	public function get_table_columns( $tables ) {
 		global $wpdb;
 		$all_tables = array();
 		$excluded   = apply_filters( 'mergebot_schema_generator_excluded_tables', array() );
 
 		foreach ( $tables as $table ) {
-			$table = str_ireplace( array( '{', '}', '`', '([^', '$wpdb->prefix', '$wpdb->', $wpdb->prefix ), '', $table );
-			$table = ltrim( $table, '\'"' );
-			$table = rtrim( $table, '\'"' );
+			$table = $this->strip_prefix_from_table( $table );
 
 			if ( in_array( $table, $excluded ) ) {
 				continue;
