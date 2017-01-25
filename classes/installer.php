@@ -79,13 +79,11 @@ class Installer {
 	public function init() {
 		$this->pre_clean();
 
-		if ( false === $this->needs_installing() ) {
-			return self::is_plugin_installed( $this->slug );
+		if ( false !== $this->needs_installing() ) {
+			$this->install();
 		}
 
-		$this->install();
-
-		return self::is_plugin_installed( $this->slug );
+		return $this->is_installed();
 	}
 
 	/**
@@ -106,7 +104,7 @@ class Installer {
 	}
 
 	protected function disable_mergebot() {
-		if ( false === self::is_plugin_installed( $this->mergebot_slug ) ) {
+		if ( false === $this->is_plugin_installed( $this->mergebot_slug ) ) {
 			// Mergebot plugin not installed
 			return;
 		}
@@ -165,7 +163,7 @@ class Installer {
 			return $this->get_installed_core_version() != $this->version;
 		}
 
-		if ( false === self::is_plugin_installed( $this->slug ) ) {
+		if ( false === $this->is_plugin_installed( $this->slug ) ) {
 			$this->uninstall = true;
 
 			return true;
@@ -241,13 +239,26 @@ class Installer {
 	}
 
 	/**
+	 * Is a object installed?
+	 *
+	 * @return bool
+	 */
+	protected function is_installed() {
+		if ( 'wordpress' === $this->type ) {
+			return true;
+		}
+
+		return $this->is_plugin_installed( $this->slug );
+	}
+
+	/**
 	 * Is a plugin installed?
 	 *
 	 * @param string $slug
 	 *
 	 * @return bool
 	 */
-	public static function is_plugin_installed( $slug ) {
+	protected function is_plugin_installed( $slug ) {
 		return file_exists( self::dir( $slug ) );
 	}
 
