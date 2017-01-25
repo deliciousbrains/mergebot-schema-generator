@@ -168,7 +168,8 @@ class Relationships extends Abstract_Element {
 				$result = Command::meta();
 
 				if ( 'exit' === $result ) {
-					return $relationships;
+					$exit = true;
+					continue;
 				}
 
 				if ( ! $result ) {
