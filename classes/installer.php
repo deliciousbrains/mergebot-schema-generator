@@ -201,7 +201,7 @@ class Installer {
 		if ( 'wordpress' === $this->type ) {
 			$this->wp_version = $this->get_installed_core_version();
 
-			$this->install_wp( $this->version );
+			$this->install_wp( $this->wp_version );
 
 			return;
 		}
@@ -338,7 +338,16 @@ class Installer {
 	public static function get_latest_core_version() {
 		$url = 'https://api.wordpress.org/core/version-check/1.7/';
 
-		return self::get_object_version( $url );
+		$data = self::get_object( $url );
+		if ( false === $data ) {
+			return $data;
+		}
+
+		if ( isset( $data->offers ) ) {
+			return $data->offers[0]->version;
+		}
+
+		return false;
 	}
 
 	/**
