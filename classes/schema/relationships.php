@@ -18,9 +18,9 @@ class Relationships extends Abstract_Element {
 	protected static $colour = 'G';
 
 	protected static function find_elements( Schema $schema ) {
-		$meta_tables = self::get_meta_tables();
+		$meta_tables = self::get_meta_tables( $schema );
 
-		$entities       = self::get_meta_data( $meta_tables );
+		$entities       = self::get_meta_data( $meta_tables, $schema );
 		$processed_meta = array();
 
 		$ignored_values = self::get_ignored_values();
@@ -82,8 +82,6 @@ class Relationships extends Abstract_Element {
 			}
 
 		}
-		// TODO deal with custom plugin meta tables
-		// update_metadata( 'woocommerce_term',
 
 		return $processed_meta;
 	}
@@ -96,7 +94,7 @@ class Relationships extends Abstract_Element {
 		foreach ( $schema->relationships[ $entity ] as $data ) {
 			foreach ( $data as $meta_key => $meta_value ) {
 				// Translate key from saved data
-				$key = self::get_key_translation( $schema->filename( false ),$entity, $key );
+				$key = self::get_key_translation( $schema, $entity, $key );
 				if ( $key === $meta_value ) {
 					return $data;
 				} else {
@@ -109,7 +107,7 @@ class Relationships extends Abstract_Element {
 	}
 
 	protected static function get_key_pos( $entity, $function ) {
-		if ( 'options' === $entity ) {
+		if ( 'options' === $entity || 'sitemeta' === $entity ) {
 			return 0;
 		}
 
@@ -117,7 +115,7 @@ class Relationships extends Abstract_Element {
 	}
 
 	protected static function get_value_pos( $entity, $function ) {
-		if ( 'options' === $entity ) {
+		if ( 'options' === $entity || 'sitemeta' === $entity ) {
 			return 1;
 		}
 
@@ -126,9 +124,9 @@ class Relationships extends Abstract_Element {
 
 	protected static function ask_elements( Schema $schema, $elements, $progress_bar ) {
 		$relationships = array();
-		$meta_tables   = self::get_meta_tables();
+		$meta_tables   = self::get_meta_tables( $schema );
 
-		$entities = self::get_meta_data( $meta_tables );
+		$entities = self::get_meta_data( $meta_tables, $schema );
 		$exit     = false;
 
 		foreach ( $elements as $entity => $data ) {
@@ -276,12 +274,22 @@ class Relationships extends Abstract_Element {
 	 *
 	 * @return array
 	 */
-	protected static function get_meta_tables() {
+	protected static function get_meta_tables( Schema $schema ) {
 		$meta_tables = array();
-		foreach ( Mergebot_Schema_Generator()->wp_tables as $table => $columns ) {
-			if ( 'options' === $table || 'meta' === substr( $table, strlen( $table ) - 4, 4 ) ) {
-				$meta_tables[] = $table;
+		$tables      = array_merge( array_keys( Mergebot_Schema_Generator()->wp_tables ), array_keys( $schema->table_columns ) );
+
+		foreach ( $tables as $table ) {
+			if ( 'options' !== $table && 'meta' !== substr( $table, strlen( $table ) - 4, 4 ) ) {
+				continue;
 			}
+
+			$meta_table = str_replace( $schema->custom_prefix, '', $table );
+
+			if ( in_array( $meta_table, $meta_tables ) ) {
+				continue;
+			}
+
+			$meta_tables[] = $meta_table;
 		}
 
 		return $meta_tables;
@@ -290,11 +298,12 @@ class Relationships extends Abstract_Element {
 	/**
 	 * Get associated data about the meta table
 	 *
-	 * @param array $tables
+	 * @param array  $tables
+	 * @param Schema $schema
 	 *
 	 * @return array
 	 */
-	protected static function get_meta_data( $tables ) {
+	protected static function get_meta_data( $tables, Schema $schema ) {
 		$entities = array();
 		foreach ( $tables as $table ) {
 			$entity = str_replace( 'meta', '', $table );
@@ -303,7 +312,7 @@ class Relationships extends Abstract_Element {
 
 			$entities[ $table ]['functions'] = $functions;
 
-			$meta_columns = self::get_meta_columns( $table );
+			$meta_columns = self::get_meta_columns( $table, $schema->table_columns, $schema->custom_prefix );
 			if ( ! $meta_columns ) {
 				continue;
 			}
@@ -330,25 +339,57 @@ class Relationships extends Abstract_Element {
 			return $functions;
 		}
 
+		$functions = array();
+		if ( 'site' === $entity ) {
+			$functions['add_site_option\s*\(']    = 'add_site_option';
+			$functions['update_site_option\s*\('] = 'update_site_option';
+
+			return $functions;
+		}
+
 		$suffix = $entity . '_meta';
 
-		$functions[ 'add_' . $suffix . '\(' ]                                         = 'add_' . $suffix;
-		$functions[ 'update_' . $suffix . '\(' ]                                      = 'update_' . $suffix;
+		if ( function_exists( 'add_' . $suffix ) ) {
+			$functions[ 'add_' . $suffix . '\(' ] = 'add_' . $suffix;
+		}
+
+		if ( function_exists( 'update_' . $suffix ) ) {
+			$functions[ 'update_' . $suffix . '\(' ] = 'update_' . $suffix;
+		}
+
 		$functions[ 'update_metadata\s*\(\s*(?:\'|")' . $entity . '(?:\'|")\s*,\s+' ] = 'update_metadata';
 
 		return $functions;
+	}
+
+	protected static function find_table( $table, $tables, $prefix ) {
+		if ( isset( $tables[ $table ] ) ) {
+			return $tables[ $table ];
+		}
+		$table = $prefix . $table;
+		if ( isset( $tables[ $table ] ) ) {
+			return $tables[ $table ];
+		}
+
+		return false;
 	}
 
 	/**
 	 * Get the key/value columns of the meta table
 	 *
 	 * @param string $table
+	 * @param array  $tables
+	 * @param string $prefix
 	 *
 	 * @return array|bool
 	 */
-	protected static function get_meta_columns( $table ) {
-		$all_tables = Mergebot_Schema_Generator()->wp_tables;
-		$columns    = $all_tables[ $table ];
+	protected static function get_meta_columns( $table, $tables = array(), $prefix = '' ) {
+		$all_tables = array_merge( Mergebot_Schema_Generator()->wp_tables, $tables );
+
+		$columns = self::find_table( $table, $all_tables, $prefix );
+		if ( empty( $columns ) ) {
+			return false;
+		}
 
 		$key   = null;
 		$value = null;
@@ -431,16 +472,17 @@ class Relationships extends Abstract_Element {
 	}
 
 	/**
-	 * @param $filename
+	 * @param $schema
 	 * @param $entity
 	 * @param $old_key
 	 *
 	 * @return mixed
 	 */
-	protected static function get_key_translation( $filename, $entity, $old_key ) {
+	protected static function get_key_translation( Schema $schema, $entity, $old_key ) {
+		$filename = $schema->filename( false );
 		$content = self::read_data_file( self::get_key_translation_file() );
 
-		$columns = self::get_meta_columns( $entity );
+		$columns = self::get_meta_columns( $entity, $schema->tables, $schema->custom_prefix );
 
 		if ( isset( $content[ $filename ][ $entity ][ $columns['key'] ][ $old_key ] ) ) {
 			return $content[ $filename ][ $entity ][ $columns['key'] ][ $old_key ];

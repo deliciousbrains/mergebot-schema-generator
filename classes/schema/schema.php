@@ -50,6 +50,11 @@ class Schema extends Abstract_Element {
 	public $tables;
 
 	/**
+	 * @var bool|string
+	 */
+	public $custom_prefix;
+
+	/**
 	 * @var array
 	 */
 	public $table_columns;
@@ -117,6 +122,7 @@ class Schema extends Abstract_Element {
 
 		$this->files  = $this->list_files();
 		$this->tables = $this->get_tables();
+		$this->custom_prefix = $this->get_custom_table_prefix_from_tables();
 	}
 
 	/**
@@ -512,15 +518,79 @@ class Schema extends Abstract_Element {
 		return $tables;
 	}
 
+	protected function get_custom_table_prefix_from_tables() {
+		if ( 'wordpress' === $this->type ) {
+			return '';
+		}
+
+		if ( empty( $this->tables ) ) {
+			return '';
+		}
+
+		$filename = $this->filename( false );
+		$prefix = Primary_Keys::get_custom_table_prefix( $filename );
+
+		if ( false !== $prefix ) {
+			return $prefix;
+		}
+
+		$table_parts = array();
+		$first_parts = false;
+		foreach ( $this->tables as $table ) {
+			$table                 = Mergebot_Schema_Generator()->strip_prefix_from_table( $table );
+			$parts                 = explode( '_', $table );
+			$table_parts[ $table ] = $parts;
+			if ( false === $first_parts ) {
+				$first_parts = $parts;
+			}
+		}
+
+		$prefix = '';
+		foreach ( $first_parts as $key => $part ) {
+			if ( $this->part_appears_in_all_tables( $part, $table_parts, $key ) ) {
+				$prefix .= $part;
+			}
+		}
+
+
+		if ( ! empty( $prefix ) ) {
+			// Save custom prefix
+			$prefix .= '_';
+			Primary_Keys::write_custom_table_prefix( $filename, $prefix );
+		} else {
+			$prefix = $this->ask_for_custom_prefix( $filename );
+		}
+
+		return $prefix;
+	}
+
+	protected function part_appears_in_all_tables( $part, $tables, $pos ) {
+		foreach( $tables as $table => $parts ) {
+			if ( false === $this->part_appears_in_table_parts( $part, $parts, $pos ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	protected function part_appears_in_table_parts( $part, $parts, $pos = 0 ) {
+		return isset( $parts[ $pos ] ) && $part === $parts[ $pos ];
+	}
+
 	protected function get_custom_table_prefix() {
 		$filename = $this->filename( false );
 
 		// Check if prefix is saved
-		$saved_prefix = Primary_Keys::get_custom_table_prefix($filename  ) ;
+		$saved_prefix = Primary_Keys::get_custom_table_prefix( $filename );
 		if ( $saved_prefix ) {
 			return $saved_prefix;
 		}
 
+		return $this->ask_for_custom_prefix( $filename );
+	}
+
+	protected function ask_for_custom_prefix( $filename ) {
 		// Ask for a prefix
 		$result = Command::table_prefix();
 
@@ -530,7 +600,5 @@ class Schema extends Abstract_Element {
 
 		// Save custom prefix
 		Primary_Keys::write_custom_table_prefix( $filename, $result );
-
-		return $result;
 	}
 }
