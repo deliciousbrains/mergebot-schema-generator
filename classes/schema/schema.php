@@ -152,7 +152,13 @@ class Schema extends Abstract_Element {
 	 * @return string
 	 */
 	public function file_path() {
-		return apply_filters( 'mergebot_schema_generator_path', Mergebot_Schema_Generator()->schema_path . '/' . $this->filename(), $this->filename(), $this->type ) ;
+		$base_path = Mergebot_Schema_Generator()->schema_path;
+		$type      = 'wordpress' === $this->type ? 'core' : $this->type . 's';
+		$filename  = $this->filename();
+
+		$path = $base_path . '/' . $type . '/' .$filename;
+
+		return apply_filters( 'mergebot_schema_generator_path', $path, $base_path , $this->type, $this->filename() ) ;
 	}
 
 	/**
