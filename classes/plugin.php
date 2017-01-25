@@ -108,20 +108,9 @@ class Mergebot_Schema_Generator {
 	}
 
 	protected function set_wp_data() {
-		$wp_tables = array(
-			'posts',
-			'comments',
-			'links',
-			'options',
-			'postmeta',
-			'terms',
-			'term_taxonomy',
-			'term_relationships',
-			'termmeta',
-			'commentmeta',
-			'users',
-			'usermeta',
-		);
+		global $wpdb;
+		$wp_tables = array_merge( $wpdb->tables, $wpdb->global_tables, $wpdb->ms_global_tables );
+
 
 		$this->wp_tables = $this->get_table_columns( $wp_tables );
 		$this->wp_primary_keys = Primary_Keys::get_primary_keys( $this->wp_tables );
@@ -130,15 +119,7 @@ class Mergebot_Schema_Generator {
 	public function get_table_columns( $tables ) {
 		global $wpdb;
 		$all_tables = array();
-		$excluded   = array(
-			'blogs',
-			'blog_versions',
-			'registration_log',
-			'site',
-			'sitemeta',
-			'signups',
-			'sitecategories',
-		);
+		$excluded   = apply_filters( 'mergebot_schema_generator_excluded_tables', array() );
 
 		foreach ( $tables as $table ) {
 			$table = str_ireplace( array( '{', '}', '`', '([^', '$wpdb->prefix', '$wpdb->', $wpdb->prefix ), '', $table );

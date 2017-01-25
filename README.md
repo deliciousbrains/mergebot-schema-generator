@@ -23,6 +23,8 @@ For WordPress core use:
 
 `wp mergebot-schema generate`
 
+When generating core schemas the command must be run from a multisite installation to ensure the network related tables are identified.
+
 ### Scope
 
 The generator will attempt define the following:
