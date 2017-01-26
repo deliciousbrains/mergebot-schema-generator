@@ -225,20 +225,21 @@ class Relationships extends Abstract_Element {
 				$serialized_value = Command::meta_serialized_value();
 				$serialized_parts = explode( '|', $serialized_value );
 
-				$serialized = array(
-					'key' => 'ignore',
-					'val' => 'ignore',
-				);
 				if ( 1 === count( $serialized_parts ) ) {
-					$serialized['val'] = $serialized_parts[0];
-				}
+					// Single dimensional array
+					$serialized_data['val'] = $serialized_parts[0];
+				} else if ( 2 === count( $serialized_parts ) ) {
+					// Multi dimensional array
+					$serialized = array(
+						'key' => 'ignore',
+						'val' => 'ignore',
+					);
 
-				if ( 2 === count( $serialized_parts ) ) {
 					$serialized['key'] = $serialized_parts[0];
 					$serialized['val'] = $serialized_parts[1];
-				}
 
-				$serialized_data['val'] = $serialized;
+					$serialized_data['val'] = $serialized;
+				}
 
 				$relationship_data['serialized'] = $serialized_data;
 
