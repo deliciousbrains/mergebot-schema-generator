@@ -322,7 +322,9 @@ class Schema extends Abstract_Element {
 	protected function add_keys_to_array( $data ) {
 		$new_data = array();
 		foreach ( $data as $value ) {
-			$new_key              = sha1( serialize( $value ) );
+			$keys = $value;
+			unset( $keys['serialized'] );
+			$new_key              = sha1( serialize( $keys ) );
 			$new_data[ $new_key ] = $value;
 		}
 
