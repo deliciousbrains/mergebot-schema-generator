@@ -181,25 +181,29 @@ class Schema extends Abstract_Element {
 	 */
 	public function load() {
 		$contents = $this->read();
-		$data     = json_decode( $contents );
+		$data     = json_decode( $contents, true );
 
 		$this->init_properties( $data );
 	}
 
-	protected function init_properties( $data ) {
+	protected function init_properties( $data = array() ) {
 		// Info
-		$this->name           = isset( $data->name ) ? $data->name : '';
-		$this->url            = isset( $data->url ) ? $data->url : '';
+		$this->name = $this->init_property( $data, 'name', '' );
+		$this->url  = $this->init_property( $data, 'url', '' );
 
 		// Data
-		$this->primary_keys   = isset( $data->primaryKeys ) ? (array) $data->primaryKeys : array();
-		$this->foreign_keys   = isset( $data->foreignKeys ) ? (array) $data->foreignKeys : array();
-		$this->shortcodes     = isset( $data->shortcodes ) ? (array) $data->shortcodes : array();
-		$this->relationships  = isset( $data->relationships ) ? (array) $data->relationships : array();
-		$this->content        = isset( $data->content ) ? (array) $data->content : array();
-		$this->table_prefixes = isset( $data->tablePrefixes ) ? (array) $data->tablePrefixes : array();
-		$this->ignore         = isset( $data->ignore ) ? (array) $data->ignore : array();
-		$this->file_types     = isset( $data->files ) ? (array) $data->files : array();
+		$this->primary_keys   = $this->init_property( $data, 'primaryKeys' );
+		$this->foreign_keys   = $this->init_property( $data, 'foreignKeys' );
+		$this->shortcodes     = $this->init_property( $data, 'shortcodes' );
+		$this->relationships  = $this->init_property( $data, 'relationships' );
+		$this->content        = $this->init_property( $data, 'content' );
+		$this->table_prefixes = $this->init_property( $data, 'tablePrefixes' );
+		$this->ignore         = $this->init_property( $data, 'ignore' );
+		$this->file_types     = $this->init_property( $data, 'files' );
+	}
+
+	protected function init_property( $data, $key, $default = array() ) {
+		return isset( $data[$key] ) ? $data[$key] : $default;
 	}
 
 	/**
@@ -208,7 +212,7 @@ class Schema extends Abstract_Element {
 	public function create() {
 		$this->from_scratch = true;
 		$this->write();
-		$this->init_properties( new \stdClass() );
+		$this->init_properties();
 		$this->set_properties();
 		$this->save();
 	}
