@@ -275,7 +275,8 @@ class Schema extends Abstract_Element {
 	 */
 	protected function set_property( $key, $value, $recursive = false ) {
 		if ( $recursive ) {
-			$this->array_merge_recursive( $this->{$key}, $value );
+			$this->{$key} = $this->array_merge_recursive( $this->{$key}, $value );
+
 			return;
 		}
 
@@ -286,7 +287,7 @@ class Schema extends Abstract_Element {
 		$array_1 = $this->add_keys_to_nested_arrays( $array_1 );
 		$array_2 = $this->add_keys_to_nested_arrays( $array_2 );
 
-		$merged = array_merge_recursive( $array_1, $array_2 );
+		$merged = array_replace_recursive( $array_1, $array_2 );
 		$merged = $this->remove_keys_to_nested_arrays( $merged );
 
 		return $merged;
@@ -321,10 +322,7 @@ class Schema extends Abstract_Element {
 	protected function add_keys_to_array( $data ) {
 		$new_data = array();
 		foreach ( $data as $value ) {
-			$new_key = '';
-			$array   = (array) $value;
-			$new_key .= key( $array );
-			$new_key .= current( $array );
+			$new_key              = sha1( serialize( $value ) );
 			$new_data[ $new_key ] = $value;
 		}
 
