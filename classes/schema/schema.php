@@ -265,15 +265,70 @@ class Schema extends Abstract_Element {
 		$this->set_property( 'shortcodes', $shortcodes );
 
 		$relationships       = Relationships::get_elements( $this );
-		$this->set_property( 'relationships', $relationships );
+		$this->set_property( 'relationships', $relationships, true );
 	}
 
 	/**
 	 * @param string $key
-	 * @param mixed $value
+	 * @param mixed  $value
+	 * @param bool   $recursive
 	 */
-	protected function set_property( $key, $value ) {
+	protected function set_property( $key, $value, $recursive = false ) {
+		if ( $recursive ) {
+			$this->array_merge_recursive( $this->{$key}, $value );
+			return;
+		}
+
 		$this->{$key} = array_merge( $this->{$key}, $value );
+	}
+
+	protected function array_merge_recursive( $array_1, $array_2 ) {
+		$array_1 = $this->add_keys_to_nested_arrays( $array_1 );
+		$array_2 = $this->add_keys_to_nested_arrays( $array_2 );
+
+		$merged = array_merge_recursive( $array_1, $array_2 );
+		$merged = $this->remove_keys_to_nested_arrays( $merged );
+
+		return $merged;
+	}
+
+	protected function remove_keys_to_nested_arrays( $data ) {
+		$new_data = array();
+		foreach ( $data as $element_key => $values ) {
+			if ( ! is_array( $values ) ) {
+				$new_data[ $element_key ] = $values;
+			}
+
+			$new_data[ $element_key ] = array_values( $values );
+		}
+
+		return $new_data;
+	}
+
+	protected function add_keys_to_nested_arrays( $data ) {
+		$new_data = array();
+		foreach ( $data as $element_key => $values ) {
+			if ( ! is_array( $values ) ) {
+				$new_data[ $element_key ] = $values;
+			}
+
+			$new_data[ $element_key ] = $this->add_keys_to_array( $values );
+		}
+
+		return $new_data;
+	}
+
+	protected function add_keys_to_array( $data ) {
+		$new_data = array();
+		foreach ( $data as $value ) {
+			$new_key = '';
+			$array   = (array) $value;
+			$new_key .= key( $array );
+			$new_key .= current( $array );
+			$new_data[ $new_key ] = $value;
+		}
+
+		return $new_data;
 	}
 
 	/**
