@@ -61,6 +61,8 @@ class Command extends \WP_CLI_Command {
 			self::$skip = true;
 		}
 
+		mergebot_schema_generator()->set_wp_data();
+
 		if ( isset( $assoc_args['plugin'] ) && 'all' === $assoc_args['plugin'] ) {
 			// Regenerate all plugin existing schemas.
 			return $this->generate_all();

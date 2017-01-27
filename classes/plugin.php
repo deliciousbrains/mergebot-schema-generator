@@ -97,7 +97,6 @@ class Mergebot_Schema_Generator {
 		spl_autoload_register( array( self::$instance, 'autoloader' ) );
 
 		$this->set_schema_path();
-		$this->set_wp_data();
 	}
 
 	protected function set_schema_path() {
@@ -107,7 +106,7 @@ class Mergebot_Schema_Generator {
 		$this->schema_path = $path;
 	}
 
-	protected function set_wp_data() {
+	public function set_wp_data() {
 		global $wpdb;
 		$wp_tables = array_merge( $wpdb->tables, $wpdb->global_tables, $wpdb->ms_global_tables );
 
