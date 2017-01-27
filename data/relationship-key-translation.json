@@ -30,5 +30,12 @@
                 "_field_' . $field_id": "_field_{nf3_fields:id}"
             }
         }
+    },
+    "wordpress-4.7": {
+        "options": {
+            "option_name": {
+                "new_user_' . $newuser_key": "new_user_(.*)"
+            }
+        }
     }
 }
