@@ -341,7 +341,6 @@ class Relationships extends Abstract_Element {
 			return $functions;
 		}
 
-		$functions = array();
 		if ( 'site' === $entity ) {
 			$functions['add_site_option\s*\(']    = 'add_site_option';
 			$functions['update_site_option\s*\('] = 'update_site_option';
