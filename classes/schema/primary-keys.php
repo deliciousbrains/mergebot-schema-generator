@@ -30,6 +30,7 @@ class Primary_Keys extends Abstract_Element {
 	public static function get_primary_keys( $tables ) {
 		$primary_keys = array();
 		foreach ( $tables as $table => $columns ) {
+			$compound_pks = array();
 			foreach ( $columns as $column ) {
 				if ( false === stripos( $column->Type, 'int' ) ) {
 					continue;
@@ -37,7 +38,19 @@ class Primary_Keys extends Abstract_Element {
 
 				if ( self::is_pk_column( $column ) ) {
 					$primary_keys[ $table ] = $column->Field;
+
+					break;
 				}
+
+				if ( self::is_maybe_compound_pk_column( $column ) ) {
+					$compound_pks[] = $column->Field;
+
+					continue;
+				}
+			}
+
+			if ( count( $compound_pks ) > 1 ) {
+				$primary_keys[ $table ] = $compound_pks;
 			}
 		}
 
@@ -53,6 +66,21 @@ class Primary_Keys extends Abstract_Element {
 	 */
 	public static function is_pk_column( $column ) {
 		return 'auto_increment' === $column->Extra;
+	}
+
+	/**
+	 * Is a MySQL table column a Primary Key?
+	 *
+	 * @param object $column
+	 *
+	 * @return bool
+	 */
+	public static function is_maybe_compound_pk_column( $column ) {
+		if ( 'PRI' !== $column->Key ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

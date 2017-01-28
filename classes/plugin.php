@@ -140,10 +140,34 @@ class Mergebot_Schema_Generator {
 				continue;
 			}
 
-			$all_tables[ $table ] = $wpdb->get_results( 'DESCRIBE ' . $wpdb->prefix . $table );
+			$columns = $wpdb->get_results( 'DESCRIBE ' . $wpdb->prefix . $table );
+			$columns = $this->get_column_indexes( $table, $columns );
+
+			$all_tables[ $table ] = $columns;
 		}
 
 		return $all_tables;
+	}
+
+	protected function get_column_indexes( $table, $columns ) {
+		global $wpdb;
+		$indexes = $wpdb->get_results( 'SHOW INDEX FROM ' . $wpdb->prefix . $table );
+
+		foreach ( $columns as $key => $column ) {
+			$column->Indexes = array();
+
+			foreach ( $indexes as $index ) {
+				if ( $column->Field !== $index->Column_name ) {
+					continue;
+				}
+
+				$column->Indexes[] = $index;
+			}
+
+			$columns[ $key ] = $column;
+		}
+
+		return $columns;
 	}
 
 	/**
