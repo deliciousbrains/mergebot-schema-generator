@@ -127,7 +127,7 @@ class Mergebot_Schema_Generator {
 	public function get_table_columns( $tables ) {
 		global $wpdb;
 		$all_tables = array();
-		$excluded   = apply_filters( 'mergebot_schema_generator_excluded_tables', array() );
+		$excluded   = apply_filters( 'mergebot_schema_generator_excluded_tables', array( 'sitecategories' ) );
 
 		foreach ( $tables as $table ) {
 			$table = $this->strip_prefix_from_table( $table );
