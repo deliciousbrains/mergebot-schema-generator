@@ -17,7 +17,7 @@ class Relationships extends Abstract_Element {
 	protected static $element = 'Relationships';
 	protected static $colour = 'G';
 
-	protected static function find_elements( Schema $schema ) {
+	public static function find_elements( Schema $schema ) {
 		$meta_tables = self::get_meta_tables( $schema );
 
 		$entities       = self::get_meta_data( $meta_tables, $schema );

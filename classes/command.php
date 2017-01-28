@@ -385,6 +385,33 @@ class Command extends \WP_CLI_Command {
 	}
 
 	/**
+	 * Ask if we should keep an element that exists in schema but no longer in plugin/core
+	 *
+	 * @param string $object
+	 * @param string $version
+	 * @param string $type
+	 * @param string $key
+	 * @param array  $assoc_args
+	 *
+	 * @return string
+	 */
+	public static function keep_element( $object, $version, $type, $key, $assoc_args = array() ) {
+		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
+			$type = \WP_CLI::colorize( '%B' . $type . '%n' );
+			$key  = \WP_CLI::colorize( '%G' . $key . '%n' );
+			fwrite( STDOUT, "$type: $key exists in the schema but no longer exists in $object v$version, keep it? [Y/n]" );
+
+			$answer = strtolower( trim( fgets( STDIN ) ) );
+
+			if ( 'n' == $answer || empty( $answer ) ) {
+				return false;
+			}
+
+			return $answer;
+		}
+	}
+
+	/**
 	 * Asks if we want to overwrite the saved schema property.
 	 *
 	 * @param array  $assoc_args

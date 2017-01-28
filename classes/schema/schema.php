@@ -256,31 +256,79 @@ class Schema extends Abstract_Element {
 		$this->set_info();
 		$this->table_columns = Mergebot_Schema_Generator()->get_table_columns( $this->tables );
 		$primary_keys        = $this->primary_keys();
-		$this->set_property( 'primary_keys', $primary_keys );
+		$this->set_property( 'primary_keys', $primary_keys, $primary_keys );
 
 		$foreign_keys        = Foreign_Keys::get_foreign_keys( $this );
-		$this->set_property( 'foreign_keys', $foreign_keys );
+		$this->set_property( 'foreign_keys', $foreign_keys, $foreign_keys );
 
-		$shortcodes          = Shortcodes::get_elements( $this );
-		$this->set_property( 'shortcodes', $shortcodes );
+		$all_shortcodes = Shortcodes::find_elements( $this );
+		$shortcodes     = Shortcodes::get_elements( $this, $all_shortcodes );
+		$this->set_property( 'shortcodes', $shortcodes, $all_shortcodes );
 
-		$relationships       = Relationships::get_elements( $this );
-		$this->set_property( 'relationships', $relationships, true );
+		$all_relationships       = Relationships::find_elements( $this );
+		$relationships       = Relationships::get_elements( $this, $all_relationships );
+		$this->set_property( 'relationships', $relationships, $all_relationships, true );
 	}
 
 	/**
 	 * @param string $key
-	 * @param mixed  $value
+	 * @param mixed  $new_values
+	 * @param mixed  $all_values
 	 * @param bool   $recursive
 	 */
-	protected function set_property( $key, $value, $recursive = false ) {
+	protected function set_property( $key, $new_values, $all_values = null, $recursive = false ) {
+		$existing = $this->{$key};
+		if ( is_null( $all_values ) ) {
+			$all_values = $new_values;
+		}
+
 		if ( $recursive ) {
-			$this->{$key} = $this->array_merge_recursive( $this->{$key}, $value );
+			$existing = $this->elements_diff_recursive( $key, $existing, $all_values );
+			$this->{$key} = $this->array_merge_recursive( $existing, $new_values );
 
 			return;
 		}
 
-		$this->{$key} = array_merge( $this->{$key}, $value );
+		$existing = $this->elements_diff( $key, $existing, $all_values );
+		$this->{$key} = array_merge( $existing, $new_values );
+	}
+
+	protected function elements_diff( $key, $existing, $current ) {
+		$existing_not_found = array_diff_key( $existing, $current );
+		foreach ( $existing_not_found as $element_key => $element_value ) {
+			// This is the schema but doesn't exist in Object Version
+			// Remove or keep?
+			$keep = Command::keep_element( $this->slug, $this->version, $key, $element_key );
+			if ( false === $keep ) {
+				unset( $existing[ $element_key ] );
+			}
+		}
+
+		return $existing;
+	}
+
+	protected function elements_diff_recursive( $key, $existing, $current ) {
+		$array_1 = $this->get_keys_from_nested_arrays( $existing );
+
+		foreach ( $array_1 as $existing_key => $values ) {
+			$current_values = isset( $current[ $existing_key ] ) ? $current[ $existing_key ] : array();
+
+			$existing_not_found = array_diff_key( $values, $current_values );
+			foreach ( $existing_not_found as $entity_key => $entity ) {
+				foreach ( $entity as $element_key => $element_value ) {
+					// This is the schema but doesn't exist in Object Version
+					// Remove or keep?
+					$keep = Command::keep_element( $this->slug, $this->version, $key, $element_key );
+					if ( false === $keep ) {
+						unset( $array_1[ $existing_key ] [ $entity_key ] );
+					}
+				}
+			}
+		}
+
+		$existing = $this->remove_keys_to_nested_arrays( $array_1 );
+
+		return $existing;
 	}
 
 	protected function array_merge_recursive( $array_1, $array_2 ) {
@@ -319,12 +367,31 @@ class Schema extends Abstract_Element {
 		return $new_data;
 	}
 
-	protected function add_keys_to_array( $data ) {
+	protected function get_keys_from_nested_arrays( $data ) {
+		$new_data = array();
+		foreach ( $data as $element_key => $values ) {
+			if ( ! is_array( $values ) ) {
+				$new_data[ $element_key ] = $values;
+			}
+
+			$new_data[ $element_key ] = $this->add_keys_to_array( $values, false );
+		}
+
+		return $new_data;
+	}
+
+	protected function add_keys_to_array( $data, $whole_array = true ) {
 		$new_data = array();
 		foreach ( $data as $value ) {
-			$keys = $value;
-			unset( $keys['serialized'] );
-			$new_key              = sha1( serialize( $keys ) );
+			if ( $whole_array ) {
+				$keys = $value;
+				unset( $keys['serialized'] );
+				$new_key = sha1( serialize( $keys ) );
+			} else {
+				$key = key( $value );
+				$new_key = $value[ $key ];
+			}
+
 			$new_data[ $new_key ] = $value;
 		}
 
