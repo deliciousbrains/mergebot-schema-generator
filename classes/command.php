@@ -396,6 +396,10 @@ class Command extends \WP_CLI_Command {
 	 * @return string
 	 */
 	public static function keep_element( $object, $version, $type, $key, $assoc_args = array() ) {
+		if ( self::$skip ) {
+			return 'y';
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 			$type = \WP_CLI::colorize( '%B' . $type . '%n' );
 			$key  = \WP_CLI::colorize( '%G' . $key . '%n' );
