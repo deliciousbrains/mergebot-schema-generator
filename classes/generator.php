@@ -39,6 +39,14 @@ class Generator {
 		}
 	}
 
+	public static function get_generated_core() {
+		$schema_dir = apply_filters( 'mergebot_schema_generator_core_path', Mergebot_Schema_Generator()->schema_path . '/core' );
+
+		$plugins = array_diff( scandir( $schema_dir), array( '..', '.' ) );
+
+		return $plugins;
+	}
+
 	public static function get_generated_plugins() {
 		$schema_dir = apply_filters( 'mergebot_schema_generator_plugins_path', Mergebot_Schema_Generator()->schema_path . '/plugins' );
 
@@ -65,6 +73,10 @@ class Generator {
 		// Remove Version
 		array_pop( $parts );
 		$slug       = implode( '-', $parts );
+
+		if ( 1 === count( $parts ) && 'wordpress' === $parts[0] ) {
+			return $parts[0];
+		}
 
 		$found = Schema::get_slug_from_schema( $slug );
 		if ( $found ) {
