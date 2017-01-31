@@ -252,6 +252,75 @@ class Relationships extends Abstract_Element {
 		return $relationships;
 	}
 
+	public static function merge_relationships( $schema, $existing, $new, $entity ) {
+		$merged      = array();
+		$meta_tables = self::get_meta_tables( $schema );
+		$entities    = self::get_meta_data( $meta_tables, $schema );
+
+		foreach( $new as $key => $data ) {
+			if ( ! isset( $existing[ $key ] ) ) {
+				$merged[ $key ] = $data;
+
+				continue;
+			}
+
+			$existing_data = $existing[ $key ];
+			// Check if relationship is serialized
+			if ( ! isset( $data['serialized'] ) && ! isset( $existing_data['serialized'] ) ) {
+				$merged[ $key ] = $data;
+
+				continue;
+			}
+
+			if ( ! isset( $data['serialized'] ) && isset( $existing_data['serialized'] ) ) {
+				\WP_CLI::info( 'Existing data is serialized, new data for ' . $key . ' is not' );
+				$merged[ $key ] = $data;
+
+				continue;
+			}
+
+			if ( isset( $data['serialized'] ) && ! isset( $existing_data['serialized'] ) ) {
+				\WP_CLI::info( 'New data is serialized, existing data for ' . $key . ' is not' );
+				$merged[ $key ] = $data;
+
+				continue;
+			}
+
+			if ( serialize( $data['serialized']) === serialize( $existing_data['serialized'] ) ) {
+				$merged[ $key ] = $data;
+
+				continue;
+			}
+
+			$value_name                  = $entities[ $entity ]['columns']['value'];
+			$data['serialized']['table'] = $data[ $value_name ];
+			if ( ! is_array( $existing_data['serialized'] ) ) {
+				// Turn serialized data into array for multiple references
+				$value_name                      = $entities[ $entity ]['columns']['value'];
+				$serialized                      = array();
+				$existing_data['serialized']['table'] = $existing_data[ $value_name ];
+				unset( $existing_data[ $value_name ] );
+				$serialized[] = $existing_data['serialized'];
+
+				$existing_data['serialized'] = $serialized;
+			}
+
+			// Add duplicate relationship to serialized array if already an array
+			$existing_data['serialized'][] = $data['serialized'];
+
+			$merged[ $key ] = $existing_data;
+		}
+
+		foreach ( $existing as $key => $value ) {
+			if ( isset( $new[ $key ] ) ) {
+				continue;
+			}
+			$merged[ $key ] = $value;
+		}
+
+		return $merged;
+	}
+
 	/**
 	 * Add the relationship to the main array.
 	 *
@@ -269,17 +338,44 @@ class Relationships extends Abstract_Element {
 			return $relationships;
 		}
 
-		$json_data = json_encode( $data );
-		foreach ( $relationships[ $entity ] as $element ) {
-			if ( json_encode( $element ) === $json_data ) {
-				// Relationship element exists already in Schema, don't duplicate.
-				return $relationships;
-			}
+		if ( ! isset( $relationships[ $entity ][ $key ] ) ) {
+			$relationships[ $entity ][ $key ] = $data;
+
+			return $relationships;
 		}
 
-		$relationships[ $entity ][] = $data;
+		$existing = $relationships[ $entity ][ $key ];
+		// Check if existing relationship is serialized
+		if ( ! isset( $existing['serialized'] ) ) {
+			\WP_CLI::warning( "Relationship for $key already exists" );
 
-		return $relationships;
+			return $relationships;
+		}
+
+		if ( ! isset( $data['serialized'] ) ) {
+			\WP_CLI::warning( "No serialized relationship for $key" );
+
+			return $relationships;
+		}
+
+		$data['serialized']['table'] = $entity;
+
+
+		if ( ! is_array( $existing['serialized'] ) ) {
+			// Turn serialized data into array for multiple references
+			$value_name                      = $entities[ $entity ]['columns']['value'];
+			$serialized                      = array();
+			$existing['serialized']['table'] = $existing[ $value_name ];
+			unset( $existing[ $value_name ] );
+			$serialized[] = $existing['serialized'];
+
+			$existing['serialized'] = $serialized;
+		}
+
+		// Add duplicate relationship to serialized array if already an array
+		$existing['serialized'][] = $data['serialized'];
+
+		$relationships[ $entity ][ $key ] = $existing;
 	}
 
 	/**

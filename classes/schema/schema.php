@@ -265,7 +265,7 @@ class Schema extends Abstract_Element {
 		$shortcodes     = Shortcodes::get_elements( $this, $all_shortcodes );
 		$this->set_property( 'shortcodes', $shortcodes, $all_shortcodes );
 
-		$all_relationships       = Relationships::find_elements( $this );
+		$all_relationships    = Relationships::find_elements( $this );
 		$relationships       = Relationships::get_elements( $this, $all_relationships );
 		$this->set_property( 'relationships', $relationships, $all_relationships, true );
 	}
@@ -284,13 +284,16 @@ class Schema extends Abstract_Element {
 
 		if ( $recursive ) {
 			$existing = $this->elements_diff_recursive( $key, $existing, $all_values );
-			$this->{$key} = $this->array_merge_recursive( $existing, $new_values );
-
+			$merged = $this->array_merge_recursive( $key, $existing, $new_values );
+			ksort( $merged );
+			$this->{$key} = $merged;
 			return;
 		}
 
 		$existing = $this->elements_diff( $key, $existing, $all_values );
-		$this->{$key} = array_merge( $existing, $new_values );
+		$merged   = array_merge( $existing, $new_values );
+		ksort( $merged );
+		$this->{$key} = $merged;
 	}
 
 	protected function elements_diff( $key, $existing, $current ) {
@@ -308,37 +311,77 @@ class Schema extends Abstract_Element {
 	}
 
 	protected function elements_diff_recursive( $key, $existing, $current ) {
-		$array_1 = $this->get_keys_from_nested_arrays( $existing );
-
-		foreach ( $array_1 as $existing_key => $values ) {
+		foreach ( $existing as $existing_key => $values ) {
 			$current_values = isset( $current[ $existing_key ] ) ? $current[ $existing_key ] : array();
+			$values = $this->add_array_keys( $values );
+
+			$existing[ $existing_key ] = $values;
 
 			$existing_not_found = array_diff_key( $values, $current_values );
-			foreach ( $existing_not_found as $entity_key => $entity ) {
-				foreach ( $entity as $element_key => $element_value ) {
-					// This is the schema but doesn't exist in Object Version
-					// Remove or keep?
-					$keep = Command::keep_element( $this->slug, $this->version, $key, $element_key );
-					if ( false === $keep ) {
-						unset( $array_1[ $existing_key ] [ $entity_key ] );
-					}
+			foreach ( $existing_not_found as $element_key => $element_value ) {
+				// This is the schema but doesn't exist in Object Version
+				// Remove or keep?
+				$keep = Command::keep_element( $this->slug, $this->version, $key . ' - ' . $existing_key, $element_key );
+				if ( false === $keep ) {
+					unset( $existing[ $existing_key ] [ $element_key ] );
 				}
 			}
 		}
 
-		$existing = $this->remove_keys_to_nested_arrays( $array_1 );
-
 		return $existing;
 	}
 
-	protected function array_merge_recursive( $array_1, $array_2 ) {
-		$array_1 = $this->add_keys_to_nested_arrays( $array_1 );
-		$array_2 = $this->add_keys_to_nested_arrays( $array_2 );
+	protected function array_merge_recursive( $section, $array_1, $array_2 ) {
+		$merged = array();
+		foreach ( $array_2 as $key => $value ) {
+			if ( ! isset( $array_1[ $key ] ) ) {
+				$merged[ $key ] = $value;
+				continue;
+			}
 
-		$merged = array_replace_recursive( $array_1, $array_2 );
-		$merged = $this->remove_keys_to_nested_arrays( $merged );
+			if ( 'relationships' === $section ) {
+				$merged[ $key ] = Relationships::merge_relationships( $this, $array_1[ $key ], $value, $key );
+				continue;
+			}
+
+			$merged[ $key ] = array_merge( $array_1[ $key ], $value );
+		}
+
+		foreach ( $array_1 as $key => $value ) {
+			if ( isset( $array_2[ $key ] ) ) {
+				continue;
+			}
+			$merged[ $key ] = $value;
+		}
+
+		foreach ( $merged as $key => $value ) {
+			ksort( $value );
+			$merged[ $key ] = $value;
+		}
 
 		return $merged;
+	}
+
+	protected function is_assoc_array( array $arr ) {
+		if ( array() === $arr ) {
+			return false;
+		}
+
+		return array_keys( $arr ) !== range( 0, count( $arr ) - 1 );
+	}
+
+	protected function add_array_keys( $array ) {
+		if ( $this->is_assoc_array( $array ) ) {
+			return $array;
+		}
+
+		$new = array();
+		foreach ( $array as $data ) {
+			$key         = $this->get_key_rel_data( $data );
+			$new[ $key ] = $data;
+		}
+
+		return $new;
 	}
 
 	protected function remove_keys_to_nested_arrays( $data ) {
@@ -378,6 +421,12 @@ class Schema extends Abstract_Element {
 		}
 
 		return $new_data;
+	}
+
+	protected function get_key_rel_data( $data ) {
+		$key = key( $data );
+
+		return $data[ $key ];
 	}
 
 	protected function add_keys_to_array( $data, $whole_array = true ) {
