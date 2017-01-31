@@ -144,6 +144,7 @@ class Relationships extends Abstract_Element {
 				fwrite( STDOUT, $_entity . ' with key: ' . $_key . ' and value: ' . $_value . "\n" );
 
 				if ( false === $schema->from_scratch && ( bool) ( $existing_data = self::meta_exists_in_schema( $schema, $entity, $key ) ) ) {
+					$key = self::get_key_translation( $schema, $entity, $key );
 					$result = true;
 					if ( ! $exit ) {
 						// Relationship already defined in schema, ask to overwrite
@@ -151,7 +152,7 @@ class Relationships extends Abstract_Element {
 					}
 
 					if ( $exit || false === $result || 'exit' === $result ) {
-						$relationships = self::save_relationship( $relationships, $entity, $existing_data );
+						$relationships = self::save_relationship( $relationships, $entities, $entity, $key, $existing_data );
 
 						if ( ! $exit && 'exit' === $result ) {
 							$exit = true;
@@ -201,7 +202,7 @@ class Relationships extends Abstract_Element {
 						$entities[ $entity ]['columns']['value'] => $target_table,
 					);
 
-					$relationships = self::save_relationship( $relationships, $entity, $relationship_data );
+					$relationships = self::save_relationship( $relationships, $entities, $entity, $key, $relationship_data );
 
 					continue;
 				}
@@ -244,16 +245,26 @@ class Relationships extends Abstract_Element {
 				$relationship_data['serialized'] = $serialized_data;
 
 				// If so, record the response in the format for the json
-				$relationships = self::save_relationship( $relationships, $entity, $relationship_data );
+				$relationships = self::save_relationship( $relationships, $entities, $entity, $key, $relationship_data );
 			}
 		}
 
 		return $relationships;
 	}
 
-	protected static function save_relationship( $relationships, $entity, $data ) {
+	/**
+	 * Add the relationship to the main array.
+	 *
+	 * @param array  $relationships
+	 * @param string $entity Table name
+	 * @param string $key Key name
+	 * @param array  $data
+	 *
+	 * @return array
+	 */
+	protected static function save_relationship( $relationships, $entities, $entity, $key, $data ) {
 		if ( ! isset( $relationships[ $entity ] ) ) {
-			$relationships[ $entity ][] = $data;
+			$relationships[ $entity ][$key] = $data;
 
 			return $relationships;
 		}
