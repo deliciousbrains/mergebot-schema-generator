@@ -422,7 +422,7 @@ class Command extends \WP_CLI_Command {
 
 			$answer = strtolower( trim( fgets( STDIN ) ) );
 
-			if ( 'n' == $answer || empty( $answer ) ) {
+			if ( 'n' == $answer ) {
 				return false;
 			}
 
