@@ -20,5 +20,6 @@
     "wordfence-wordfence": "wordfence",
     "wordpress-importer-wordpress-importer": "wordpress-importer",
     "wordpress-seo-wp-seo": "wordpress-seo",
-    "wp-super-cache-wp-cache": "wp-super-cache"
+    "wp-super-cache-wp-cache": "wp-super-cache",
+    "gravityformsstripe-stripe": "gravityformsstripe"
 }
