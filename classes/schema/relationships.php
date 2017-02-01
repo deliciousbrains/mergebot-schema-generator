@@ -129,6 +129,8 @@ class Relationships extends Abstract_Element {
 		$entities = self::get_meta_data( $meta_tables, $schema );
 		$exit     = false;
 
+		ksort( $elements );
+
 		foreach ( $elements as $entity => $data ) {
 			foreach ( $data as $key => $relationship ) {
 				$value = $relationship['value'];
