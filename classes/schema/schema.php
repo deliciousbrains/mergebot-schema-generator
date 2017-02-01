@@ -362,7 +362,7 @@ class Schema extends Abstract_Element {
 		return $merged;
 	}
 
-	protected function is_assoc_array( array $arr ) {
+	public static function is_assoc_array( array $arr ) {
 		if ( array() === $arr ) {
 			return false;
 		}
@@ -371,7 +371,7 @@ class Schema extends Abstract_Element {
 	}
 
 	protected function add_array_keys( $array ) {
-		if ( $this->is_assoc_array( $array ) ) {
+		if ( self::is_assoc_array( $array ) ) {
 			return $array;
 		}
 

@@ -292,23 +292,7 @@ class Relationships extends Abstract_Element {
 				continue;
 			}
 
-			$value_name                  = $entities[ $entity ]['columns']['value'];
-			$data['serialized']['table'] = $data[ $value_name ];
-			if ( ! is_array( $existing_data['serialized'] ) ) {
-				// Turn serialized data into array for multiple references
-				$value_name                      = $entities[ $entity ]['columns']['value'];
-				$serialized                      = array();
-				$existing_data['serialized']['table'] = $existing_data[ $value_name ];
-				unset( $existing_data[ $value_name ] );
-				$serialized[] = $existing_data['serialized'];
-
-				$existing_data['serialized'] = $serialized;
-			}
-
-			// Add duplicate relationship to serialized array if already an array
-			$existing_data['serialized'][] = $data['serialized'];
-
-			$merged[ $key ] = $existing_data;
+			$merged[ $key ] = $data;
 		}
 
 		foreach ( $existing as $key => $value ) {
@@ -319,6 +303,32 @@ class Relationships extends Abstract_Element {
 		}
 
 		return $merged;
+	}
+
+	/**
+	 * Add new serialized item to array or convert single serialized relationship to an array.
+	 *
+	 * @param string $value_name_key
+	 * @param array $existing_item
+	 * @param array $new_item
+	 *
+	 * @return array
+	 */
+	protected static function merge_relationship_serialized( $value_name_key, $existing_item, $new_item ) {
+		$new_item_serialized = $new_item['serialized'];
+		$new_item_serialized = array( $value_name_key => $new_item[ $value_name_key ] ) + $new_item_serialized;
+
+		if ( Schema::is_assoc_array( $existing_item['serialized'] ) ) {
+			$existing_item_serialized      = $existing_item['serialized'];
+			$existing_item_serialized      = array( $value_name_key => $existing_item[ $value_name_key ] ) + $existing_item_serialized;
+			$existing_item['serialized']   = array();
+			$existing_item['serialized'][] = $existing_item_serialized;
+			unset( $existing_item[ $value_name_key ] );
+		}
+
+		$existing_item['serialized'][] = $new_item_serialized;
+
+		return $existing_item;
 	}
 
 	/**
@@ -358,24 +368,12 @@ class Relationships extends Abstract_Element {
 			return $relationships;
 		}
 
-		$data['serialized']['table'] = $entity;
-
-
-		if ( ! is_array( $existing['serialized'] ) ) {
-			// Turn serialized data into array for multiple references
-			$value_name                      = $entities[ $entity ]['columns']['value'];
-			$serialized                      = array();
-			$existing['serialized']['table'] = $existing[ $value_name ];
-			unset( $existing[ $value_name ] );
-			$serialized[] = $existing['serialized'];
-
-			$existing['serialized'] = $serialized;
-		}
-
-		// Add duplicate relationship to serialized array if already an array
-		$existing['serialized'][] = $data['serialized'];
+		$value_name = $entities[ $entity ]['columns']['value'];
+		$existing   = self::merge_relationship_serialized( $value_name, $data, $existing );
 
 		$relationships[ $entity ][ $key ] = $existing;
+
+		return $relationships;
 	}
 
 	/**
