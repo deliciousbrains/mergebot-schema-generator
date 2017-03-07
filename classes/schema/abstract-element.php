@@ -18,10 +18,8 @@ abstract class Abstract_Element {
 	protected static $element;
 	protected static $colour;
 
-	public static function get_elements( Schema $schema ) {
+	public static function get_elements( Schema $schema, $elements ) {
 		Mergebot_Schema_Generator::log( rtrim( static::$element, 's' ) . 's', '%' . static::$colour );
-
-		$elements       = static::find_elements( $schema );
 		$total_elements = static::get_total_elements( $elements );
 		$message        = sprintf( 'Processing %s %s', $total_elements, static::$element );
 		$progress_bar   = \WP_CLI\Utils\make_progress_bar( \WP_CLI::colorize( '%' . static::$colour . $message . ':%n' ), $total_elements );
@@ -32,7 +30,7 @@ abstract class Abstract_Element {
 		return $elements;
 	}
 
-	protected static function find_elements( Schema $schema ) {
+	public static function find_elements( Schema $schema ) {
 	}
 
 	protected static function ask_elements( Schema $schema, $elements, $progress_bar ) {

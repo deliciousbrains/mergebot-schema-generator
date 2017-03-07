@@ -256,41 +256,132 @@ class Schema extends Abstract_Element {
 		$this->set_info();
 		$this->table_columns = Mergebot_Schema_Generator()->get_table_columns( $this->tables );
 		$primary_keys        = $this->primary_keys();
-		$this->set_property( 'primary_keys', $primary_keys );
+		$this->set_property( 'primary_keys', $primary_keys, $primary_keys );
 
 		$foreign_keys        = Foreign_Keys::get_foreign_keys( $this );
-		$this->set_property( 'foreign_keys', $foreign_keys );
+		$this->set_property( 'foreign_keys', $foreign_keys, $foreign_keys );
 
-		$shortcodes          = Shortcodes::get_elements( $this );
-		$this->set_property( 'shortcodes', $shortcodes );
+		$all_shortcodes = Shortcodes::find_elements( $this );
+		$shortcodes     = Shortcodes::get_elements( $this, $all_shortcodes );
+		$this->set_property( 'shortcodes', $shortcodes, $all_shortcodes );
 
-		$relationships       = Relationships::get_elements( $this );
-		$this->set_property( 'relationships', $relationships, true );
+		$all_relationships    = Relationships::find_elements( $this );
+		$relationships       = Relationships::get_elements( $this, $all_relationships );
+		$this->set_property( 'relationships', $relationships, $all_relationships, true );
 	}
 
 	/**
 	 * @param string $key
-	 * @param mixed  $value
+	 * @param mixed  $new_values
+	 * @param mixed  $all_values
 	 * @param bool   $recursive
 	 */
-	protected function set_property( $key, $value, $recursive = false ) {
-		if ( $recursive ) {
-			$this->{$key} = $this->array_merge_recursive( $this->{$key}, $value );
+	protected function set_property( $key, $new_values, $all_values = null, $recursive = false ) {
+		$existing = $this->{$key};
+		if ( is_null( $all_values ) ) {
+			$all_values = $new_values;
+		}
 
+		if ( $recursive ) {
+			$existing = $this->elements_diff_recursive( $key, $existing, $all_values );
+			$merged = $this->array_merge_recursive( $key, $existing, $new_values );
+			ksort( $merged );
+			$this->{$key} = $merged;
 			return;
 		}
 
-		$this->{$key} = array_merge( $this->{$key}, $value );
+		$existing = $this->elements_diff( $key, $existing, $all_values );
+		$merged   = array_merge( $existing, $new_values );
+		ksort( $merged );
+		$this->{$key} = $merged;
 	}
 
-	protected function array_merge_recursive( $array_1, $array_2 ) {
-		$array_1 = $this->add_keys_to_nested_arrays( $array_1 );
-		$array_2 = $this->add_keys_to_nested_arrays( $array_2 );
+	protected function elements_diff( $key, $existing, $current ) {
+		$existing_not_found = array_diff_key( $existing, $current );
+		foreach ( $existing_not_found as $element_key => $element_value ) {
+			// This is the schema but doesn't exist in Object Version
+			// Remove or keep?
+			$keep = Command::keep_element( $this->slug, $this->version, $key, $element_key );
+			if ( false === $keep ) {
+				unset( $existing[ $element_key ] );
+			}
+		}
 
-		$merged = array_replace_recursive( $array_1, $array_2 );
-		$merged = $this->remove_keys_to_nested_arrays( $merged );
+		return $existing;
+	}
+
+	protected function elements_diff_recursive( $key, $existing, $current ) {
+		foreach ( $existing as $existing_key => $values ) {
+			$current_values = isset( $current[ $existing_key ] ) ? $current[ $existing_key ] : array();
+			$values = $this->add_array_keys( $values );
+
+			$existing[ $existing_key ] = $values;
+
+			$existing_not_found = array_diff_key( $values, $current_values );
+			foreach ( $existing_not_found as $element_key => $element_value ) {
+				// This is the schema but doesn't exist in Object Version
+				// Remove or keep?
+				$keep = Command::keep_element( $this->slug, $this->version, $key . ' - ' . $existing_key, $element_key );
+				if ( false === $keep ) {
+					unset( $existing[ $existing_key ] [ $element_key ] );
+				}
+			}
+		}
+
+		return $existing;
+	}
+
+	protected function array_merge_recursive( $section, $array_1, $array_2 ) {
+		$merged = array();
+		foreach ( $array_2 as $key => $value ) {
+			if ( ! isset( $array_1[ $key ] ) ) {
+				$merged[ $key ] = $value;
+				continue;
+			}
+
+			if ( 'relationships' === $section ) {
+				$merged[ $key ] = Relationships::merge_relationships( $this, $array_1[ $key ], $value, $key );
+				continue;
+			}
+
+			$merged[ $key ] = array_merge( $array_1[ $key ], $value );
+		}
+
+		foreach ( $array_1 as $key => $value ) {
+			if ( isset( $array_2[ $key ] ) ) {
+				continue;
+			}
+			$merged[ $key ] = $value;
+		}
+
+		foreach ( $merged as $key => $value ) {
+			ksort( $value );
+			$merged[ $key ] = $value;
+		}
 
 		return $merged;
+	}
+
+	public static function is_assoc_array( array $arr ) {
+		if ( array() === $arr ) {
+			return false;
+		}
+
+		return array_keys( $arr ) !== range( 0, count( $arr ) - 1 );
+	}
+
+	protected function add_array_keys( $array ) {
+		if ( self::is_assoc_array( $array ) ) {
+			return $array;
+		}
+
+		$new = array();
+		foreach ( $array as $data ) {
+			$key         = $this->get_key_rel_data( $data );
+			$new[ $key ] = $data;
+		}
+
+		return $new;
 	}
 
 	protected function remove_keys_to_nested_arrays( $data ) {
@@ -319,12 +410,37 @@ class Schema extends Abstract_Element {
 		return $new_data;
 	}
 
-	protected function add_keys_to_array( $data ) {
+	protected function get_keys_from_nested_arrays( $data ) {
+		$new_data = array();
+		foreach ( $data as $element_key => $values ) {
+			if ( ! is_array( $values ) ) {
+				$new_data[ $element_key ] = $values;
+			}
+
+			$new_data[ $element_key ] = $this->add_keys_to_array( $values, false );
+		}
+
+		return $new_data;
+	}
+
+	protected function get_key_rel_data( $data ) {
+		$key = key( $data );
+
+		return $data[ $key ];
+	}
+
+	protected function add_keys_to_array( $data, $whole_array = true ) {
 		$new_data = array();
 		foreach ( $data as $value ) {
-			$keys = $value;
-			unset( $keys['serialized'] );
-			$new_key              = sha1( serialize( $keys ) );
+			if ( $whole_array ) {
+				$keys = $value;
+				unset( $keys['serialized'] );
+				$new_key = sha1( serialize( $keys ) );
+			} else {
+				$key = key( $value );
+				$new_key = $value[ $key ];
+			}
+
 			$new_data[ $new_key ] = $value;
 		}
 

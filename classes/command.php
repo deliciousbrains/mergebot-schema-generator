@@ -42,6 +42,9 @@ class Command extends \WP_CLI_Command {
 	 * [--skip]
 	 * : Don't ask any questions, ie. load existing schema as is, or create bare miniumum
 	 *
+	 * [--all]
+	 * : Regenerate all core schemas
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp mergebot-schema generate
@@ -68,15 +71,24 @@ class Command extends \WP_CLI_Command {
 			return $this->generate_all();
 		}
 
+		if ( ! isset( $assoc_args['plugin'] ) && isset( $assoc_args['all'] ) ) {
+			// Regenerate all plugin existing schemas.
+			return $this->generate_all( false );
+		}
+
 		$this->generate_one( $assoc_args );
 	}
 
-	protected function generate_all() {
-		$existing_schemas = Generator::get_generated_plugins();
+	protected function generate_all( $plugin = true ) {
+		if ($plugin) {
+			$existing_schemas = Generator::get_generated_plugins();
+		} else {
+			$existing_schemas = Generator::get_generated_core();
+		}
 
-		foreach( $existing_schemas as $schema ) {
+		foreach ( $existing_schemas as $schema ) {
 			$slug = Generator::get_slug_from_filename( $schema );
-			if( empty( $slug ) ) {
+			if ( empty( $slug ) ) {
 				$slug = Command::slug( $schema );
 			}
 
@@ -85,8 +97,11 @@ class Command extends \WP_CLI_Command {
 			}
 
 			$version = Generator::get_version_from_filename( $schema );
-
-			$this->generate_one( array( 'plugin' => $slug, 'version' => $version ) );
+			$args    = array( 'version' => $version );
+			if ( $plugin ) {
+				$args['plugin'] = $slug;
+			}
+			$this->generate_one( $args );
 		}
 	}
 
@@ -379,6 +394,37 @@ class Command extends \WP_CLI_Command {
 			fwrite( STDOUT, 'Enter slug for schema file ' . $schema . ": " );
 
 			$answer = trim( fgets( STDIN ) );
+
+			return $answer;
+		}
+	}
+
+	/**
+	 * Ask if we should keep an element that exists in schema but no longer in plugin/core
+	 *
+	 * @param string $object
+	 * @param string $version
+	 * @param string $type
+	 * @param string $key
+	 * @param array  $assoc_args
+	 *
+	 * @return string
+	 */
+	public static function keep_element( $object, $version, $type, $key, $assoc_args = array() ) {
+		if ( self::$skip ) {
+			return 'y';
+		}
+
+		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
+			$type = \WP_CLI::colorize( '%B' . $type . '%n' );
+			$key  = \WP_CLI::colorize( '%G' . $key . '%n' );
+			fwrite( STDOUT, "$type: $key exists in the schema but no longer exists in $object v$version, keep it? [Y/n]" );
+
+			$answer = strtolower( trim( fgets( STDIN ) ) );
+
+			if ( 'n' == $answer ) {
+				return false;
+			}
 
 			return $answer;
 		}

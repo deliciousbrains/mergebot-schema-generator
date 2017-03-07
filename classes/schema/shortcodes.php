@@ -70,7 +70,7 @@ class Shortcodes extends Abstract_Element {
 		return $shortcodes;
 	}
 
-	protected static function find_elements( Schema $schema ) {
+	public static function find_elements( Schema $schema ) {
 		$shortcodes = array();
 		$shortcodes_registered = self::find_all_shortcode_registrations( $schema );
 

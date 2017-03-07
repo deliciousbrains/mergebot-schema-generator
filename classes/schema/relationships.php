@@ -17,7 +17,7 @@ class Relationships extends Abstract_Element {
 	protected static $element = 'Relationships';
 	protected static $colour = 'G';
 
-	protected static function find_elements( Schema $schema ) {
+	public static function find_elements( Schema $schema ) {
 		$meta_tables = self::get_meta_tables( $schema );
 
 		$entities       = self::get_meta_data( $meta_tables, $schema );
@@ -129,6 +129,8 @@ class Relationships extends Abstract_Element {
 		$entities = self::get_meta_data( $meta_tables, $schema );
 		$exit     = false;
 
+		ksort( $elements );
+
 		foreach ( $elements as $entity => $data ) {
 			foreach ( $data as $key => $relationship ) {
 				$value = $relationship['value'];
@@ -144,6 +146,7 @@ class Relationships extends Abstract_Element {
 				fwrite( STDOUT, $_entity . ' with key: ' . $_key . ' and value: ' . $_value . "\n" );
 
 				if ( false === $schema->from_scratch && ( bool) ( $existing_data = self::meta_exists_in_schema( $schema, $entity, $key ) ) ) {
+					$key = self::get_key_translation( $schema, $entity, $key );
 					$result = true;
 					if ( ! $exit ) {
 						// Relationship already defined in schema, ask to overwrite
@@ -151,7 +154,7 @@ class Relationships extends Abstract_Element {
 					}
 
 					if ( $exit || false === $result || 'exit' === $result ) {
-						$relationships = self::save_relationship( $relationships, $entity, $existing_data );
+						$relationships = self::save_relationship( $relationships, $entities, $entity, $key, $existing_data );
 
 						if ( ! $exit && 'exit' === $result ) {
 							$exit = true;
@@ -201,7 +204,7 @@ class Relationships extends Abstract_Element {
 						$entities[ $entity ]['columns']['value'] => $target_table,
 					);
 
-					$relationships = self::save_relationship( $relationships, $entity, $relationship_data );
+					$relationships = self::save_relationship( $relationships, $entities, $entity, $key, $relationship_data );
 
 					continue;
 				}
@@ -244,29 +247,133 @@ class Relationships extends Abstract_Element {
 				$relationship_data['serialized'] = $serialized_data;
 
 				// If so, record the response in the format for the json
-				$relationships = self::save_relationship( $relationships, $entity, $relationship_data );
+				$relationships = self::save_relationship( $relationships, $entities, $entity, $key, $relationship_data );
 			}
 		}
 
 		return $relationships;
 	}
 
-	protected static function save_relationship( $relationships, $entity, $data ) {
+	public static function merge_relationships( $schema, $existing, $new, $entity ) {
+		$merged      = array();
+		$meta_tables = self::get_meta_tables( $schema );
+		$entities    = self::get_meta_data( $meta_tables, $schema );
+
+		foreach( $new as $key => $data ) {
+			if ( ! isset( $existing[ $key ] ) ) {
+				$merged[ $key ] = $data;
+
+				continue;
+			}
+
+			$existing_data = $existing[ $key ];
+			// Check if relationship is serialized
+			if ( ! isset( $data['serialized'] ) && ! isset( $existing_data['serialized'] ) ) {
+				$merged[ $key ] = $data;
+
+				continue;
+			}
+
+			if ( ! isset( $data['serialized'] ) && isset( $existing_data['serialized'] ) ) {
+				\WP_CLI::info( 'Existing data is serialized, new data for ' . $key . ' is not' );
+				$merged[ $key ] = $data;
+
+				continue;
+			}
+
+			if ( isset( $data['serialized'] ) && ! isset( $existing_data['serialized'] ) ) {
+				\WP_CLI::info( 'New data is serialized, existing data for ' . $key . ' is not' );
+				$merged[ $key ] = $data;
+
+				continue;
+			}
+
+			if ( serialize( $data['serialized']) === serialize( $existing_data['serialized'] ) ) {
+				$merged[ $key ] = $data;
+
+				continue;
+			}
+
+			$merged[ $key ] = $data;
+		}
+
+		foreach ( $existing as $key => $value ) {
+			if ( isset( $new[ $key ] ) ) {
+				continue;
+			}
+			$merged[ $key ] = $value;
+		}
+
+		return $merged;
+	}
+
+	/**
+	 * Add new serialized item to array or convert single serialized relationship to an array.
+	 *
+	 * @param string $value_name_key
+	 * @param array $existing_item
+	 * @param array $new_item
+	 *
+	 * @return array
+	 */
+	protected static function merge_relationship_serialized( $value_name_key, $existing_item, $new_item ) {
+		$new_item_serialized = $new_item['serialized'];
+		$new_item_serialized = array( $value_name_key => $new_item[ $value_name_key ] ) + $new_item_serialized;
+
+		if ( Schema::is_assoc_array( $existing_item['serialized'] ) ) {
+			$existing_item_serialized      = $existing_item['serialized'];
+			$existing_item_serialized      = array( $value_name_key => $existing_item[ $value_name_key ] ) + $existing_item_serialized;
+			$existing_item['serialized']   = array();
+			$existing_item['serialized'][] = $existing_item_serialized;
+			unset( $existing_item[ $value_name_key ] );
+		}
+
+		$existing_item['serialized'][] = $new_item_serialized;
+
+		return $existing_item;
+	}
+
+	/**
+	 * Add the relationship to the main array.
+	 *
+	 * @param array  $relationships
+	 * @param string $entity Table name
+	 * @param string $key Key name
+	 * @param array  $data
+	 *
+	 * @return array
+	 */
+	protected static function save_relationship( $relationships, $entities, $entity, $key, $data ) {
 		if ( ! isset( $relationships[ $entity ] ) ) {
-			$relationships[ $entity ][] = $data;
+			$relationships[ $entity ][$key] = $data;
 
 			return $relationships;
 		}
 
-		$json_data = json_encode( $data );
-		foreach ( $relationships[ $entity ] as $element ) {
-			if ( json_encode( $element ) === $json_data ) {
-				// Relationship element exists already in Schema, don't duplicate.
-				return $relationships;
-			}
+		if ( ! isset( $relationships[ $entity ][ $key ] ) ) {
+			$relationships[ $entity ][ $key ] = $data;
+
+			return $relationships;
 		}
 
-		$relationships[ $entity ][] = $data;
+		$existing = $relationships[ $entity ][ $key ];
+		// Check if existing relationship is serialized
+		if ( ! isset( $existing['serialized'] ) ) {
+			\WP_CLI::warning( "Relationship for $key already exists" );
+
+			return $relationships;
+		}
+
+		if ( ! isset( $data['serialized'] ) ) {
+			\WP_CLI::warning( "No serialized relationship for $key" );
+
+			return $relationships;
+		}
+
+		$value_name = $entities[ $entity ]['columns']['value'];
+		$existing   = self::merge_relationship_serialized( $value_name, $data, $existing );
+
+		$relationships[ $entity ][ $key ] = $existing;
 
 		return $relationships;
 	}
