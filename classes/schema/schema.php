@@ -72,6 +72,11 @@ class Schema extends Abstract_Element {
 	/**
 	 * @var array
 	 */
+	public $meta_tables;
+
+	/**
+	 * @var array
+	 */
 	public $shortcodes;
 
 	/**
@@ -194,6 +199,7 @@ class Schema extends Abstract_Element {
 		// Data
 		$this->primary_keys   = $this->init_property( $data, 'primaryKeys' );
 		$this->foreign_keys   = $this->init_property( $data, 'foreignKeys' );
+		$this->meta_tables    = $this->init_property( $data, 'metaTables' );
 		$this->shortcodes     = $this->init_property( $data, 'shortcodes' );
 		$this->relationships  = $this->init_property( $data, 'relationships' );
 		$this->content        = $this->init_property( $data, 'content' );
@@ -488,6 +494,7 @@ class Schema extends Abstract_Element {
 		$file_contents = array(
 			'primaryKeys'   => $this->primary_keys,
 			'foreignKeys'   => $this->foreign_keys,
+			'metaTables'    => $this->meta_tables,
 			'shortcodes'    => $this->shortcodes,
 			'relationships' => $this->relationships,
 			'content'       => $this->content,
