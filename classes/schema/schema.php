@@ -671,7 +671,10 @@ class Schema extends Abstract_Element {
 			$pattern = '/(?<=\b' . 'CREATE TABLE(?: IF NOT EXISTS)' . '\s)([\S]+)/is';
 			preg_match_all( $pattern, $content, $matches );
 
-			if ( $matches && is_array( $matches[0] ) ) {
+			if ( $matches && is_array( $matches[0] ) && ! empty( $matches[0] ) ) {
+				if ( in_array( $matches[0][0], array( '"', "'" ) ) ) {
+					continue;
+				}
 				$tables     = $matches[0];
 				$all_tables = array_merge( $all_tables, $tables );
 			}
