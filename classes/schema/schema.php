@@ -664,7 +664,7 @@ class Schema extends Abstract_Element {
 
 		foreach ( $this->files as $file ) {
 			$content = strtolower( file_get_contents( $file->getRealPath() ) );
-			if ( false === strpos( $content, $search ) ) {
+			if ( false === stripos( $content, $search ) ) {
 				continue;
 			}
 
