@@ -680,6 +680,10 @@ class Schema extends Abstract_Element {
 			}
 		}
 
+		if ( empty( $all_tables ) ) {
+			$all_tables = $this->get_prefixed_tables();
+		}
+
 		return $all_tables;
 	}
 
