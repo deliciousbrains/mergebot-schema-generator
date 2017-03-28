@@ -785,5 +785,7 @@ class Schema extends Abstract_Element {
 
 		// Save custom prefix
 		Primary_Keys::write_custom_table_prefix( $filename, $result );
+
+		return $result;
 	}
 }
