@@ -668,7 +668,7 @@ class Schema extends Abstract_Element {
 				continue;
 			}
 
-			$pattern = '/(?<=\b' . $search . '\s)([\S]+)/is';
+			$pattern = '/(?<=\b' . 'CREATE TABLE(?: IF NOT EXISTS)' . '\s)([\S]+)/is';
 			preg_match_all( $pattern, $content, $matches );
 
 			if ( $matches && is_array( $matches[0] ) ) {
