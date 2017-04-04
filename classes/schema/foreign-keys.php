@@ -43,7 +43,7 @@ class Foreign_Keys {
 
 				// Single entity a WordPress one
 				if ( isset( $wp_tables[ $entity ] ) ) {
-					$pk = $wp_primary_keys[ $entity ]['key'];
+					$pk = $wp_primary_keys[ $entity ]['key'][0];
 
 					$foreign_keys[ $table . ':' . $column->Field ] = $entity . ':' . $pk;
 
@@ -53,7 +53,7 @@ class Foreign_Keys {
 				// Plural entity a WordPress one
 				$plural_entity = $entity . 's';
 				if ( isset( $wp_tables[ $plural_entity ] ) ) {
-					$pk = $wp_primary_keys[ $plural_entity ]['key'];
+					$pk = $wp_primary_keys[ $plural_entity ]['key'][0];
 
 					$foreign_keys[ $table . ':' . $column->Field ] = $plural_entity . ':' . $pk;
 
@@ -62,7 +62,7 @@ class Foreign_Keys {
 
 				// Single entity a Post Type
 				if ( isset( $post_types[ $entity ] ) ) {
-					$pk = $wp_primary_keys['posts']['key'];
+					$pk = $wp_primary_keys['posts']['key'][0];
 
 					$foreign_keys[ $table . ':' . $column->Field ] = 'posts:' . $pk;
 
@@ -86,7 +86,7 @@ class Foreign_Keys {
 				// Single entity a Post Type match = eg, order = shop_order
 				$match = self::post_type_match( $post_types, $entity );
 				if ( $match ) {
-					$pk = $wp_primary_keys['posts']['key'];
+					$pk = $wp_primary_keys['posts']['key'][0];
 
 					$foreign_keys[ $table . ':' . $column->Field ] = 'posts:' . $pk;
 
@@ -99,7 +99,7 @@ class Foreign_Keys {
 				$entity       = array_pop( $entity_parts );
 				// Single entity a WordPress one
 				if ( isset( $wp_tables[ $entity ] ) ) {
-					$pk = $wp_primary_keys[ $entity ]['key'];
+					$pk = $wp_primary_keys[ $entity ]['key'][0];
 
 					$foreign_keys[ $table . ':' . $column->Field ] = $entity . ':' . $pk;
 
@@ -109,7 +109,7 @@ class Foreign_Keys {
 				// Plural entity a WordPress one
 				$plural_entity = $entity . 's';
 				if ( isset( $wp_tables[ $plural_entity ] ) ) {
-					$pk = $wp_primary_keys[ $plural_entity ]['key'];
+					$pk = $wp_primary_keys[ $plural_entity ]['key'][0];
 
 					$foreign_keys[ $table . ':' . $column->Field ] = $plural_entity . ':' . $pk;
 
@@ -154,7 +154,7 @@ class Foreign_Keys {
 		$match         = self::table_match( $plugin_tables, $entity, $table );
 
 		if ( $match && isset( $schema->primary_keys[ $match ] ) ) {
-			$pk = $schema->primary_keys[ $match ]['key'];
+			$pk = $schema->primary_keys[ $match ]['key'][0];
 
 			return $match . ':' . $pk;
 		}

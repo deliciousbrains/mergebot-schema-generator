@@ -56,6 +56,10 @@ class Primary_Keys extends Abstract_Element {
 				continue;
 			}
 
+			if ( ! is_array( $primary_keys ) ) {
+				$primary_keys = array( $primary_keys );
+			}
+
 			$data[ $table ] = array( 'key' => $primary_keys );
 			if ( false === $auto_increment ) {
 				$data[ $table ] ['auto_increment'] = false;
