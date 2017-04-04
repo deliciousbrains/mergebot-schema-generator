@@ -154,7 +154,7 @@ class Foreign_Keys {
 		$match         = self::table_match( $plugin_tables, $entity, $table );
 
 		if ( $match && isset( $schema->primary_keys[ $match ] ) ) {
-			$pk = $schema->primary_keys[ $match ];
+			$pk = $schema->primary_keys[ $match ]['key'];
 
 			return $match . ':' . $pk;
 		}
