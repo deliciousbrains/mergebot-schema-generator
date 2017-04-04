@@ -659,16 +659,16 @@ class Schema extends Abstract_Element {
 	 * @return array
 	 */
 	protected function get_tables() {
-		$all_tables = array();
-		$search     = 'create table';
-
+		$all_tables        = array();
+		$search            = 'create table';
+		$has_custom_tables = false;
 		foreach ( $this->files as $file ) {
 			$content = strtolower( file_get_contents( $file->getRealPath() ) );
 			if ( false === stripos( $content, $search ) ) {
 				continue;
 			}
-
-			$pattern = '/(CREATE TABLE(?: IF NOT EXISTS)?\s)([\S]+)/is';
+			$has_custom_tables = true;
+			$pattern           = '/(CREATE TABLE(?: IF NOT EXISTS)?\s)([\S]+)/is';
 			preg_match_all( $pattern, $content, $matches );
 
 			if ( $matches && is_array( $matches[2] ) && ! empty( $matches[2] ) ) {
@@ -680,7 +680,7 @@ class Schema extends Abstract_Element {
 			}
 		}
 
-		if ( empty( $all_tables ) ) {
+		if ( empty( $all_tables ) && $has_custom_tables ) {
 			$all_tables = $this->get_prefixed_tables();
 		}
 
