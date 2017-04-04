@@ -32,10 +32,6 @@ class Primary_Keys extends Abstract_Element {
 		foreach ( $tables as $table => $columns ) {
 			$compound_pks = array();
 			foreach ( $columns as $column ) {
-				if ( false === stripos( $column->Type, 'int' ) ) {
-					continue;
-				}
-
 				if ( self::is_pk_column( $column ) ) {
 					$primary_keys[ $table ] = $column->Field;
 

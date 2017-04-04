@@ -351,7 +351,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function table_prefix( $assoc_args = array() ) {
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
-			fwrite( STDOUT, 'Tables cannot be parsed, but the plugin has custom tables. Do you know the custom prefix?' . "\n" );
+			fwrite( STDOUT, 'Tables cannot be parsed, but the plugin has custom tables. Do you know the custom prefix? [prefix/n]' . "\n" );
 
 			$answer = trim( fgets( STDIN ) );
 

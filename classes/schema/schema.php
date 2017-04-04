@@ -664,17 +664,24 @@ class Schema extends Abstract_Element {
 
 		foreach ( $this->files as $file ) {
 			$content = strtolower( file_get_contents( $file->getRealPath() ) );
-			if ( false === strpos( $content, $search ) ) {
+			if ( false === stripos( $content, $search ) ) {
 				continue;
 			}
 
-			$pattern = '/(?<=\b' . $search . '\s)([\S]+)/is';
+			$pattern = '/(CREATE TABLE(?: IF NOT EXISTS)?\s)([\S]+)/is';
 			preg_match_all( $pattern, $content, $matches );
 
-			if ( $matches && is_array( $matches[0] ) ) {
-				$tables     = $matches[0];
+			if ( $matches && is_array( $matches[2] ) && ! empty( $matches[2] ) ) {
+				if ( in_array( $matches[2][0], array( '"', "'" ) ) ) {
+					continue;
+				}
+				$tables     = $matches[2];
 				$all_tables = array_merge( $all_tables, $tables );
 			}
+		}
+
+		if ( empty( $all_tables ) ) {
+			$all_tables = $this->get_prefixed_tables();
 		}
 
 		return $all_tables;
@@ -782,5 +789,7 @@ class Schema extends Abstract_Element {
 
 		// Save custom prefix
 		Primary_Keys::write_custom_table_prefix( $filename, $result );
+
+		return $result;
 	}
 }
