@@ -75,11 +75,11 @@ class Primary_Keys extends Abstract_Element {
 	public static function is_pk_column( $schema, $table, $column ) {
 		$pk_data = $schema->primary_keys;
 
-		if ( ! isset( $pk_data[ $table ] ) ) {
+		if ( ! isset( $pk_data[ $table ] ) || ! isset( $pk_data[ $table ]['key'] ) ) {
 			return false;
 		}
 
-		$key = $pk_data[ $table ];
+		$key = $pk_data[ $table ]['key'];
 
 		if ( ! is_array( $key ) ) {
 			$key = array( $key );
