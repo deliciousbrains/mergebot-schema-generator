@@ -22,18 +22,21 @@ class Primary_Keys extends Abstract_Element {
 
 	/**
 	 * Get the Primary keys for an array of tables
-	 * 
+	 *
 	 * @param array $tables
 	 *
 	 * @return array
 	 */
 	public static function get_primary_keys( $tables ) {
-		$primary_keys = array();
+		$data = array();
 		foreach ( $tables as $table => $columns ) {
+			$auto_increment = false;
 			$compound_pks = array();
+			$primary_keys = false;
 			foreach ( $columns as $column ) {
-				if ( self::is_pk_column( $column ) ) {
-					$primary_keys[ $table ] = $column->Field;
+				if ( self::is_auto_increment_column( $column ) ) {
+					$auto_increment         = true;
+					$primary_keys = $column->Field;
 
 					break;
 				}
@@ -46,21 +49,57 @@ class Primary_Keys extends Abstract_Element {
 			}
 
 			if ( count( $compound_pks ) > 1 ) {
-				$primary_keys[ $table ] = $compound_pks;
+				$primary_keys = $compound_pks;
+			}
+
+			if ( false === $primary_keys ) {
+				continue;
+			}
+
+			if ( ! is_array( $primary_keys ) ) {
+				$primary_keys = array( $primary_keys );
+			}
+
+			$data[ $table ] = array( 'key' => $primary_keys );
+			if ( false === $auto_increment ) {
+				$data[ $table ] ['auto_increment'] = false;
 			}
 		}
 
-		return $primary_keys;
+		return $data;
 	}
 
 	/**
-	 * Is a MySQL table column a Primary Key?
+	 * Is the column already defined as a Primary Key in the schema
 	 *
 	 * @param object $column
 	 *
 	 * @return bool
 	 */
-	public static function is_pk_column( $column ) {
+	public static function is_pk_column( $schema, $table, $column ) {
+		$pk_data = $schema->primary_keys;
+
+		if ( ! isset( $pk_data[ $table ] ) || ! isset( $pk_data[ $table ]['key'] ) ) {
+			return false;
+		}
+
+		$key = $pk_data[ $table ]['key'];
+
+		if ( ! is_array( $key ) ) {
+			$key = array( $key );
+		}
+
+		return in_array( $column, $key );
+	}
+
+	/**
+	 * Is a MySQL table column an auto increment column?
+	 *
+	 * @param object $column
+	 *
+	 * @return bool
+	 */
+	public static function is_auto_increment_column( $column ) {
 		return 'auto_increment' === $column->Extra;
 	}
 

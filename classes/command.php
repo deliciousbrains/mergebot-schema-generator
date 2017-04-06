@@ -72,7 +72,7 @@ class Command extends \WP_CLI_Command {
 		}
 
 		if ( ! isset( $assoc_args['plugin'] ) && isset( $assoc_args['all'] ) ) {
-			// Regenerate all plugin existing schemas.
+			// Regenerate all existing core schemas.
 			return $this->generate_all( false );
 		}
 
