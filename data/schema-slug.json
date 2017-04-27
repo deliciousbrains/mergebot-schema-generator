@@ -22,5 +22,6 @@
     "wordpress-seo-wp-seo": "wordpress-seo",
     "wp-super-cache-wp-cache": "wp-super-cache",
     "gravityformsstripe-stripe": "gravityformsstripe",
-    "relevanssi-relevanssi": "relevanssi"
+    "relevanssi-relevanssi": "relevanssi",
+    "wordpress-mu-domain-mapping-domain_mapping": "wordpress-mu-domain-mapping"
 }
