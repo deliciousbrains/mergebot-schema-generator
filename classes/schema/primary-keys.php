@@ -50,6 +50,8 @@ class Primary_Keys extends Abstract_Element {
 
 			if ( count( $compound_pks ) > 1 ) {
 				$primary_keys = $compound_pks;
+			} else if ( count( $compound_pks ) == 1 ) {
+				$primary_keys = $compound_pks[0];
 			}
 
 			if ( false === $primary_keys ) {
