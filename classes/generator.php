@@ -32,11 +32,26 @@ class Generator {
 	 * @param bool $create_from_scratch
 	 */
 	public function generate( $create_from_scratch = false ) {
-		if ( ! $this->schema->exists() || $create_from_scratch ) {
+		if ( $create_from_scratch  ) {
 			$this->schema->create();
-		} else {
-			$this->schema->update();
+
+			return;
 		}
+
+		if ( $this->schema->exists() ) {
+			$this->schema->update();
+
+			return $this->schema->update();
+		}
+
+		// Look for the last version that exists
+		$latest_version = $this->schema->get_latest_schema_version();
+		if ( false === $latest_version ) {
+			$this->schema->create();
+		}
+
+		$this->schema->duplicate( $latest_version );
+		$this->schema->update();
 	}
 
 	public static function get_generated_core() {

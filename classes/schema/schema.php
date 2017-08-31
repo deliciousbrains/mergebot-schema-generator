@@ -182,6 +182,38 @@ class Schema extends Abstract_Element {
 	}
 
 	/**
+	 * Get the file path of a schema without the version and extension
+	 *
+	 * @return string
+	 */
+	protected function get_schema_base_filepath() {
+		$type = 'wordpress' === $this->type ? 'core' : $this->type . 's';
+		$path = apply_filters( 'mergebot_schema_generator_plugins_path', Mergebot_Schema_Generator()->schema_path . '/' . $type );
+		$slug = $this->filename( false, false );
+
+		return $path . $slug;
+	}
+
+	/**
+	 * Get the latest version of a schema.
+	 *
+	 * @return bool
+	 */
+	public function get_latest_schema_version() {
+		$path = $this->get_schema_base_filepath();
+
+		$latest_version = false;
+		$schemas        = glob( $path . '-*.json' );
+		if ( empty( $schemas ) ) {
+			return $latest_version;
+		}
+
+		$schema = array_pop( $schemas );
+
+		return str_replace( array( $path . '-', '.json' ), '', $schema );
+	}
+
+	/**
 	 * Load existing schema
 	 */
 	public function load() {
@@ -569,10 +601,16 @@ class Schema extends Abstract_Element {
 	/**
 	 * Read schema file
 	 *
+	 * @param null $path
+	 *
 	 * @return string
 	 */
-	protected function read() {
-		return file_get_contents( $this->file_path() );
+	protected function read( $path = null ) {
+		if ( is_null( $path ) ) {
+			$path = $this->file_path();
+		}
+
+		return file_get_contents( $path );
 	}
 
 	/**
@@ -589,6 +627,20 @@ class Schema extends Abstract_Element {
 		}
 
 		file_put_contents( $schema_file, $content );
+	}
+
+	/**
+	 * Duplicate an existing version schema to the new version.
+	 *
+	 * @param $version
+	 */
+	public function duplicate( $version ) {
+		$path     = $this->get_schema_base_filepath();
+		$path     .= '-' . $version . '.json';
+		$contents = $this->read( $path );
+		$contents = str_replace( $version, $this->version, $contents );
+
+		$this->write( $contents );
 	}
 
 	/**
