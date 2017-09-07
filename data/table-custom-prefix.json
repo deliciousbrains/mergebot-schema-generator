@@ -11,6 +11,6 @@
     "relevanssi-relevanssi-3.5.6.1": "relevanssi",
     "wordpress-mu-domain-mapping-domain_mapping-0.5.5.1": "domain_mapping",
     "woocommerce-woocommerce-3.1.2": "woocommerce_",
-    "wordpress-seo-wp-seo-5.4": "yoast_seo_",
-    "wordfence-wordfence-6.3.17": "wf"
-}§
+    "wordfence-wordfence-6.3.17": "wf",
+    "wordpress-seo-wp-seo-5.4": "yoast_seo"
+}
