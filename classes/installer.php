@@ -363,11 +363,72 @@ class Installer {
 			return $data;
 		}
 
-		if ( isset( $data->version ) && ! empty( $data->version ) ) {
+		if ( empty( $data->version ) ) {
+			return false;
+		}
+
+
+		if ( self::is_valid_version( $data->version ) ) {
+			// Latest version is a major/minor version
 			return $data->version;
 		}
 
+		$all_versions = $data->versions;
+		unset( $all_versions->trunk );
+		$all_versions = get_object_vars( $all_versions );
+
+		$decending = function ( $a, $b ) {
+			return -version_compare( $a, $b );
+
+		};
+
+		uksort($all_versions, $decending );
+
+		foreach ( $all_versions as $version => $url ) {
+			if ( self::is_valid_version( $version ) ) {
+				// Latest version is a major/minor version
+				return $version;
+			}
+		}
+
 		return false;
+	}
+
+	/**
+	 * Is the version a major or minor version only?
+	 *
+	 * @param string $version
+	 *
+	 * @return bool
+	 */
+	public static function is_valid_version( $version ) {
+		$clean_version       = self::normalize_version( $version );
+		if ( $clean_version !== $version ) {
+			return false;
+		}
+
+		$version_parts = explode( '.', $version );
+		if ( isset( $version_parts[2] ) && '0' != $version_parts[2] ) {
+			return false;
+		}
+
+		// Version is a major/minor version
+		return true;
+	}
+
+	/**
+	 * Normalize software versions by removing superfluous characters.
+	 *
+	 * @param string $version
+	 *
+	 * @return string|null
+	 */
+	protected static function normalize_version( $version ) {
+		if ( preg_match( '/^\d+.\d+(?:.\d+)?/', $version, $matches ) ) {
+			return $matches[0];
+		}
+
+		return null;
 	}
 
 	protected static function get_object( $url ) {
