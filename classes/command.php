@@ -137,7 +137,30 @@ class Command extends \WP_CLI_Command {
 		// Clean up the install
 		$installer->clean_up();
 
+		// Rebuild the Plugin API JSON file
+		if ( $this->rebuild_api() ) {
+			\WP_CLI::success( 'Plugin schema API regenerated' );
+		}
+
 		\WP_CLI::success( ucfirst( $slug ) . ' schema generated!' );
+	}
+
+	/**
+	 * Rebuild the plugins API JSON file
+	 */
+	protected function rebuild_api() {
+		$api_build_file_path = apply_filters( 'mergebot_schema_generator_path', Mergebot_Schema_Generator()->schema_path, Mergebot_Schema_Generator()->schema_path );
+		$api_build_file      = $api_build_file_path . '/api/build.php';
+		if ( ! file_exists( $api_build_file ) ) {
+			return false;
+		}
+
+		$current_dir = dirname( __FILE__ );
+		chdir( $api_build_file_path );
+		require $api_build_file;
+		chdir( $current_dir );
+
+		return true;
 	}
 
 	/**
