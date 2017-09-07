@@ -726,7 +726,7 @@ class Schema extends Abstract_Element {
 			preg_match_all( $pattern, $content, $matches );
 
 			if ( $matches && is_array( $matches[2] ) && ! empty( $matches[2] ) ) {
-				if ( in_array( $matches[2][0], array( '"', "'" ) ) ) {
+				if ( in_array( $matches[2][0], array( '"', "'" ) ) || false !== strpos( $matches[2][0], '$' ) || false !== strpos( $matches[2][0], '%' ) ) {
 					// Tables names defined in variables.
 					$force_use_table_prefix = true;
 					continue;
