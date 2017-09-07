@@ -41,13 +41,15 @@ class Generator {
 		if ( $this->schema->exists() ) {
 			$this->schema->update();
 
-			return $this->schema->update();
+			return;
 		}
 
 		// Look for the last version that exists
 		$latest_version = $this->schema->get_latest_schema_version();
 		if ( false === $latest_version ) {
 			$this->schema->create();
+
+			return;
 		}
 
 		$this->schema->duplicate( $latest_version );
