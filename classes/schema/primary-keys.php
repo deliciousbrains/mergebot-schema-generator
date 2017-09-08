@@ -154,6 +154,8 @@ class Primary_Keys extends Abstract_Element {
 
 		$content[ $filename ] = $prefix;
 
+		ksort( $content );
+
 		return self::write_data_file( $file, $content );
 	}
 }
