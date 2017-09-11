@@ -38,5 +38,18 @@
                 "{$taxonomy}_children": "(.*)_children"
             }
         }
+    },
+    "ninja-forms-ninja-forms-3.1": {
+        "options": {
+            "option_name": {
+                "nf_form_' . $form_id": "nf_form_{nf3_forms:id}",
+                "nf_form_' . $form_data['id']": "nf_form_{nf3_forms:id}"
+            }
+        },
+        "postmeta": {
+            "meta_key": {
+                "_field_' . $field_id": "_field_{nf3_fields:id}"
+            }
+        }
     }
 }
