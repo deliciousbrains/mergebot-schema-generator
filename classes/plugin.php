@@ -184,7 +184,7 @@ class Mergebot_Schema_Generator {
 			$prefix = $wpdb->prefix . $prefix;
 		}
 
-		$sql = $wpdb->prepare( 'SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE %s', DB_NAME, $prefix . '%' );
+		$sql = $wpdb->prepare( 'SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = %s AND SUBSTRING(TABLE_NAME, 1, %d) = %s', DB_NAME, strlen( $prefix ), $prefix );
 
 		$tables = $wpdb->get_col( $sql );
 

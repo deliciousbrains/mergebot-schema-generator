@@ -474,9 +474,16 @@ class Relationships extends Abstract_Element {
 		if ( isset( $tables[ $table ] ) ) {
 			return $tables[ $table ];
 		}
-		$table = $prefix . $table;
-		if ( isset( $tables[ $table ] ) ) {
-			return $tables[ $table ];
+
+		if ( ! is_array( $prefix ) ) {
+			$prefix = array( $prefix );
+		}
+
+		foreach ( $prefix as $single_prefix ) {
+			$table = $single_prefix . $table;
+			if ( isset( $tables[ $table ] ) ) {
+				return $tables[ $table ];
+			}
 		}
 
 		return false;

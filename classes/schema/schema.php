@@ -50,7 +50,7 @@ class Schema extends Abstract_Element {
 	public $tables;
 
 	/**
-	 * @var bool|string
+	 * @var array
 	 */
 	public $custom_prefix;
 
@@ -756,29 +756,64 @@ class Schema extends Abstract_Element {
 			return false;
 		}
 
-		$tables = Mergebot_Schema_Generator()->get_tables_by_prefix( $prefix );
-		if ( empty( $tables ) ) {
+		$prefixes = $this->format_custom_prefixes( $prefix );
+
+		$all_tables = array();
+		foreach ( $prefixes as $prefix ) {
+			$tables     = Mergebot_Schema_Generator()->get_tables_by_prefix( $prefix );
+			$all_tables = array_merge( $all_tables, $tables );
+		}
+
+		if ( empty( $all_tables ) ) {
 			// TODO handle warning - try again with a prefix?
 			return false;
 		}
 
-		return $tables;
+
+		return $all_tables;
 	}
 
+	/**
+	 * Return array of custom table prefixes including trailing underscore.
+	 *
+	 * @param mixed $prefix
+	 *
+	 * @return array
+	 */
+	protected function format_custom_prefixes( $prefix ) {
+		if ( empty ( $prefix ) ) {
+			return array();
+		}
+
+		$all_prefixes = array();
+		$prefixes     = explode( ',', $prefix );
+
+		foreach ( $prefixes as $prefix ) {
+			$all_prefixes[] = rtrim( $prefix, '_' ) . '_';
+		}
+
+		return $all_prefixes;
+	}
+
+	/**
+	 * Get custom prefixes for the tables created by the plugin.
+	 *
+	 * @return array
+	 */
 	protected function get_custom_table_prefix_from_tables() {
 		if ( 'wordpress' === $this->type ) {
-			return '';
+			return array();
 		}
 
 		if ( empty( $this->tables ) ) {
-			return '';
+			return array();
 		}
 
 		$filename = $this->filename( false );
 		$prefix = Primary_Keys::get_custom_table_prefix( $filename );
 
 		if ( false !== $prefix ) {
-			return $prefix;
+			return $this->format_custom_prefixes( $prefix );
 		}
 
 		$table_parts = array();
@@ -799,16 +834,18 @@ class Schema extends Abstract_Element {
 			}
 		}
 
-
 		if ( ! empty( $prefix ) ) {
 			// Save custom prefix
-			$prefix .= '_';
 			Primary_Keys::write_custom_table_prefix( $filename, $prefix );
 		} else {
 			$prefix = $this->ask_for_custom_prefix( $filename );
 		}
 
-		return $prefix;
+		if ( false === $prefix ) {
+			$prefix = '';
+		}
+
+		return $this->format_custom_prefixes( $prefix );
 	}
 
 	protected function part_appears_in_all_tables( $part, $tables, $pos ) {
