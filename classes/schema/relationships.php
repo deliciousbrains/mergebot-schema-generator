@@ -188,7 +188,7 @@ class Relationships extends Abstract_Element {
 					$new_key = Command::meta_key( $key );
 					if ( $new_key ) {
 						// Store original key and new key
-						self::write_key_translation( $schema->filename( false), $entity, $entities[ $entity ]['columns']['key'] , $key, $new_key );
+						self::write_key_translation( $schema->filename( false, false ), $entity, $entities[ $entity ]['columns']['key'] , $key, $new_key );
 
 						$key = $new_key;
 					}
@@ -580,13 +580,6 @@ class Relationships extends Abstract_Element {
 	}
 
 	/**
-	 * @return string
-	 */
-	protected static function get_key_translation_file() {
-		return dirname( Mergebot_Schema_Generator()->file_path ) . '/data/relationship-key-translation.json';
-	}
-
-	/**
 	 * @param $schema
 	 * @param $entity
 	 * @param $old_key
@@ -594,13 +587,13 @@ class Relationships extends Abstract_Element {
 	 * @return mixed
 	 */
 	protected static function get_key_translation( Schema $schema, $entity, $old_key ) {
-		$filename = $schema->filename( false );
-		$content = self::read_data_file( self::get_key_translation_file() );
+		$filename = $schema->filename( false, false );
+		$content  = self::read_data_file( $filename );
 
 		$columns = self::get_meta_columns( $entity, $schema->tables, $schema->custom_prefix );
 
-		if ( isset( $content[ $filename ][ $entity ][ $columns['key'] ][ $old_key ] ) ) {
-			return $content[ $filename ][ $entity ][ $columns['key'] ][ $old_key ];
+		if ( isset( $content['relationships']['key_translation'][ $entity ][ $columns['key'] ][ $old_key ] ) ) {
+			return $content['relationships']['key_translation'][ $entity ][ $columns['key'] ][ $old_key ];
 		}
 
 		return $old_key;
@@ -616,11 +609,10 @@ class Relationships extends Abstract_Element {
 	 * @return int
 	 */
 	protected static function write_key_translation( $filename, $entity, $key_name, $old_key, $new_key ) {
-		$file = self::get_key_translation_file();
-		$content = self::read_data_file( $file );
+		$content = self::read_data_file( $filename );
 
-		$content[$filename][$entity][$key_name][$old_key] = $new_key;
+		$content['relationships']['key_translation'][ $entity ][ $key_name ][ $old_key ] = $new_key;
 
-		return self::write_data_file( $file, $content );
+		return self::write_data_file( $filename, $content );
 	}
 }

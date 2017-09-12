@@ -121,22 +121,15 @@ class Primary_Keys extends Abstract_Element {
 	}
 
 	/**
-	 * @return string
-	 */
-	protected static function get_custom_prefix_file() {
-		return dirname( Mergebot_Schema_Generator()->file_path ) . '/data/table-custom-prefix.json';
-	}
-
-	/**
 	 * @param string $filename
 	 *
 	 * @return string|bool
 	 */
 	public static function get_custom_table_prefix( $filename ) {
-		$content = self::read_data_file( self::get_custom_prefix_file() );
+		$content = self::read_data_file( $filename );
 
-		if ( isset( $content[ $filename ] ) ) {
-			return $content[ $filename ];
+		if ( isset( $content[ 'table_prefix' ] ) ) {
+			return $content[ 'table_prefix' ];
 		}
 
 		return false;
@@ -149,13 +142,10 @@ class Primary_Keys extends Abstract_Element {
 	 * @return int
 	 */
 	public static function write_custom_table_prefix( $filename, $prefix ) {
-		$file    = self::get_custom_prefix_file();
-		$content = self::read_data_file( $file );
+		$content = self::read_data_file( $filename );
 
-		$content[ $filename ] = $prefix;
+		$content[ 'table_prefix' ] = $prefix;
 
-		ksort( $content );
-
-		return self::write_data_file( $file, $content );
+		return self::write_data_file( $filename, $content );
 	}
 }

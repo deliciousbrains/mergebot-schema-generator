@@ -560,13 +560,6 @@ class Schema extends Abstract_Element {
 	}
 
 	/**
-	 * @return string
-	 */
-	protected static function get_schema_slug_file() {
-		return dirname( Mergebot_Schema_Generator()->file_path ) . '/data/schema-slug.json';
-	}
-
-	/**
 	 * Get the slug from a schema file
 	 *
 	 * @param string $schema
@@ -574,10 +567,10 @@ class Schema extends Abstract_Element {
 	 * @return string|bool
 	 */
 	public static function get_slug_from_schema( $schema ) {
-		$content = self::read_data_file( self::get_schema_slug_file() );
+		$content = self::read_data_file( $schema );
 
-		if ( isset( $content[ $schema ] ) ) {
-			return $content[ $schema ];
+		if ( isset( $content[ 'slug' ] ) ) {
+			return $content[ 'slug' ];
 		}
 
 		return false;
@@ -590,12 +583,11 @@ class Schema extends Abstract_Element {
 	 * @return int
 	 */
 	public static function write_slug_schema_prefix( $schema, $slug ) {
-		$file    = self::get_schema_slug_file();
-		$content = self::read_data_file( $file );
+		$content = self::read_data_file( $schema );
 
-		$content[ $schema ] = $slug;
+		$content[ 'slug' ] = $slug;
 
-		return self::write_data_file( $file, $content );
+		return self::write_data_file( $schema, $content );
 	}
 
 	/**
@@ -809,7 +801,7 @@ class Schema extends Abstract_Element {
 			return array();
 		}
 
-		$filename = $this->filename( false );
+		$filename = $this->filename( false, false );
 		$prefix = Primary_Keys::get_custom_table_prefix( $filename );
 
 		if ( false !== $prefix ) {
@@ -863,7 +855,7 @@ class Schema extends Abstract_Element {
 	}
 
 	protected function get_custom_table_prefix() {
-		$filename = $this->filename( false );
+		$filename = $this->filename( false, false );
 
 		// Check if prefix is saved
 		$saved_prefix = Primary_Keys::get_custom_table_prefix( $filename );
