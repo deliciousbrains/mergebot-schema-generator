@@ -357,6 +357,10 @@ class Schema extends Abstract_Element {
 
 			$existing_not_found = array_diff_key( $values, $current_values );
 			foreach ( $existing_not_found as $element_key => $element_value ) {
+				if ( 'relationships' == $key && Relationships::is_key_translated( $this, $existing_key, $element_key ) ) {
+					continue;
+				}
+
 				// This is the schema but doesn't exist in Object Version
 				// Remove or keep?
 				$keep = Command::keep_element( $this->slug, $this->version, $key . ' - ' . $existing_key, $element_key );

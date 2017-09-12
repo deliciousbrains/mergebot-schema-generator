@@ -580,6 +580,33 @@ class Relationships extends Abstract_Element {
 	}
 
 	/**
+	 * Is the meta key been translated?
+	 *
+	 * @param Schema $schema
+	 * @param string $entity
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	public static function is_key_translated( Schema $schema, $entity, $key ) {
+		$content = self::read_data_file( $schema->filename( false, false ) );
+
+		$columns = self::get_meta_columns( $entity, $schema->tables, $schema->custom_prefix );
+
+		if ( ! isset( $content['relationships']['key_translation'][ $entity ][ $columns['key'] ] ) ) {
+			return false;
+		}
+
+		foreach ( $content['relationships']['key_translation'][ $entity ][ $columns['key'] ] as $translated_key ) {
+			if ( $translated_key == $key ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * @param $schema
 	 * @param $entity
 	 * @param $old_key
