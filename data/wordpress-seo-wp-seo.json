@@ -10,7 +10,7 @@
             },
             "postmeta": {
                 "meta_key": {
-                    "wpseo_meta::$meta_prefix . 'primary_' . $this->taxonomy_name": "_yoast_wpseo_primary_%"
+                    "wpseo_meta::$meta_prefix . 'primary_' . $this->taxonomy_name": "_yoast_wpseo_primary_(.*)"
                 }
             }
         }
