@@ -1,0 +1,4 @@
+{
+    "slug": "wordpress-mu-domain-mapping",
+    "table_prefix": "domain_mapping"
+}

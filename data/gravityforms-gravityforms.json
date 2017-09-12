@@ -1,0 +1,13 @@
+{
+    "slug": "gravityforms",
+    "table_prefix": "rg",
+    "relationships": {
+        "key_translation": {
+            "options": {
+                "option_name": {
+                    "{$taxonomy}_children": "(.*)_children"
+                }
+            }
+        }
+    }
+}

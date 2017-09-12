@@ -1,0 +1,12 @@
+{
+    "relationships": {
+        "key_translation": {
+            "options": {
+                "option_name": {
+                    "new_user_' . $newuser_key": "new_user_(.*)",
+                    "{$taxonomy}_children": "(.*)_children"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "slug": "ninja-forms",
+    "table_prefix": "nf3,nf,ninja_forms",
+    "relationships": {
+        "key_translation": {
+            "options": {
+                "option_name": {
+                    "nf_form_' . $form_id": "nf_form_{nf3_forms:id}",
+                    "nf_form_' . $form_data['id']": "nf_form_{nf3_forms:id}"
+                }
+            },
+            "postmeta": {
+                "meta_key": {
+                    "_field_' . $field_id": "_field_{nf3_fields:id}"
+                }
+            }
+        }
+    }
+}

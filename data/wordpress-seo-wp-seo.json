@@ -1,0 +1,18 @@
+{
+    "slug": "wordpress-seo",
+    "table_prefix": "yoast_seo",
+    "relationships": {
+        "key_translation": {
+            "options": {
+                "option_name": {
+                    "self::$name": "wpseo_taxonomy_meta"
+                }
+            },
+            "postmeta": {
+                "meta_key": {
+                    "wpseo_meta::$meta_prefix . 'primary_' . $this->taxonomy_name": "_yoast_wpseo_primary_%"
+                }
+            }
+        }
+    }
+}
