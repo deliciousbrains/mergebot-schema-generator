@@ -483,6 +483,10 @@ class Command extends \WP_CLI_Command {
 		}
 	}
 
+	public function migrate(  $args, $assoc_args ) {
+		new Migrations\Legacy_Data();
+	}
+
 }
 
 \WP_CLI::add_command( 'mergebot-schema', 'DeliciousBrains\MergebotSchemaGenerator\Command' );
