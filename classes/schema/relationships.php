@@ -321,14 +321,21 @@ class Relationships extends Abstract_Element {
 		$new_item_serialized = array( $value_name_key => $new_item[ $value_name_key ] ) + $new_item_serialized;
 
 		if ( Schema::is_assoc_array( $existing_item['serialized'] ) ) {
-			$existing_item_serialized      = $existing_item['serialized'];
-			$existing_item_serialized      = array( $value_name_key => $existing_item[ $value_name_key ] ) + $existing_item_serialized;
-			$existing_item['serialized']   = array();
-			$existing_item['serialized'][] = $existing_item_serialized;
-			unset( $existing_item[ $value_name_key ] );
+			$existing_item_serialized    = $existing_item['serialized'];
+			$existing_item_serialized    = array( $value_name_key => $existing_item[ $value_name_key ] ) + $existing_item_serialized;
+			$existing_item['serialized'] = array();
+			if ( serialize( $new_item_serialized ) != serialize( $existing_item_serialized ) ) {
+				unset( $existing_item_serialized[ $value_name_key ] );
+				$existing_item['serialized'][] = $existing_item_serialized;
+			}
 		}
 
-		$existing_item['serialized'][] = $new_item_serialized;
+		unset( $new_item_serialized[ $value_name_key ] );
+		if ( empty( $existing_item['serialized'] ) ) {
+			$existing_item['serialized'] = $new_item_serialized;
+		} else {
+			$existing_item['serialized'][] = $new_item_serialized;
+		}
 
 		return $existing_item;
 	}
@@ -371,7 +378,7 @@ class Relationships extends Abstract_Element {
 		}
 
 		$value_name = $entities[ $entity ]['columns']['value'];
-		$existing   = self::merge_relationship_serialized( $value_name, $data, $existing );
+		$existing   = self::merge_relationship_serialized( $value_name, $existing, $data );
 
 		$relationships[ $entity ][ $key ] = $existing;
 
