@@ -83,6 +83,8 @@ class Installer {
 			$this->install();
 		}
 
+		$this->post_clean();
+
 		return $this->is_installed();
 	}
 
@@ -101,6 +103,15 @@ class Installer {
 		}
 
 		rename( $this->get_plugin_bk_dir(), $this->get_plugin_dir() );
+	}
+
+	/**
+	 * Clean up after install. Remove uninstall file so we don't have issues when bulk generating.
+	 */
+	protected function post_clean() {
+		if ( file_exists( WP_PLUGIN_DIR . '/' . $this->slug . '/uninstall.php' ) ) {
+			unlink( WP_PLUGIN_DIR . '/' . $this->slug . '/uninstall.php' );
+		}
 	}
 
 	protected function disable_mergebot() {
