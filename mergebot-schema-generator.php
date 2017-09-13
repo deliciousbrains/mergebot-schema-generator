@@ -36,7 +36,9 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 function mergebot_schema_generator() {
 	// Load the main class
 	require_once dirname( __FILE__ ) . '/classes/plugin.php';
-	require_once dirname( __FILE__ ) . '/vendor/autoload.php';
+	if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
+		require_once dirname( __FILE__ ) . '/vendor/autoload.php';
+	}
 
 	return Mergebot_Schema_Generator::get_instance( __FILE__ );
 }
