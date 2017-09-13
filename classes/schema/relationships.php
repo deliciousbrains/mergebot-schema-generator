@@ -264,8 +264,10 @@ class Relationships extends Abstract_Element {
 			}
 		}
 
-		$content['relationships']['ignore'] = $ignored;
-		self::write_data_file( $filename, $content );
+		if ( ! empty( $ignored ) ) {
+			$content['relationships']['ignore'] = $ignored;
+			self::write_data_file( $filename, $content );
+		}
 
 		return $relationships;
 	}

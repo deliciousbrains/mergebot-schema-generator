@@ -196,8 +196,10 @@ class Shortcodes extends Abstract_Element {
 			$shortcodes[ $tag ] = $parameters;
 		}
 
-		$content['shortcodes']['ignore'] = $ignored;
-		self::write_data_file( $filename, $content );
+		if ( ! empty ( $ignored ) ) {
+			$content['shortcodes']['ignore'] = $ignored;
+			self::write_data_file( $filename, $content );
+		}
 
 		return $shortcodes;
 	}
