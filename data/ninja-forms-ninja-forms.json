@@ -1,6 +1,11 @@
 {
     "slug": "ninja-forms",
     "table_prefix": "nf3,nf,ninja_forms",
+    "foreignKeys": {
+        "persist": {
+            "ninja_forms_fields:form_id": "ninja_forms:id"
+        }
+    },
     "relationships": {
         "key_translation": {
             "options": {
