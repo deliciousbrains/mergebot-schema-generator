@@ -17,6 +17,9 @@ class Foreign_Keys {
 		$wp_primary_keys = Mergebot_Schema_Generator()->wp_primary_keys;
 		$post_types      = get_post_types();
 
+		$content = $schema->read_data_file();
+		$persist = isset( $content['foreignKeys']['persist'] ) ? $content['foreignKeys']['persist'] : array();
+
 		foreach ( $schema->table_columns as $table => $columns ) {
 			foreach ( $columns as $column ) {
 				if ( false === stripos( $column->Type, 'int' ) ) {
@@ -34,7 +37,15 @@ class Foreign_Keys {
 
 				$entity = str_replace( array( 'ID', 'Id', 'id' ), '', $column->Field );
 				$entity = rtrim( $entity, '_' );
+				
 				$foreign_key = $table . ':' . $column->Field;
+
+				if ( isset( $persist[ $foreign_key ] ) ) {
+					// Persist FKs stored in schema data for FKs that can't be detected
+					$foreign_keys[ $foreign_key ] = $persist[ $foreign_key ];
+
+					continue;
+				}
 
 				if ( false !== ( $match = self::handle_parent_id( $schema, $entity, $table ) ) ) {
 					$foreign_keys[ $foreign_key ] = $match;
