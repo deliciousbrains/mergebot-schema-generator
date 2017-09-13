@@ -45,6 +45,9 @@ class Command extends \WP_CLI_Command {
 	 * [--all]
 	 * : Regenerate all core schemas
 	 *
+	 *  [--exclude]
+	 * : Exclude plugins when generating all plugin schemas
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp mergebot-schema generate
@@ -68,7 +71,7 @@ class Command extends \WP_CLI_Command {
 
 		if ( isset( $assoc_args['plugin'] ) && 'all' === $assoc_args['plugin'] ) {
 			// Regenerate all plugin existing schemas.
-			return $this->generate_all();
+			return $this->generate_all( true, $assoc_args['exclude'] );
 		}
 
 		if ( ! isset( $assoc_args['plugin'] ) && isset( $assoc_args['all'] ) ) {
@@ -84,15 +87,25 @@ class Command extends \WP_CLI_Command {
 		}
 	}
 
-	protected function generate_all( $plugin = true ) {
-		if ($plugin) {
+	protected function generate_all( $plugin = true, $exclude = null ) {
+		if ( $plugin ) {
 			$existing_schemas = Generator::get_generated_plugins();
 		} else {
 			$existing_schemas = Generator::get_generated_core();
 		}
 
+		if ( ! empty( $exclude ) ) {
+			$exclude = explode( ',', $exclude );
+		} else {
+			$exclude = array();
+		}
+
 		foreach ( $existing_schemas as $schema ) {
 			$slug = Generator::get_slug_from_filename( $schema );
+			if ( in_array( $slug, $exclude ) ) {
+				continue;
+			}
+
 			if ( empty( $slug ) ) {
 				$slug = Command::slug( $schema );
 			}
