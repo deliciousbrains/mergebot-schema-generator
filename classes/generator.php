@@ -61,7 +61,7 @@ class Generator {
 
 		$plugins = array_diff( scandir( $schema_dir), array( '..', '.' ) );
 
-		return $plugins;
+		return self::filter_json_files( $plugins );
 	}
 
 	public static function get_generated_plugins() {
@@ -69,7 +69,28 @@ class Generator {
 
 		$plugins = array_diff( scandir( $schema_dir), array( '..', '.' ) );
 
-		return $plugins;
+		return self::filter_json_files( $plugins );
+	}
+
+	/**
+	 * Ensure all files are JSON files.
+	 *
+	 * @param array $files
+	 *
+	 * @return array
+	 */
+	protected static function filter_json_files( $files ) {
+		$all_files = array();
+		foreach( $files as $file ) {
+			$parts = explode('.', $file );
+			if ( 'json' !== array_pop( $parts ) ) {
+				continue;
+			}
+
+			$all_files[] = $file;
+		}
+
+		return $all_files;
 	}
 
 	public static function get_version_from_filename( $filename ) {
