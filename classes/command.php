@@ -77,6 +77,11 @@ class Command extends \WP_CLI_Command {
 		}
 
 		$this->generate_one( $assoc_args );
+
+		// Rebuild the Plugin API JSON file
+		if ( $this->rebuild_api() ) {
+			\WP_CLI::success( 'Plugin schema API regenerated' );
+		}
 	}
 
 	protected function generate_all( $plugin = true ) {
@@ -102,6 +107,11 @@ class Command extends \WP_CLI_Command {
 				$args['plugin'] = $slug;
 			}
 			$this->generate_one( $args );
+		}
+
+		// Rebuild the Plugin API JSON file
+		if ( $this->rebuild_api() ) {
+			\WP_CLI::success( 'Plugin schema API regenerated' );
 		}
 	}
 
@@ -136,11 +146,6 @@ class Command extends \WP_CLI_Command {
 
 		// Clean up the install
 		$installer->clean_up();
-
-		// Rebuild the Plugin API JSON file
-		if ( $this->rebuild_api() ) {
-			\WP_CLI::success( 'Plugin schema API regenerated' );
-		}
 
 		\WP_CLI::success( ucfirst( $slug ) . ' schema generated!' );
 	}
