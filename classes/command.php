@@ -149,7 +149,7 @@ class Command extends \WP_CLI_Command {
 	 * Rebuild the plugins API JSON file
 	 */
 	protected function rebuild_api() {
-		$api_build_file_path = apply_filters( 'mergebot_schema_generator_path', Mergebot_Schema_Generator()->schema_path, Mergebot_Schema_Generator()->schema_path );
+		$api_build_file_path = apply_filters( 'mergebot_schema_generator_path', Mergebot_Schema_Generator()->schema_path, Mergebot_Schema_Generator()->schema_path, '', '' );
 		$api_build_file      = $api_build_file_path . '/api/build.php';
 		if ( ! file_exists( $api_build_file ) ) {
 			return false;
