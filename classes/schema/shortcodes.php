@@ -122,8 +122,18 @@ class Shortcodes extends Abstract_Element {
 		$shortcodes = array();
 
 		$exit = false;
+
+		$filename = $schema->filename( false, false );
+		$content = self::read_data_file( $filename );
+		$ignored = isset( $content['shortcodes']['ignore'] ) ? $content['shortcodes']['ignore'] : array();
+
 		foreach( $all_shortcodes as $tag => $shortcode ) {
 			$progress_bar->tick();
+
+			if ( in_array( $tag, $ignored ) ) {
+				// We have already ignore this shortcode before, ignore it again.
+				continue;
+			}
 
 			Mergebot_Schema_Generator::log( \WP_CLI::colorize(  "\n" . '%B' . 'Shortcode' . ':%n' . '[' . $tag . ']' ) );
 			if ( false === $schema->from_scratch && isset( $schema->shortcodes[ $tag ] ) ) {
@@ -145,6 +155,8 @@ class Shortcodes extends Abstract_Element {
 			}
 
 			if ( $exit ) {
+				$ignored[] = $tag;
+
 				continue;
 			}
 
@@ -156,10 +168,12 @@ class Shortcodes extends Abstract_Element {
 
 			if ( 'exit' === $result ) {
 				$exit = true;
+				$ignored[] = $tag;
 				continue;
 			}
 
 			if ( ! $result ) {
+				$ignored[] = $tag;
 				continue;
 			}
 
@@ -181,6 +195,9 @@ class Shortcodes extends Abstract_Element {
 
 			$shortcodes[ $tag ] = $parameters;
 		}
+
+		$content['shortcodes']['ignore'] = $ignored;
+		self::write_data_file( $filename, $content );
 
 		return $shortcodes;
 	}

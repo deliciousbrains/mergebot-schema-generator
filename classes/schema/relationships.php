@@ -131,9 +131,18 @@ class Relationships extends Abstract_Element {
 
 		ksort( $elements );
 
+		$filename = $schema->filename( false, false );
+		$content = self::read_data_file( $filename );
+		$ignored = isset( $content['relationships']['ignore'] ) ? $content['relationships']['ignore'] : array();
+
 		foreach ( $elements as $entity => $data ) {
 			foreach ( $data as $key => $relationship ) {
 				$value = $relationship['value'];
+
+				if ( isset( $ignored[ $entity ] ) && in_array( $key, $ignored[ $entity ] ) ) {
+					// We have already ignore this relationship before, ignore it again.
+					continue;
+				}
 
 				$progress_bar->tick();
 				// ask if we are interested in the key/value
@@ -165,6 +174,7 @@ class Relationships extends Abstract_Element {
 				}
 
 				if ( $exit ) {
+					$ignored[ $entity ][] = $key;
 					continue;
 				}
 
@@ -172,14 +182,17 @@ class Relationships extends Abstract_Element {
 
 				if ( 'exit' === $result ) {
 					$exit = true;
+					$ignored[ $entity ][] = $key;
 					continue;
 				}
 
 				if ( ! $result ) {
+					$ignored[ $entity ][] = $key;
 					continue;
 				}
 
 				if ( 'y' !== strtolower( $result ) ) {
+					$ignored[ $entity ][] = $key;
 					continue;
 				}
 
@@ -250,6 +263,9 @@ class Relationships extends Abstract_Element {
 				$relationships = self::save_relationship( $relationships, $entities, $entity, $key, $relationship_data );
 			}
 		}
+
+		$content['relationships']['ignore'] = $ignored;
+		self::write_data_file( $filename, $content );
 
 		return $relationships;
 	}
