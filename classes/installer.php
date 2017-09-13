@@ -282,7 +282,8 @@ class Installer {
 	 * @return bool
 	 */
 	public static function get_plugin_basename( $slug ) {
-		$active_plugins = get_option( 'active_plugins' );
+		$active_plugins = self::get_active_plugins();
+
 		$length         = strlen( $slug );
 		$basename       = false;
 		foreach ( $active_plugins as $active_plugin ) {
@@ -294,6 +295,57 @@ class Installer {
 
 		return $basename;
 	}
+
+	/**
+	 * Get all plugins activated for an install.
+	 */
+	protected static function get_active_plugins() {
+		if ( ! is_multisite() ) {
+			return get_option( 'active_plugins' );
+		}
+
+		$network_active_plugins = wp_get_active_network_plugins();
+		$active_plugins         = array();
+
+		foreach ( $network_active_plugins as $plugin ) {
+			$active_plugins[] = self::remove_wp_plugin_dir( $plugin );
+		}
+
+		$sites_in_network = self::get_sites();
+
+		foreach( $sites_in_network as $site ) {
+			$site_active_plugins = get_blog_option( $site->blog_id, 'active_plugins', array() );
+
+			$active_plugins = array_merge( $active_plugins, $site_active_plugins );
+		}
+
+		return array_unique( $active_plugins );
+	}
+
+	protected static function remove_wp_plugin_dir( $path ) {
+		$plugin = str_replace( WP_PLUGIN_DIR, '', $path );
+
+		return substr( $plugin, 1 );
+	}
+
+	protected static function get_sites() {
+		if ( ! is_multisite() ) {
+			return array();
+		}
+
+		// Is plugin network activated? Get all blogs in network.
+		$args = array(
+			'number'   => null,
+			'spam'     => 0,
+			'deleted'  => 0,
+			'archived' => 0,
+		);
+
+		$sites = get_sites( $args );
+
+		return $sites;
+	}
+
 
 	/**
 	 * Get the installed version of WordPress core.
