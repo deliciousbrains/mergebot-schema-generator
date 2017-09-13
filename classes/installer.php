@@ -99,7 +99,7 @@ class Installer {
 		}
 
 		if ( file_exists( $this->get_plugin_dir() ) ) {
-			WP_CLI::run_command( array( 'plugin', 'uninstall', $this->slug ), array( 'deactivate' => true ) );
+			WP_CLI::runcommand( 'plugin uninstall ' . $this->slug . ' --deactivate' );
 		}
 
 		rename( $this->get_plugin_bk_dir(), $this->get_plugin_dir() );
@@ -125,7 +125,7 @@ class Installer {
 			return;
 		}
 
-		WP_CLI::run_command( array( 'plugin', 'deactivate', $this->mergebot_slug ) );
+		WP_CLI::runcommand( 'plugin deactivate ' . $this->mergebot_slug );
 		$this->mergebot_activated = true;
 	}
 
@@ -134,7 +134,7 @@ class Installer {
 	 */
 	public function clean_up() {
 		if ( $this->mergebot_activated ) {
-			WP_CLI::run_command( array( 'plugin', 'activate', $this->mergebot_slug ) );
+			WP_CLI::runcommand( 'plugin activate ' . $this->mergebot_slug );
 		}
 
 		if ( $this->wp_version ) {
@@ -144,22 +144,22 @@ class Installer {
 		}
 
 		if ( $this->uninstall ) {
-			WP_CLI::run_command( array( 'plugin', 'uninstall', $this->slug ), array( 'deactivate' => true ) );
+			WP_CLI::runcommand( 'plugin uninstall ' . $this->slug .' --deactivate' );
 
 			return;
 		}
 
 		if ( $this->deactivate ) {
-			WP_CLI::run_command( array( 'plugin', 'deactivate', $this->slug ) );
+			WP_CLI::runcommand( 'plugin deactivate ' . $this->slug );
 		}
 
 		if ( $this->rollback && file_exists( $this->get_plugin_bk_dir() ) ) {
 			// Rollback to backup
-			WP_CLI::run_command( array( 'plugin', 'uninstall', $this->slug ), array( 'deactivate' => true ) );
+			WP_CLI::runcommand( 'plugin uninstall ' . $this->slug . ' --deactivate' );
 			rename( $this->get_plugin_bk_dir(), $this->get_plugin_dir() );
 			WP_CLI::success( 'Plugin rolled back.' );
 			if ( ! $this->deactivate ) {
-				WP_CLI::run_command( array( 'plugin', 'activate', $this->slug ) );
+				WP_CLI::runcommand( 'plugin activate ' . $this->slug );
 			}
 		}
 	}
@@ -182,7 +182,7 @@ class Installer {
 
 		if ( false === ( $basename = self::get_plugin_basename( $this->slug ) ) ) {
 			$this->deactivate = true;
-			WP_CLI::run_command( array( 'plugin', 'activate', $this->slug ) );
+			WP_CLI::runcommand( 'plugin activate ' . $this->slug );
 			$basename = self::get_plugin_basename( $this->slug );
 		}
 
@@ -218,17 +218,17 @@ class Installer {
 		}
 
 		// Install plugin version
-		$args = array( 'force' => true );
+		$args = '--force';
 		if ( 'latest' !== $this->version ) {
-			$args['version'] = $this->version;
+			$args .= ' --version=' . $this->version;
 		}
 
 		if ( false === $this->deactivate ) {
 			// Activate if not already
-			$args['activate'] = true;
+			$args .= ' --activate';
 		}
 
-		WP_CLI::run_command( array( 'plugin', 'install', $this->slug ), $args );
+		WP_CLI::runcommand( 'plugin install ' . $this->slug . ' ' . $args );
 	}
 
 	/**
@@ -237,16 +237,13 @@ class Installer {
 	 * @param string $version
 	 */
 	protected function install_wp( $version ) {
-		$args = array(
-			'force' => true,
-			'path'  => ABSPATH,
-		);
+		$args = '--force --path=' . ABSPATH;
 
 		if ( 'latest' !== $version ) {
-			$args['version'] = $version;
+			$args .= ' --version=' . $version;
 		}
 
-		WP_CLI::run_command( array( 'core', 'download' ), $args );
+		WP_CLI::runcommand( 'core download ' . $args );
 	}
 
 	/**
