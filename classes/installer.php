@@ -124,8 +124,8 @@ class Installer {
 			// Mergebot plugin not activated
 			return;
 		}
-
-		WP_CLI::runcommand( 'plugin deactivate ' . $this->mergebot_slug, array( 'launch' => false ) );
+		$extra = is_multisite() ? ' --network' : '';
+		WP_CLI::runcommand( 'plugin deactivate ' . $this->mergebot_slug . $extra, array( 'launch' => false ) );
 		$this->mergebot_activated = true;
 	}
 
@@ -133,8 +133,10 @@ class Installer {
 	 * Reset anything that the installer does, to keep the WP install in tact after a schema generation.
 	 */
 	public function clean_up() {
+		$extra = is_multisite() ? ' --network' : '';
+
 		if ( $this->mergebot_activated ) {
-			WP_CLI::runcommand( 'plugin activate ' . $this->mergebot_slug, array( 'launch' => false ) );
+			WP_CLI::runcommand( 'plugin activate ' . $this->mergebot_slug . $extra, array( 'launch' => false ) );
 		}
 
 		if ( $this->wp_version ) {
@@ -144,22 +146,23 @@ class Installer {
 		}
 
 		if ( $this->uninstall ) {
-			WP_CLI::runcommand( 'plugin uninstall ' . $this->slug .' --deactivate', array( 'launch' => false ) );
+			WP_CLI::runcommand( 'plugin deactivate ' . $this->slug .' --uninstall' . $extra, array( 'launch' => false ) );
 
 			return;
 		}
 
 		if ( $this->deactivate ) {
-			WP_CLI::runcommand( 'plugin deactivate ' . $this->slug, array( 'launch' => false ) );
+
+			WP_CLI::runcommand( 'plugin deactivate ' . $this->slug . $extra, array( 'launch' => false ) );
 		}
 
 		if ( $this->rollback && file_exists( $this->get_plugin_bk_dir() ) ) {
 			// Rollback to backup
-			WP_CLI::runcommand( 'plugin uninstall ' . $this->slug . ' --deactivate', array( 'launch' => false ) );
+			WP_CLI::runcommand( 'plugin deactivate ' . $this->slug . ' --uninstall' . $extra, array( 'launch' => false ) );
 			rename( $this->get_plugin_bk_dir(), $this->get_plugin_dir() );
 			WP_CLI::success( 'Plugin rolled back.' );
 			if ( ! $this->deactivate ) {
-				WP_CLI::runcommand( 'plugin activate ' . $this->slug, array( 'launch' => false ) );
+				WP_CLI::runcommand( 'plugin activate ' . $this->slug . $extra, array( 'launch' => false ) );
 			}
 		}
 	}
@@ -182,7 +185,8 @@ class Installer {
 
 		if ( false === ( $basename = self::get_plugin_basename( $this->slug ) ) ) {
 			$this->deactivate = true;
-			WP_CLI::runcommand( 'plugin activate ' . $this->slug, array( 'launch' => false ) );
+			$extra = is_multisite() ? ' --network' : '';
+			WP_CLI::runcommand( 'plugin activate ' . $this->slug . $extra, array( 'launch' => false ) );
 			$basename = self::get_plugin_basename( $this->slug );
 		}
 
@@ -225,7 +229,7 @@ class Installer {
 
 		if ( false === $this->deactivate ) {
 			// Activate if not already
-			$args .= ' --activate';
+			$args .= is_multisite() ? ' --activate-network' : ' --activate';
 		}
 
 		WP_CLI::runcommand( 'plugin install ' . $this->slug . ' ' . $args, array( 'launch' => false ) );
