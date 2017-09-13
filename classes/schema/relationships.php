@@ -131,8 +131,7 @@ class Relationships extends Abstract_Element {
 
 		ksort( $elements );
 
-		$filename = $schema->filename( false, false );
-		$content = self::read_data_file( $filename );
+		$content = $schema->read_data_file();
 		$ignored = isset( $content['relationships']['ignore'] ) ? $content['relationships']['ignore'] : array();
 
 		foreach ( $elements as $entity => $data ) {
@@ -201,7 +200,7 @@ class Relationships extends Abstract_Element {
 					$new_key = Command::meta_key( $key );
 					if ( $new_key ) {
 						// Store original key and new key
-						self::write_key_translation( $schema->filename( false, false ), $entity, $entities[ $entity ]['columns']['key'] , $key, $new_key );
+						self::write_key_translation( $schema, $entity, $entities[ $entity ]['columns']['key'] , $key, $new_key );
 
 						$key = $new_key;
 					}
@@ -266,7 +265,7 @@ class Relationships extends Abstract_Element {
 
 		if ( ! empty( $ignored ) ) {
 			$content['relationships']['ignore'] = $ignored;
-			self::write_data_file( $filename, $content );
+			$schema->write_data_file( $content );
 		}
 
 		return $relationships;
@@ -614,7 +613,7 @@ class Relationships extends Abstract_Element {
 	 * @return bool
 	 */
 	public static function is_key_translated( Schema $schema, $entity, $key ) {
-		$content = self::read_data_file( $schema->filename( false, false ) );
+		$content = $schema->read_data_file();
 
 		$columns = self::get_meta_columns( $entity, $schema->tables, $schema->custom_prefix );
 
@@ -639,8 +638,7 @@ class Relationships extends Abstract_Element {
 	 * @return mixed
 	 */
 	protected static function get_key_translation( Schema $schema, $entity, $old_key ) {
-		$filename = $schema->filename( false, false );
-		$content  = self::read_data_file( $filename );
+		$content = $schema->read_data_file();
 
 		$columns = self::get_meta_columns( $entity, $schema->tables, $schema->custom_prefix );
 
@@ -652,19 +650,19 @@ class Relationships extends Abstract_Element {
 	}
 
 	/**
-	 * @param $filename
-	 * @param $entity
-	 * @param $key_name
-	 * @param $old_key
-	 * @param $new_key
+	 * @param Schema $schema
+	 * @param        $entity
+	 * @param        $key_name
+	 * @param        $old_key
+	 * @param        $new_key
 	 *
 	 * @return int
 	 */
-	protected static function write_key_translation( $filename, $entity, $key_name, $old_key, $new_key ) {
-		$content = self::read_data_file( $filename );
+	protected static function write_key_translation( $schema, $entity, $key_name, $old_key, $new_key ) {
+		$content = $schema->read_data_file();
 
 		$content['relationships']['key_translation'][ $entity ][ $key_name ][ $old_key ] = $new_key;
 
-		return self::write_data_file( $filename, $content );
+		return $schema->write_data_file( $content );
 	}
 }

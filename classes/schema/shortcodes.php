@@ -123,8 +123,7 @@ class Shortcodes extends Abstract_Element {
 
 		$exit = false;
 
-		$filename = $schema->filename( false, false );
-		$content = self::read_data_file( $filename );
+		$content = $schema->read_data_file();
 		$ignored = isset( $content['shortcodes']['ignore'] ) ? $content['shortcodes']['ignore'] : array();
 
 		foreach( $all_shortcodes as $tag => $shortcode ) {
@@ -198,7 +197,7 @@ class Shortcodes extends Abstract_Element {
 
 		if ( ! empty ( $ignored ) ) {
 			$content['shortcodes']['ignore'] = $ignored;
-			self::write_data_file( $filename, $content );
+			$schema->write_data_file( $content );
 		}
 
 		return $shortcodes;

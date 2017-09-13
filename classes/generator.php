@@ -24,6 +24,7 @@ class Generator {
 	 */
 	public function __construct( $slug, $version, $type ) {
 		$this->schema = new Schema( $slug, $version, $type );
+		$this->schema->init();
 	}
 
 	/**
@@ -116,7 +117,8 @@ class Generator {
 			return $parts[0];
 		}
 
-		$found = Schema::get_slug_from_schema( $slug );
+		$schema = new Schema( $slug );
+		$found  = Schema::get_slug_from_schema( $schema );
 		if ( $found ) {
 			return $found;
 		}

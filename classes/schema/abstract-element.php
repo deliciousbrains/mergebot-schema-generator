@@ -65,39 +65,7 @@ abstract class Abstract_Element {
 		return $args;
 	}
 
-	/**
-	 * @param $filename
-	 *
-	 * @return array|mixed|object
-	 */
-	protected static function read_data_file( $filename ) {
-		$file = dirname( Mergebot_Schema_Generator()->file_path ) . '/data/' . $filename . '.json';
-		if ( ! file_exists( $file ) ) {
-			self::write_data_file( $file );
 
-			return array();
-		}
-
-		$contents = file_get_contents( $file );
-		if ( empty( $contents ) ) {
-			return array();
-		}
-
-		return json_decode( $contents, true );
-	}
-
-	/**
-	 * @param string $filename
-	 * @param array  $content
-	 *
-	 * @return int
-	 */
-	protected static function write_data_file( $filename, $content = array() ) {
-		$file    = dirname( Mergebot_Schema_Generator()->file_path ) . '/data/' . $filename . '.json';
-		$content = json_encode( $content, JSON_PRETTY_PRINT );
-
-		return file_put_contents( $file, $content );
-	}
 
 	protected static function get_class_for_method( $files, $contents, $method ) {
 		$parser = ( new ParserFactory )->create( ParserFactory::PREFER_PHP7 );

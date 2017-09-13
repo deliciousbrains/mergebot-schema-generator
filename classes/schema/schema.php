@@ -124,7 +124,9 @@ class Schema extends Abstract_Element {
 		$this->slug    = $slug;
 		$this->version = $version;
 		$this->type    = $type;
+	}
 
+	public function init() {
 		$this->files  = $this->list_files();
 		$this->tables = $this->get_tables();
 		$this->custom_prefix = $this->get_custom_table_prefix_from_tables();
@@ -558,40 +560,38 @@ class Schema extends Abstract_Element {
 			return;
 		}
 
-		$schema = $this->filename( false, false );
-
-		self::write_slug_schema_prefix( $schema, $this->slug );
+		self::write_slug_schema_prefix( $this, $this->slug );
 	}
 
 	/**
 	 * Get the slug from a schema file
 	 *
-	 * @param string $schema
+	 * @param Schema $schema
 	 *
 	 * @return string|bool
 	 */
 	public static function get_slug_from_schema( $schema ) {
-		$content = self::read_data_file( $schema );
+		$content = $schema->read_data_file();
 
-		if ( isset( $content[ 'slug' ] ) ) {
-			return $content[ 'slug' ];
+		if ( isset( $content['slug'] ) ) {
+			return $content['slug'];
 		}
 
 		return false;
 	}
 
 	/**
-	 * @param string $schema
+	 * @param Schema $schema
 	 * @param string $slug
 	 *
 	 * @return int
 	 */
 	public static function write_slug_schema_prefix( $schema, $slug ) {
-		$content = self::read_data_file( $schema );
+		$content = $schema->read_data_file();
 
-		$content[ 'slug' ] = $slug;
+		$content['slug'] = $slug;
 
-		return self::write_data_file( $schema, $content );
+		return $schema->write_data_file( $content );
 	}
 
 	/**
@@ -809,7 +809,7 @@ class Schema extends Abstract_Element {
 		}
 
 		$filename = $this->filename( false, false );
-		$prefix = Primary_Keys::get_custom_table_prefix( $filename );
+		$prefix = Primary_Keys::get_custom_table_prefix( $this );
 
 		if ( false !== $prefix ) {
 			return $this->format_custom_prefixes( $prefix );
@@ -865,7 +865,7 @@ class Schema extends Abstract_Element {
 		$filename = $this->filename( false, false );
 
 		// Check if prefix is saved
-		$saved_prefix = Primary_Keys::get_custom_table_prefix( $filename );
+		$saved_prefix = Primary_Keys::get_custom_table_prefix( $this );
 		if ( $saved_prefix ) {
 			return $saved_prefix;
 		}
@@ -885,5 +885,44 @@ class Schema extends Abstract_Element {
 		Primary_Keys::write_custom_table_prefix( $filename, $result );
 
 		return $result;
+	}
+
+	/**
+	 * @return array|mixed|object
+	 */
+	public function read_data_file() {
+		$file = $this->get_schema_data_file_path();
+		if ( ! file_exists( $file ) ) {
+			$this->write_data_file( $file );
+
+			return array();
+		}
+
+		$contents = file_get_contents( $file );
+		if ( empty( $contents ) ) {
+			return array();
+		}
+
+		return json_decode( $contents, true );
+	}
+
+	/**
+	 * @param array $content
+	 *
+	 * @return int
+	 */
+	public function write_data_file( $content = array() ) {
+		$content = json_encode( $content, JSON_PRETTY_PRINT );
+
+		return file_put_contents( $this->get_schema_data_file_path(), $content );
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function get_schema_data_file_path() {
+		$filename = $this->filename( false, false );
+
+		return dirname( Mergebot_Schema_Generator()->file_path ) . '/data/' . $filename . '.json';
 	}
 }

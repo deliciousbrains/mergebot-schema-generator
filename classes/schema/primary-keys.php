@@ -121,12 +121,12 @@ class Primary_Keys extends Abstract_Element {
 	}
 
 	/**
-	 * @param string $filename
+	 * @param Schema $schema
 	 *
 	 * @return string|bool
 	 */
-	public static function get_custom_table_prefix( $filename ) {
-		$content = self::read_data_file( $filename );
+	public static function get_custom_table_prefix( $schema ) {
+		$content = $schema->read_data_file();
 
 		if ( isset( $content[ 'table_prefix' ] ) ) {
 			return $content[ 'table_prefix' ];
@@ -136,16 +136,16 @@ class Primary_Keys extends Abstract_Element {
 	}
 
 	/**
-	 * @param string $filename
+	 * @param Schema $schema
 	 * @param string $prefix
 	 *
 	 * @return int
 	 */
-	public static function write_custom_table_prefix( $filename, $prefix ) {
-		$content = self::read_data_file( $filename );
+	public static function write_custom_table_prefix( $schema, $prefix ) {
+		$content = $schema->read_data_file();
 
 		$content[ 'table_prefix' ] = $prefix;
 
-		return self::write_data_file( $filename, $content );
+		return $schema->write_data_file( $content );
 	}
 }
