@@ -735,7 +735,10 @@ class Schema extends Abstract_Element {
 		if ( $force_use_table_prefix || ( empty( $all_tables ) && $has_custom_tables ) ) {
 			$prefixed_tables = $this->get_prefixed_tables();
 
-			$all_tables = array_merge( $all_tables, $prefixed_tables );
+			if ( is_array( $prefixed_tables ) ) {
+				$all_tables = array_merge( $all_tables, $prefixed_tables );
+			}
+
 		}
 
 		return $all_tables;

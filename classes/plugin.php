@@ -129,6 +129,10 @@ class Mergebot_Schema_Generator {
 		$all_tables = array();
 		$excluded   = apply_filters( 'mergebot_schema_generator_excluded_tables', array( 'sitecategories' ) );
 
+		if ( empty( $tables ) ) {
+			return $all_tables;
+		}
+
 		foreach ( $tables as $table ) {
 			$table = $this->strip_prefix_from_table( $table );
 
