@@ -1,3 +1,23 @@
 {
-    "slug": "akismet"
+    "slug": "akismet",
+    "relationships": {
+        "ignore": {
+            "commentmeta": [
+                "akismet_history",
+                "akismet_as_submitted",
+                "akismet_pro_tip",
+                "akismet_user",
+                "akismet_result"
+            ],
+            "options": [
+                "$option",
+                "wordpress_api_key",
+                "akismet_available_servers",
+                "akismet_spam_count",
+                "akismet_alert_code",
+                "akismet_alert_msg",
+                "active_plugins"
+            ]
+        }
+    }
 }

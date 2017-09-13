@@ -1,4 +1,18 @@
 {
     "slug": "wordpress-mu-domain-mapping",
-    "table_prefix": "domain_mapping"
+    "table_prefix": "domain_mapping",
+    "relationships": {
+        "ignore": {
+            "sitemeta": [
+                "dm_ipaddress",
+                "dm_cname",
+                "dm_301_redirect",
+                "dm_remote_login",
+                "dm_redirect_admin",
+                "dm_user_settings",
+                "dm_no_primary_domain",
+                "dm_hash"
+            ]
+        }
+    }
 }

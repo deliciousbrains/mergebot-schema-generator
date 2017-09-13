@@ -8,6 +8,45 @@
                     "{$taxonomy}_children": "(.*)_children"
                 }
             }
+        },
+        "ignore": {
+            "options": [
+                "gform_email_count",
+                "gform_api_count",
+                "rg_gforms_message",
+                "gform_sticky_admin_messages",
+                "gform_upload_page_slug",
+                "{$taxonomy}_children",
+                "gform_custom_choices",
+                "rg_gforms_key",
+                "active_plugins",
+                "rg_form_version",
+                "gf_imported_theme_file",
+                "rg_gforms_captcha_private_key",
+                "rg_gforms_captcha_public_key",
+                "gf_dismissed_upgrades",
+                "gravityformsaddon_' . $this->_slug . '_version",
+                "gravityformsaddon_' . $this->_slug . '_settings",
+                "gravityformsaddon_' . $this->_slug . '_app_settings",
+                "recently_activated",
+                "gravityformsaddon_feed-base_version",
+                "gravityformsaddon_payment_addons",
+                "gravityformsaddon_payment_version",
+                "gf_site_key",
+                "gf_site_secret",
+                "$key",
+                "gform_enable_background_updates",
+                "gform_enable_noconflict",
+                "rg_gforms_enable_akismet",
+                "rg_gforms_currency",
+                "gform_enable_toolbar_menu",
+                "gform_installation_wizard_' . $this->get_name()",
+                "gform_recaptcha_keys_status"
+            ],
+            "postmeta": [
+                "_gform-entry-id",
+                "$meta_name"
+            ]
         }
     }
 }

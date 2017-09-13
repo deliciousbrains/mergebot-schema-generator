@@ -1,3 +1,17 @@
 {
-    "slug": "limit-login-attempts"
+    "slug": "limit-login-attempts",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "limit_login_retries",
+                "limit_login_retries_valid",
+                "limit_login_logged",
+                "limit_login_lockouts_total",
+                "limit_login_lockouts"
+            ],
+            "usermeta": [
+                "limit_login_previous_cookie"
+            ]
+        }
+    }
 }

@@ -1,3 +1,18 @@
 {
-    "slug": "wp-super-cache"
+    "slug": "wp-super-cache",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "ossdl_off_cdn_url",
+                "ossdl_off_include_dirs",
+                "ossdl_off_exclude",
+                "ossdl_cname",
+                "ossdl_https",
+                "supercache_last_cached",
+                "wpsupercache_gc_time",
+                "preload_cache_counter",
+                "supercache_stats"
+            ]
+        }
+    }
 }

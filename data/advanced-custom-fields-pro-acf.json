@@ -1,3 +1,21 @@
 {
-    "slug": "advanced-custom-fields-pro"
+    "slug": "advanced-custom-fields-pro",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "acf_version",
+                "$option",
+                "acf_pro_license"
+            ],
+            "postmeta": [
+                "_wp_attachment_image_alt"
+            ],
+            "termmeta": [
+                "$name"
+            ],
+            "usermeta": [
+                "acf_user_settings"
+            ]
+        }
+    }
 }

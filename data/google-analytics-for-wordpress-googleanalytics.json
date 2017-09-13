@@ -1,3 +1,16 @@
 {
-    "slug": "google-analytics-for-wordpress"
+    "slug": "google-analytics-for-wordpress",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->option_name",
+                "yst_ga_' . $type",
+                "$this->option_refresh_token",
+                "$option_name"
+            ],
+            "sitemeta": [
+                "$option_name"
+            ]
+        }
+    }
 }

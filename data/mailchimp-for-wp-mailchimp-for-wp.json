@@ -1,3 +1,26 @@
 {
-    "slug": "mailchimp-for-wp"
+    "slug": "mailchimp-for-wp",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "mc4wp_flash_messages",
+                "mc4wp_version",
+                "mc4wp",
+                "mc4wp_form_stylesheets",
+                "mc4wp_integrations",
+                "sidebars_widgets",
+                "widget_mc4wp_form_widget",
+                "mc4wp_groupings_map",
+                "mc4wp_mailchimp_lists_v3_fallback",
+                "$this->option_name"
+            ],
+            "postmeta": [
+                "_mc4wp_settings",
+                "$message_key",
+                "$key",
+                "text_' . $key",
+                "_mc4wp_optin"
+            ]
+        }
+    }
 }

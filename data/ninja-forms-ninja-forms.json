@@ -14,6 +14,33 @@
                     "_field_' . $field_id": "_field_{nf3_fields:id}"
                 }
             }
+        },
+        "ignore": {
+            "options": [
+                "nf_admin_notice",
+                "nf_admin_notice_extra",
+                "nf_version_upgraded_from",
+                "ninja_forms_settings",
+                "nf_upgrade_' . $this->name . '_last_step",
+                "nf_convert_subs_step",
+                "nf_convert_subs_num",
+                "_wp_session_expires_{$this->session_id}",
+                "_wp_session_{$this->session_id}",
+                "$cache_key"
+            ],
+            "postmeta": [
+                "_seq_num",
+                "$key"
+            ],
+            "sitemeta": [
+                "$key"
+            ]
         }
+    },
+    "shortcodes": {
+        "ignore": [
+            "ninja_forms_sub_date",
+            "ninja_forms_all_fields"
+        ]
     }
 }

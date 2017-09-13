@@ -1,3 +1,18 @@
 {
-    "slug": "contact-form-7"
+    "slug": "contact-form-7",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "wpcf7"
+            ],
+            "postmeta": [
+                "_locale",
+                "_old_cf7_unit_id",
+                "_' . $prop"
+            ],
+            "usermeta": [
+                "wpcf7_hide_welcome_panel_on"
+            ]
+        }
+    }
 }

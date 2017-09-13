@@ -1,4 +1,17 @@
 {
     "slug": "wordfence",
-    "table_prefix": "wf"
+    "table_prefix": "wf",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "limit_login_retries"
+            ],
+            "sitemeta": [
+                "wordfence_syncattackdataattempts"
+            ],
+            "usermeta": [
+                "_wf_twofactornonce"
+            ]
+        }
+    }
 }

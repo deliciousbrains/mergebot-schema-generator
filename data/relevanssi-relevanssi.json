@@ -1,4 +1,62 @@
 {
     "slug": "relevanssi",
-    "table_prefix": "relevanssi"
+    "table_prefix": "relevanssi",
+    "shortcodes": {
+        "ignore": [
+            "search"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "relevanssi_doc_count",
+                "relevanssi_db_version",
+                "relevanssi_title_boost",
+                "relevanssi_comment_boost",
+                "relevanssi_min_word_length",
+                "relevanssi_excerpt_length",
+                "relevanssi_synonyms",
+                "relevanssi_show_matches",
+                "relevanssi_show_matches_text",
+                "relevanssi_post_type_weights",
+                "relevanssi_index_post_types",
+                "relevanssi_index_taxonomies_list",
+                "relevanssi_index_terms",
+                "relevanssi_admin_search",
+                "relevanssi_excerpts",
+                "relevanssi_excerpt_type",
+                "relevanssi_excerpt_allowable_tags",
+                "relevanssi_log_queries",
+                "relevanssi_log_queries_with_ip",
+                "relevanssi_highlight",
+                "relevanssi_highlight_docs",
+                "relevanssi_highlight_comments",
+                "relevanssi_txt_col",
+                "relevanssi_bg_col",
+                "relevanssi_css",
+                "relevanssi_class",
+                "relevanssi_cat",
+                "relevanssi_excat",
+                "relevanssi_extag",
+                "relevanssi_index_fields",
+                "relevanssi_exclude_posts",
+                "relevanssi_hilite_title",
+                "relevanssi_index_comments",
+                "relevanssi_index_author",
+                "relevanssi_index_excerpt",
+                "relevanssi_fuzzy",
+                "relevanssi_expand_shortcodes",
+                "relevanssi_implicit_operator",
+                "relevanssi_omit_from_logs",
+                "relevanssi_index_limit",
+                "relevanssi_disable_or_fallback",
+                "relevanssi_respect_exclude",
+                "relevanssi_throttle",
+                "relevanssi_throttle_limit",
+                "relevanssi_wpml_only_current",
+                "relevanssi_word_boundaries",
+                "relevanssi_default_orderby"
+            ]
+        }
+    }
 }

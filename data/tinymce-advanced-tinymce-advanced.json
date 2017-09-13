@@ -1,3 +1,11 @@
 {
-    "slug": "tinymce-advanced"
+    "slug": "tinymce-advanced",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "tadv_admin_settings",
+                "tadv_settings"
+            ]
+        }
+    }
 }

@@ -1,3 +1,13 @@
 {
-    "slug": "google-sitemap-generator"
+    "slug": "google-sitemap-generator",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "sm_cpages",
+                "sm_status",
+                "sm_options",
+                "sm_rewrite_done"
+            ]
+        }
+    }
 }

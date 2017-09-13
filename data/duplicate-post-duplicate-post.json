@@ -1,3 +1,15 @@
 {
-    "slug": "duplicate-post"
+    "slug": "duplicate-post",
+    "relationships": {
+        "ignore": {
+            "postmeta": [
+                "$meta_key",
+                "_wp_attachment_image_alt"
+            ],
+            "options": [
+                "duplicate_post_taxonomies_blacklist",
+                "duplicate_post_blacklist"
+            ]
+        }
+    }
 }

@@ -1,3 +1,16 @@
 {
-    "slug": "wordpress-importer"
+    "slug": "wordpress-importer",
+    "relationships": {
+        "ignore": {
+            "commentmeta": [
+                "$meta['key']"
+            ],
+            "postmeta": [
+                "$key"
+            ],
+            "termmeta": [
+                "$key"
+            ]
+        }
+    }
 }

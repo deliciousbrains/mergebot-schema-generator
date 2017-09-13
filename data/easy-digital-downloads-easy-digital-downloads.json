@@ -1,4 +1,72 @@
 {
     "slug": "easy-digital-downloads",
-    "table_prefix": "edd"
+    "table_prefix": "edd",
+    "shortcodes": {
+        "ignore": [
+            "edd_login",
+            "edd_register",
+            "edd_downloads"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "customermeta": [
+                "$meta_key"
+            ],
+            "options": [
+                "edd_general",
+                "edd_gateways",
+                "edd_emails",
+                "edd_styles",
+                "edd_taxes",
+                "edd_extensions",
+                "edd_misc",
+                "edd_settings",
+                "edd_tax_rates",
+                "edd_earnings_total",
+                "edd_version",
+                "edd_completed_upgrades",
+                "edd_settings_general",
+                "edd_settings_taxes",
+                "edd_doing_upgrade",
+                "$this->table_name . '_db_version",
+                "$this->item_shortname . '_license_active",
+                "$cache_key",
+                "edd_version_upgraded_from",
+                "edd_default_api_version",
+                "_wp_session_expires_{$this->session_id}",
+                "_wp_session_{$this->session_id}",
+                "_wp_session_list",
+                "edd_last_payment_number"
+            ],
+            "postmeta": [
+                "edd_price",
+                "_edd_download_limit",
+                "$field",
+                "_edd_download_sales",
+                "_edd_download_earnings",
+                "edd_product_notes",
+                "edd_sku",
+                "edd_variable_prices",
+                "edd_download_files",
+                "_edd_discount_' . $meta_key",
+                "_edd_log_' . sanitize_key($key)",
+                "_edd_discount_' . $key",
+                "_edd_discount_uses",
+                "_edd_download_limit_override_' . $payment_id",
+                "_edd_payment_meta",
+                "_edd_payment_user_email",
+                "$meta_key",
+                "$key"
+            ],
+            "usermeta": [
+                "_edd_user_address",
+                "$meta_value",
+                "edd_saved_cart",
+                "edd_cart_token",
+                "edd_user_public_key",
+                "edd_user_secret_key"
+            ]
+        }
+    }
 }

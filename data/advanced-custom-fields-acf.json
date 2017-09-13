@@ -1,3 +1,34 @@
 {
-    "slug": "advanced-custom-fields"
+    "slug": "advanced-custom-fields",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "acf_version",
+                "$new_name",
+                "$option"
+            ],
+            "postmeta": [
+                "rule",
+                "position",
+                "layout",
+                "hide_on_screen",
+                "$row['meta_key']",
+                "$field['key']",
+                "show_on_page",
+                "$value['meta_key']",
+                "_' . $value['meta_key']",
+                "$new_meta_key",
+                "_' . $new_meta_key",
+                "$field_name",
+                "_' . $field_name",
+                "$field['name']",
+                "_' . $field['name']"
+            ],
+            "usermeta": [
+                "$meta_key_prefix . $matches[2]",
+                "$field['name']",
+                "_' . $field['name']"
+            ]
+        }
+    }
 }
