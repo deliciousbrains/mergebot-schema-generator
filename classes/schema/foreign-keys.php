@@ -34,9 +34,10 @@ class Foreign_Keys {
 
 				$entity = str_replace( array( 'ID', 'Id', 'id' ), '', $column->Field );
 				$entity = rtrim( $entity, '_' );
+				$foreign_key = $table . ':' . $column->Field;
 
 				if ( false !== ( $match = self::handle_parent_id( $schema, $entity, $table ) ) ) {
-					$foreign_keys[ $table . ':' . $column->Field ] = $match;
+					$foreign_keys[ $foreign_key ] = $match;
 
 					continue;
 				}
@@ -45,7 +46,7 @@ class Foreign_Keys {
 				if ( isset( $wp_tables[ $entity ] ) ) {
 					$pk = $wp_primary_keys[ $entity ]['key'][0];
 
-					$foreign_keys[ $table . ':' . $column->Field ] = $entity . ':' . $pk;
+					$foreign_keys[ $foreign_key ] = $entity . ':' . $pk;
 
 					continue;
 				}
@@ -55,7 +56,7 @@ class Foreign_Keys {
 				if ( isset( $wp_tables[ $plural_entity ] ) ) {
 					$pk = $wp_primary_keys[ $plural_entity ]['key'][0];
 
-					$foreign_keys[ $table . ':' . $column->Field ] = $plural_entity . ':' . $pk;
+					$foreign_keys[ $foreign_key ] = $plural_entity . ':' . $pk;
 
 					continue;
 				}
@@ -64,21 +65,21 @@ class Foreign_Keys {
 				if ( isset( $post_types[ $entity ] ) ) {
 					$pk = $wp_primary_keys['posts']['key'][0];
 
-					$foreign_keys[ $table . ':' . $column->Field ] = 'posts:' . $pk;
+					$foreign_keys[ $foreign_key ] = 'posts:' . $pk;
 
 					continue;
 				}
 
 				// Single entity a plugin one
 				if ( false !== ( $match = self::is_plugin_table_fk( $schema, $entity, $table ) ) ) {
-					$foreign_keys[ $table . ':' . $column->Field ] = $match;
+					$foreign_keys[ $foreign_key ] = $match;
 
 					continue;
 				}
 
 				// Plural entity a plugin one
 				if ( false !== ( $match = self::is_plugin_table_fk( $schema, $plural_entity, $table ) ) ) {
-					$foreign_keys[ $table . ':' . $column->Field ] = $match;
+					$foreign_keys[ $foreign_key ] = $match;
 
 					continue;
 				}
@@ -88,7 +89,7 @@ class Foreign_Keys {
 				if ( $match ) {
 					$pk = $wp_primary_keys['posts']['key'][0];
 
-					$foreign_keys[ $table . ':' . $column->Field ] = 'posts:' . $pk;
+					$foreign_keys[ $foreign_key ] = 'posts:' . $pk;
 
 					continue;
 				}
@@ -101,7 +102,7 @@ class Foreign_Keys {
 				if ( isset( $wp_tables[ $entity ] ) ) {
 					$pk = $wp_primary_keys[ $entity ]['key'][0];
 
-					$foreign_keys[ $table . ':' . $column->Field ] = $entity . ':' . $pk;
+					$foreign_keys[ $foreign_key ] = $entity . ':' . $pk;
 
 					continue;
 				}
@@ -111,7 +112,7 @@ class Foreign_Keys {
 				if ( isset( $wp_tables[ $plural_entity ] ) ) {
 					$pk = $wp_primary_keys[ $plural_entity ]['key'][0];
 
-					$foreign_keys[ $table . ':' . $column->Field ] = $plural_entity . ':' . $pk;
+					$foreign_keys[ $foreign_key ] = $plural_entity . ':' . $pk;
 
 					continue;
 				}
