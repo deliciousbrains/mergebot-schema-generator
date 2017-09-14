@@ -253,7 +253,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function shortcode( $tag, $attributes, $assoc_args = array() ) {
 		if ( self::$headless ) {
-			\WP_CLI::error( 'User question' );
+			\WP_CLI::error( 'User question - shortcode' );
 		}
 
 		if ( self::$skip ) {
@@ -287,7 +287,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function meta( $assoc_args = array() ) {
 		if ( self::$headless ) {
-			\WP_CLI::error( 'User question' );
+			\WP_CLI::error( 'User question - meta' );
 		}
 
 		if ( self::$skip ) {
@@ -318,7 +318,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function meta_key( $key, $assoc_args = array() ) {
 		if ( Command::$headless ) {
-			\WP_CLI::error( 'User question' );
+			\WP_CLI::error( 'User question - meta key' );
 		}
 
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
@@ -346,7 +346,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function meta_table( $simple = true, $assoc_args = array() ) {
 		if ( Command::$headless ) {
-			\WP_CLI::error( 'User question' );
+			\WP_CLI::error( 'User question - meta table' );
 		}
 
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
@@ -376,7 +376,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function meta_serialized_key( $assoc_args = array() ) {
 		if ( Command::$headless ) {
-			\WP_CLI::error( 'User question' );
+			\WP_CLI::error( 'User question - serialized key' );
 		}
 
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
@@ -403,7 +403,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function meta_serialized_value( $assoc_args = array() ) {
 		if ( Command::$headless ) {
-			\WP_CLI::error( 'User question' );
+			\WP_CLI::error( 'User question - serialized value' );
 		}
 
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
@@ -430,7 +430,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function table_prefix( $assoc_args = array() ) {
 		if ( self::$headless ) {
-			\WP_CLI::error( 'User question' );
+			\WP_CLI::error( 'User question - table prefix' );
 		}
 
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
@@ -456,7 +456,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function info( $key = 'name', $assoc_args = array() ) {
 		if ( self::$headless ) {
-			\WP_CLI::error( 'User question' );
+			\WP_CLI::error( 'User question - info' );
 		}
 
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
@@ -478,7 +478,7 @@ class Command extends \WP_CLI_Command {
 	 */
 	public static function slug( $schema, $assoc_args = array() ) {
 		if ( self::$headless ) {
-			\WP_CLI::error( 'User question' );
+			\WP_CLI::error( 'User question - slug' );
 		}
 
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
