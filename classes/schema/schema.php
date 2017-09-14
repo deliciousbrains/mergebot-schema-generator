@@ -167,16 +167,18 @@ class Schema extends Abstract_Element {
 	/**
 	 * Get the file path of schema
 	 *
+	 * @param string $action
+	 *
 	 * @return string
 	 */
-	public function file_path() {
+	public function file_path( $action = 'read' ) {
 		$base_path = Mergebot_Schema_Generator()->schema_path;
 		$type      = 'wordpress' === $this->type ? 'core' : $this->type . 's';
 		$filename  = $this->filename();
 
 		$path = $base_path . '/' . $type . '/' .$filename;
 
-		return apply_filters( 'mergebot_schema_generator_path', $path, $base_path , $this->type, $this->filename() ) ;
+		return apply_filters( 'mergebot_schema_generator_path', $path, $base_path , $this->type, $this->filename(), $action ) ;
 	}
 
 	/**
@@ -622,7 +624,7 @@ class Schema extends Abstract_Element {
 	 * @param string $content
 	 */
 	protected function write( $content = '{}' ) {
-		$schema_file = $this->file_path();
+		$schema_file = $this->file_path( 'write' );
 
 		if ( file_exists( $schema_file ) ) {
 			// TODO duplicate or merge?
