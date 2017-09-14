@@ -32,6 +32,11 @@ class Schema extends Abstract_Element {
 	/**
 	 * @var string
 	 */
+	public $basename;
+
+	/**
+	 * @var string
+	 */
 	public $version;
 
 	/**
@@ -138,6 +143,17 @@ class Schema extends Abstract_Element {
 	}
 
 	/**
+	 * @return string
+	 */
+	protected function get_basename() {
+		if ( empty( $this->basename ) ) {
+			$this->basename = Installer::get_plugin_basename( $this->slug );
+		}
+
+		return $this->basename;
+	}
+
+	/**
 	 * Get schema filename
 	 *
 	 * @param bool $ext
@@ -149,14 +165,15 @@ class Schema extends Abstract_Element {
 	public function filename( $ext = true, $version = true ) {
 		$filename = $this->slug;
 		if ( 'plugin' === $this->type ) {
-			$filename = Installer::get_plugin_basename( $this->slug );
+			$filename = $this->get_basename();
 			$filename = str_replace( '/', '-', $filename );
 			$filename = str_replace( '.php', '', $filename );
 		}
 
-		if ( $version) {
-			$filename = $filename . '-' . $this->version;
+		if ( $version ) {
+			$filename .= '-' . $this->version;
 		}
+
 		if ( $ext ) {
 			$filename .= '.json';
 		}
@@ -169,12 +186,15 @@ class Schema extends Abstract_Element {
 	 *
 	 * @param string $action
 	 *
+	 * @param bool   $ext
+	 * @param bool   $version
+	 *
 	 * @return string
 	 */
-	public function file_path( $action = 'read' ) {
+	public function file_path( $action = 'read', $ext = true, $version = true ) {
 		$base_path = Mergebot_Schema_Generator()->schema_path;
 		$type      = 'wordpress' === $this->type ? 'core' : $this->type . 's';
-		$filename  = $this->filename();
+		$filename  = $this->filename( $ext, $version );
 
 		$path = $base_path . '/' . $type . '/' .$filename;
 
@@ -191,25 +211,12 @@ class Schema extends Abstract_Element {
 	}
 
 	/**
-	 * Get the file path of a schema without the version and extension
-	 *
-	 * @return string
-	 */
-	protected function get_schema_base_filepath() {
-		$type = 'wordpress' === $this->type ? 'core' : $this->type . 's';
-		$path = apply_filters( 'mergebot_schema_generator_plugins_path', Mergebot_Schema_Generator()->schema_path . '/' . $type );
-		$slug = $this->filename( false, false );
-
-		return $path . $slug;
-	}
-
-	/**
 	 * Get the latest version of a schema.
 	 *
 	 * @return bool
 	 */
 	public function get_latest_schema_version() {
-		$path = $this->get_schema_base_filepath();
+		$path = $this->file_path( 'read', false, false );
 
 		$latest_version = false;
 		$schemas        = glob( $path . '-*.json' );
@@ -642,7 +649,7 @@ class Schema extends Abstract_Element {
 	 * @param $version
 	 */
 	public function duplicate( $version ) {
-		$path     = $this->get_schema_base_filepath();
+		$path     = $this->file_path( 'read', false, false);
 		$path     .= '-' . $version . '.json';
 		$contents = $this->read( $path );
 		$contents = str_replace( $version, $this->version, $contents );

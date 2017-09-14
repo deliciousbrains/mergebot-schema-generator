@@ -279,7 +279,7 @@ class Installer {
 	 *
 	 * @param string $slug
 	 *
-	 * @return bool
+	 * @return bool|string
 	 */
 	public static function get_plugin_basename( $slug ) {
 		$active_plugins = self::get_active_plugins();
