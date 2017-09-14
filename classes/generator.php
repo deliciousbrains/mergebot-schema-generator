@@ -117,7 +117,7 @@ class Generator {
 			return $parts[0];
 		}
 
-		$schema = new Schema( $slug );
+		$schema = new Schema( '', '', '', $slug );
 		$found  = Schema::get_slug_from_schema( $schema );
 		if ( $found ) {
 			return $found;

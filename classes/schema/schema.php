@@ -37,6 +37,11 @@ class Schema extends Abstract_Element {
 	/**
 	 * @var string
 	 */
+	public $slug_key;
+
+	/**
+	 * @var string
+	 */
 	public $version;
 
 	/**
@@ -125,15 +130,17 @@ class Schema extends Abstract_Element {
 	 * @param string $slug
 	 * @param string $version
 	 * @param string $type
+	 * @param string $slug_key
 	 */
-	public function __construct( $slug = 'wordpress', $version = '', $type = 'plugin' ) {
+	public function __construct( $slug = 'wordpress', $version = '', $type = 'plugin', $slug_key = '' ) {
 		if ( 'wordpress' === $type ) {
 			$slug = $type;
 		}
 
-		$this->slug    = $slug;
-		$this->version = $version;
-		$this->type    = $type;
+		$this->slug     = $slug;
+		$this->version  = $version;
+		$this->type     = $type;
+		$this->slug_key = $slug_key;
 	}
 
 	public function init() {
@@ -939,7 +946,7 @@ class Schema extends Abstract_Element {
 	 * @return string
 	 */
 	protected function get_schema_data_file_path() {
-		$filename = $this->filename( false, false );
+		$filename = $this->slug_key ? $this->slug_key : $this->filename( false, false );
 
 		return dirname( Mergebot_Schema_Generator()->file_path ) . '/data/' . $filename . '.json';
 	}
