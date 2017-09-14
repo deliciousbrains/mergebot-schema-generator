@@ -37,6 +37,11 @@ class Schema extends Abstract_Element {
 	/**
 	 * @var string
 	 */
+	public $tested_up_to;
+
+	/**
+	 * @var string
+	 */
 	public $type;
 
 	/**
@@ -227,8 +232,9 @@ class Schema extends Abstract_Element {
 
 	protected function init_properties( $data = array() ) {
 		// Info
-		$this->name = $this->init_property( $data, 'name', '' );
-		$this->url  = $this->init_property( $data, 'url', '' );
+		$this->name         = $this->init_property( $data, 'name', '' );
+		$this->url          = $this->init_property( $data, 'url', '' );
+		$this->tested_up_to = $this->init_property( $data, 'testedUpTo', $this->version );
 
 		// Data
 		$this->primary_keys   = $this->init_property( $data, 'primaryKeys' );
@@ -523,9 +529,10 @@ class Schema extends Abstract_Element {
 		$info = array();
 		if ( 'wordpress' !== $this->type ) {
 			$info = array(
-				'name'    => $this->name,
-				'version' => $this->version,
-				'url'     => $this->url,
+				'name'       => $this->name,
+				'version'    => $this->version,
+				'testedUpTo' => $this->tested_up_to,
+				'url'        => $this->url,
 			);
 		}
 
