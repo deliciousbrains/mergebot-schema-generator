@@ -631,6 +631,8 @@ class Schema extends Abstract_Element {
 			//return;
 		}
 
+		wp_mkdir_p( dirname( $schema_file ) );
+
 		file_put_contents( $schema_file, $content );
 	}
 
