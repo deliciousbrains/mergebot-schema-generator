@@ -22,6 +22,8 @@ class Command extends \WP_CLI_Command {
 
 	protected static $skip = false;
 
+	public static $headless = false;
+
 	/**
 	 * Generates a schema for a plugin
 	 *
@@ -48,6 +50,10 @@ class Command extends \WP_CLI_Command {
 	 *  [--exclude]
 	 * : Exclude plugins when generating all plugin schemas
 	 *
+	 *  [--headless]
+	 * : Run in headless mode, will error if a question is asked
+	 *
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp mergebot-schema generate
@@ -65,6 +71,10 @@ class Command extends \WP_CLI_Command {
 
 		if ( isset( $assoc_args['skip'] )  ) {
 			self::$skip = true;
+		}
+
+		if ( isset( $assoc_args['headless'] )  ) {
+			self::$headless = true;
 		}
 
 		mergebot_schema_generator()->set_wp_data();
@@ -242,6 +252,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function shortcode( $tag, $attributes, $assoc_args = array() ) {
+		if ( self::$headless ) {
+			\WP_CLI::error( 'User question' );
+		}
+
 		if ( self::$skip ) {
 			return 'exit';
 		}
@@ -272,6 +286,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function meta( $assoc_args = array() ) {
+		if ( self::$headless ) {
+			\WP_CLI::error( 'User question' );
+		}
+
 		if ( self::$skip ) {
 			return 'exit';
 		}
@@ -299,6 +317,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function meta_key( $key, $assoc_args = array() ) {
+		if ( Command::$headless ) {
+			\WP_CLI::error( 'User question' );
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 
 			$key = \WP_CLI::colorize( '%B' . $key . '%n' );
@@ -323,6 +345,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function meta_table( $simple = true, $assoc_args = array() ) {
+		if ( Command::$headless ) {
+			\WP_CLI::error( 'User question' );
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 
 			if ( $simple ) {
@@ -349,6 +375,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function meta_serialized_key( $assoc_args = array() ) {
+		if ( Command::$headless ) {
+			\WP_CLI::error( 'User question' );
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 
 			fwrite( STDOUT, "\n" . "Is the serialized array keyed?\n[n/key/table:column] " );
@@ -372,6 +402,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function meta_serialized_value( $assoc_args = array() ) {
+		if ( Command::$headless ) {
+			\WP_CLI::error( 'User question' );
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 
 			fwrite( STDOUT, "\n" . "What is the serialized array value ?\n[key|table:column] or [table:column] when no key\n" );
@@ -395,6 +429,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function table_prefix( $assoc_args = array() ) {
+		if ( self::$headless ) {
+			\WP_CLI::error( 'User question' );
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 			fwrite( STDOUT, 'Tables cannot be parsed, but the plugin has custom tables. Do you know the custom prefix? [prefix/n] (Multiple prefixes separated by a comma)' . "\n" );
 
@@ -417,6 +455,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function info( $key = 'name', $assoc_args = array() ) {
+		if ( self::$headless ) {
+			\WP_CLI::error( 'User question' );
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 			fwrite( STDOUT, 'Enter plugin ' . $key . ": " );
 
@@ -435,6 +477,10 @@ class Command extends \WP_CLI_Command {
 	 * @return bool|string
 	 */
 	public static function slug( $schema, $assoc_args = array() ) {
+		if ( self::$headless ) {
+			\WP_CLI::error( 'User question' );
+		}
+
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
 			fwrite( STDOUT, 'Enter slug for schema file ' . $schema . ": " );
 
