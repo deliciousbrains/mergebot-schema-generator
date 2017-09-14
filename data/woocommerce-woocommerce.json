@@ -3,7 +3,15 @@
     "table_prefix": "woocommerce",
     "shortcodes": {
         "ignore": [
-            "fee"
+            "fee",
+            "product_category",
+            "recent_products",
+            "sale_products",
+            "best_selling_products",
+            "top_rated_products",
+            "featured_products",
+            "product_attribute",
+            "related_products"
         ]
     },
     "relationships": {
