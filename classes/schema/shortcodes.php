@@ -153,7 +153,7 @@ class Shortcodes extends Abstract_Element {
 				}
 			}
 
-			if ( $exit ) {
+			if ( $exit && ! Command::$headless ) {
 				$ignored[] = $tag;
 
 				continue;
