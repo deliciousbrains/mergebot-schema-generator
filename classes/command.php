@@ -92,9 +92,19 @@ class Command extends \WP_CLI_Command {
 		$this->generate_one( $assoc_args );
 
 		// Rebuild the Plugin API JSON file
-		if ( $this->rebuild_api() ) {
-			\WP_CLI::success( 'Plugin schema API regenerated' );
-		}
+		$this->rebuild_api();
+	}
+
+	/**
+	 * Rebuild the Plugin API JSON file
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp mergebot-schema api
+	 */
+	public function api( $args, $assoc_args ) {
+		// Rebuild the Plugin API JSON file
+		$this->rebuild_api();
 	}
 
 	protected function generate_all( $plugin = true, $exclude = null ) {
@@ -133,9 +143,7 @@ class Command extends \WP_CLI_Command {
 		}
 
 		// Rebuild the Plugin API JSON file
-		if ( $this->rebuild_api() ) {
-			\WP_CLI::success( 'Plugin schema API regenerated' );
-		}
+		$this->rebuild_api();
 	}
 
 	protected function generate_one( $assoc_args ) {
@@ -187,6 +195,8 @@ class Command extends \WP_CLI_Command {
 		chdir( $api_build_file_path );
 		require $api_build_file;
 		chdir( $current_dir );
+
+		\WP_CLI::success( 'Plugin schema API regenerated' );
 
 		return true;
 	}
