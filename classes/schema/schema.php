@@ -220,20 +220,41 @@ class Schema extends Abstract_Element {
 	/**
 	 * Get the latest version of a schema.
 	 *
-	 * @return bool
+	 * @param bool $max_version
+	 *
+	 * @return bool|Schema
 	 */
-	public function get_latest_schema_version() {
+	public function get_latest_schema( $max_version = false ) {
 		$path = $this->file_path( 'read', false, false );
 
-		$latest_version = false;
-		$schemas        = glob( $path . '-*.json' );
+		$latest_schema = false;
+		$schemas       = glob( $path . '-*.json' );
 		if ( empty( $schemas ) ) {
-			return $latest_version;
+			return $latest_schema;
 		}
 
-		$schema = array_pop( $schemas );
+		$all_schemas = array();
+		foreach( $schemas as $schema ) {
+			$filename = str_replace( '.json', '', basename( $schema ) );
+			$parts    = explode( '-', $filename );
+			$version  = array_pop( $parts );
 
-		return str_replace( array( $path . '-', '.json' ), '', $schema );
+			if ( ! $max_version || version_compare( $version, $max_version, '<') ) {
+				$all_schemas[] = $schema;
+			}
+		}
+
+		if ( empty( $all_schemas ) ) {
+			return $latest_schema;
+		}
+
+		$schema_path = array_pop( $all_schemas );
+
+		$filename = str_replace( '.json', '', basename( $schema_path ) );
+		$parts    = explode( '-', $filename );
+		$version  = array_pop( $parts );
+
+		return new Schema( $this->slug, $version, 'plugin', $filename );
 	}
 
 	/**
@@ -632,6 +653,14 @@ class Schema extends Abstract_Element {
 		return file_get_contents( $path );
 	}
 
+	public function contents() {
+		return $this->read();
+	}
+
+	public function json() {
+		return json_decode( $this->contents(), true );
+	}
+
 	/**
 	 * Write schema file
 	 *
@@ -648,6 +677,17 @@ class Schema extends Abstract_Element {
 		wp_mkdir_p( dirname( $schema_file ) );
 
 		file_put_contents( $schema_file, $content );
+	}
+
+	/**
+	 * @param $contents
+	 * @param $version
+	 *
+	 * @return string
+	 */
+	public function update_tested_up_to( $contents, $version ) {
+		$contents['testedUpTo'] = $version;
+		$this->write( json_encode( $contents, JSON_PRETTY_PRINT ) );
 	}
 
 	/**

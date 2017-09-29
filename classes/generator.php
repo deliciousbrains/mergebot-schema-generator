@@ -16,6 +16,11 @@ class Generator {
 	protected $schema;
 
 	/**
+	 * @var Schema
+	 */
+	protected $latest_schema;
+
+	/**
 	 * Generator constructor.
 	 *
 	 * @param string $slug
@@ -46,15 +51,68 @@ class Generator {
 		}
 
 		// Look for the last version that exists
-		$latest_version = $this->schema->get_latest_schema_version();
-		if ( false === $latest_version ) {
+		$this->latest_schema = $this->schema->get_latest_schema( $this->schema->version );
+		if ( false === $this->latest_schema ) {
 			$this->schema->create();
 
 			return;
 		}
 
-		$this->schema->duplicate( $latest_version );
+		$this->schema->duplicate( $this->latest_schema->version );
 		$this->schema->update();
+	}
+
+	public function maybe_update_latest_schema() {
+		if ( Command::$headless ) {
+			return;
+		}
+
+		if ( false === $this->latest_schema ) {
+			return;
+		}
+
+		// Get contents of schemas
+		$schema_contents = $this->schema->json();
+		$latest_contents = $this->latest_schema->json();
+
+		if ( ! $this->schemas_identical( $schema_contents, $latest_contents ) ) {
+			return;
+		}
+
+		$this->latest_schema->update_tested_up_to( $latest_contents, $this->schema->version );
+		unlink( $this->schema->file_path() );
+	}
+
+	/**
+	 * Compare two schema file contents and check if the same, ignoring version differences.
+	 *
+	 * @param string $schema_a_contents
+	 * @param string $schema_b_contents
+	 *
+	 * @return bool
+	 */
+	protected function schemas_identical( $schema_a_contents, $schema_b_contents ) {
+		unset( $schema_a_contents['version'] );
+		unset( $schema_a_contents['testedUpTo'] );
+		unset( $schema_b_contents['version'] );
+		unset( $schema_b_contents['testedUpTo'] );
+
+		return json_encode( $schema_a_contents ) === json_encode( $schema_b_contents );
+	}
+
+	/**
+	 * Get the JSON contents of a schema file.
+	 *
+	 * @param string $filename
+	 *
+	 * @return array|mixed|object
+	 */
+	protected function get_schema_json( $filename ) {
+		$path = $this->getSchemaPath( $filename );
+
+		$contents = file_get_contents( $path );
+
+		return json_decode( $contents, true );
 	}
 
 	public static function get_generated_core() {

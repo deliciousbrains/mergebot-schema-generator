@@ -175,6 +175,9 @@ class Command extends \WP_CLI_Command {
 		$generator = new Generator( $slug, $version, $this->type );
 		$generator->generate( $create_from_scratch );
 
+		// Maybe update latest schema
+		$generator->maybe_update_latest_schema();
+
 		// Clean up the install
 		$installer->clean_up();
 
