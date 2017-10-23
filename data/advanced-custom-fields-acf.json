@@ -27,7 +27,11 @@
             "usermeta": [
                 "$meta_key_prefix . $matches[2]",
                 "$field['name']",
-                "_' . $field['name']"
+                "_' . $field['name']",
+                "acf_user_settings"
+            ],
+            "termmeta": [
+                "$name"
             ]
         }
     }
