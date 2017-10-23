@@ -35,7 +35,25 @@
             "jetpack_subscription_form",
             "videopress",
             "wpvideo",
-            "jetpack_top_posts_widget"
+            "jetpack_top_posts_widget",
+            "archiveorg-book",
+            "archiveorg",
+            "getty",
+            "googleapps",
+            "gravatar",
+            "gravatar_profile",
+            "kickstarter",
+            "lytro",
+            "question",
+            "answer",
+            "wrong",
+            "explanation",
+            "upcomingevents",
+            "spotify",
+            "tweet",
+            "ustream",
+            "ustreamsocial",
+            "blog_subscription_form"
         ]
     },
     "relationships": {
@@ -80,7 +98,9 @@
                 "jetpack_constant_' . $constant",
                 "jetpack_updates",
                 "jetpack_' . $name",
-                "jetpack_network_' . $option"
+                "jetpack_network_' . $option",
+                "jetpack_content_blog_display",
+                "self::updates_checksum_option_name"
             ],
             "postmeta": [
                 "_wp_attachment_image_alt",
