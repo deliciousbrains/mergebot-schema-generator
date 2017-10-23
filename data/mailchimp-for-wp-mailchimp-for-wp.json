@@ -12,7 +12,9 @@
                 "widget_mc4wp_form_widget",
                 "mc4wp_groupings_map",
                 "mc4wp_mailchimp_lists_v3_fallback",
-                "$this->option_name"
+                "$this->option_name",
+                "mc4wp_mailchimp_list_' . $list_id",
+                "mc4wp_mailchimp_list_ids"
             ],
             "postmeta": [
                 "_mc4wp_settings",
