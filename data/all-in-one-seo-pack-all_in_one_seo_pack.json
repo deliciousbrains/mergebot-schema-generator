@@ -21,7 +21,8 @@
                 "$field",
                 "_aioseop_sitemap_exclude",
                 "_aioseop_disable",
-                "_aioseop_disable_analytics"
+                "_aioseop_disable_analytics",
+                "_' . $prefix . $k"
             ],
             "usermeta": [
                 "aioseop_ignore_notice"
