@@ -16,7 +16,8 @@
                 "akismet_spam_count",
                 "akismet_alert_code",
                 "akismet_alert_msg",
-                "active_plugins"
+                "active_plugins",
+                "$setting_key"
             ]
         }
     }
