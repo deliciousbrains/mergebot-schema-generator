@@ -6,10 +6,30 @@
                 "$this->option_name",
                 "yst_ga_' . $type",
                 "$this->option_refresh_token",
-                "$option_name"
+                "$option_name",
+                "$new_option_access_token",
+                "$new_option_refresh_token",
+                "monsterinsights_get_profiles",
+                "monsterinsights_license",
+                "monsterinsights_license_updates",
+                "monsterinsights_notices",
+                "monsterinsights_report_overview_pageviews",
+                "monsterinsights_report_overview_top_content",
+                "monsterinsights_report_overview_top_sources",
+                "monsterinsights_report_overview_countries",
+                "monsterinsights_version_upgraded_from",
+                "monsterinsights_get_option_name()",
+                "monsterinsights_over_time",
+                "yst_ga",
+                "monsterinsights_pro_access_token",
+                "monsterinsights_lite_access_token",
+                "monsterinsights_pro_refresh_token",
+                "monsterinsights_lite_refresh_token"
             ],
             "sitemeta": [
-                "$option_name"
+                "$option_name",
+                "monsterinsights_license",
+                "monsterinsights_settings"
             ]
         }
     }
