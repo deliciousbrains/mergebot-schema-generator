@@ -1,0 +1,75 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "tribe_last_' . $action",
+                "$this->chunked_keys_option_name",
+                "$this->pue_install_key",
+                "self::store_key",
+                "tribe_settings_errors",
+                "tribe_settings_major_error",
+                "tribe_settings_sent_data",
+                "$field_id",
+                "$option_id",
+                "tribe__main::optionname",
+                "tribe_systeminfo_optin",
+                "tribe_events_import_column_mapping_' . $content_type",
+                "tribe_events_importer_offset",
+                "tribe_events_import_log",
+                "tribe_events_import_failed_rows",
+                "tribe_events_import_encoded_rows",
+                "tribe_events_import_type",
+                "tribe_events_import_column_mapping_' . $importer->get_type()",
+                "tribe__events__main::optionname",
+                "tribe_events_import_column_mapping_' . $type"
+            ],
+            "postmeta": [
+                "_tribe_importer_original_url",
+                "self::history_key",
+                "$meta_timeout",
+                "$meta",
+                "self::$field_key",
+                "_eventtimezone",
+                "_eventtimezoneabbr",
+                "_eventstartdateutc",
+                "_eventenddateutc",
+                "$tribe_aggregator_meta_key",
+                "tribe__events__aggregator__event::$global_id_lineage_key",
+                "$field",
+                "$key",
+                "self::$meta_key_prefix . 'import_id",
+                "tribe__events__aggregator__event::$global_id_key",
+                "_{$unique_field['target']}",
+                "_eventrecurrencerrule",
+                "_eventorigin",
+                "tribe__events__aggregator__event::$origin_key",
+                "tribe__events__aggregator__event::$record_key",
+                "tribe__events__aggregator__event::$source_key",
+                "tribe__events__aggregator__event::$updated_key",
+                "_eventcost",
+                "_eventshowmaplink",
+                "_eventshowmap",
+                "_thumbnail_id",
+                "$tag",
+                "self::$key_previous_status",
+                "$meta_key",
+                "$post_type . 'origin",
+                "_organizer' . $key",
+                "_preview_venues",
+                "_preview_organizers",
+                "_venueshowmaplink",
+                "_venueshowmap",
+                "_venue' . $key"
+            ],
+            "sitemeta": [
+                "$this->pue_option_name",
+                "$field_id",
+                "$option_id"
+            ],
+            "usermeta": [
+                "self::$meta_key"
+            ]
+        }
+    },
+    "slug": "the-events-calendar"
+}
