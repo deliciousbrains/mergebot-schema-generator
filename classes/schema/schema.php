@@ -900,7 +900,7 @@ class Schema extends Abstract_Element {
 
 		if ( ! empty( $prefix ) ) {
 			// Save custom prefix
-			Primary_Keys::write_custom_table_prefix( $filename, $prefix );
+			Primary_Keys::write_custom_table_prefix( $this, $prefix );
 		} else {
 			$prefix = $this->ask_for_custom_prefix( $filename );
 		}
@@ -947,7 +947,7 @@ class Schema extends Abstract_Element {
 		}
 
 		// Save custom prefix
-		Primary_Keys::write_custom_table_prefix( $filename, $result );
+		Primary_Keys::write_custom_table_prefix( $this, $result );
 
 		return $result;
 	}
@@ -958,7 +958,7 @@ class Schema extends Abstract_Element {
 	public function read_data_file() {
 		$file = $this->get_schema_data_file_path();
 		if ( ! file_exists( $file ) ) {
-			$this->write_data_file( $file );
+			$this->write_data_file();
 
 			return array();
 		}
