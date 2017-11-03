@@ -100,7 +100,8 @@
                 "jetpack_' . $name",
                 "jetpack_network_' . $option",
                 "jetpack_content_blog_display",
-                "self::updates_checksum_option_name"
+                "self::updates_checksum_option_name",
+                "$opts['callback'][0]->option_name"
             ],
             "postmeta": [
                 "_wp_attachment_image_alt",
@@ -123,7 +124,10 @@
                 "$cache_meta_key",
                 "_jetpack_dont_email_post_to_subs",
                 "videopress_guid",
-                "videopress_status"
+                "videopress_status",
+                "self::$wp_revision_history",
+                "self::$wp_original_media",
+                "jetpack_media::$wp_attachment_image_alt"
             ],
             "sitemeta": [
                 "$this->settings_name",
