@@ -31,7 +31,8 @@
                 "nf_convert_subs_num",
                 "_wp_session_expires_{$this->session_id}",
                 "_wp_session_{$this->session_id}",
-                "$cache_key"
+                "$cache_key",
+                "ninja_forms_three_throttle"
             ],
             "postmeta": [
                 "_seq_num",
