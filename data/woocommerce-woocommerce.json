@@ -11,7 +11,8 @@
             "top_rated_products",
             "featured_products",
             "product_attribute",
-            "related_products"
+            "related_products",
+            "woocommerce_my_account"
         ]
     },
     "relationships": {
@@ -65,7 +66,13 @@
                 "$option_key[0]",
                 "$method->get_instance_option_key()",
                 "woocommerce_tracker_ua",
-                "self::$option_name"
+                "self::$option_name",
+                "woocommerce_store_address",
+                "woocommerce_store_address_2",
+                "woocommerce_store_city",
+                "woocommerce_store_postcode",
+                "woocommerce_product_type",
+                "woocommerce_setup_automated_taxes"
             ],
             "order_itemmeta": [
                 "$meta_key",
@@ -191,7 +198,8 @@
                 "billing_' . $key",
                 "shipping_' . $key",
                 "_money_spent",
-                "_order_count"
+                "_order_count",
+                "_woocommerce_persistent_cart_' . get_current_blog_id()"
             ]
         }
     }
