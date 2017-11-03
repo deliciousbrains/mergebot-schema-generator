@@ -75,7 +75,9 @@ class Generator {
 		$schema_contents = $this->schema->json();
 		$latest_contents = $this->latest_schema->json();
 
-		if ( ! $this->schemas_identical( $schema_contents, $latest_contents ) ) {
+		if ( ! self::schemas_identical( $schema_contents, $latest_contents ) ) {
+			$this->schema->update_tested_up_to( $schema_contents, $this->schema->version );
+
 			return;
 		}
 
