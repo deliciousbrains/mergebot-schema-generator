@@ -88,16 +88,19 @@ class Generator {
 	/**
 	 * Compare two schema file contents and check if the same, ignoring version differences.
 	 *
-	 * @param string $schema_a_contents
-	 * @param string $schema_b_contents
+	 * @param array $schema_a_contents
+	 * @param array $schema_b_contents
 	 *
 	 * @return bool
 	 */
-	protected function schemas_identical( $schema_a_contents, $schema_b_contents ) {
+	public static function schemas_identical( $schema_a_contents, $schema_b_contents ) {
 		unset( $schema_a_contents['version'] );
 		unset( $schema_a_contents['testedUpTo'] );
 		unset( $schema_b_contents['version'] );
 		unset( $schema_b_contents['testedUpTo'] );
+
+		ksort( $schema_a_contents );
+		ksort( $schema_b_contents );
 
 		return json_encode( $schema_a_contents ) === json_encode( $schema_b_contents );
 	}
