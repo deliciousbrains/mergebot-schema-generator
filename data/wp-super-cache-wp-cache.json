@@ -12,7 +12,8 @@
                 "wpsupercache_gc_time",
                 "preload_cache_counter",
                 "supercache_stats",
-                "ossdl_off_blog_url"
+                "ossdl_off_blog_url",
+                "wpsc_feed_list"
             ]
         }
     }
