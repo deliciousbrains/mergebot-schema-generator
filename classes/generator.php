@@ -71,6 +71,10 @@ class Generator {
 			return;
 		}
 
+		if ( 'wordpress' === $this->schema->type ) {
+			return;
+		}
+
 		// Get contents of schemas
 		$schema_contents = $this->schema->json();
 		$latest_contents = $this->latest_schema->json();
