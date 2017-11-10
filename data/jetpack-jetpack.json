@@ -101,7 +101,8 @@
                 "jetpack_network_' . $option",
                 "jetpack_content_blog_display",
                 "self::updates_checksum_option_name",
-                "$opts['callback'][0]->option_name"
+                "$opts['callback'][0]->option_name",
+                "jetpack-sitemap-state"
             ],
             "postmeta": [
                 "_wp_attachment_image_alt",
@@ -136,7 +137,9 @@
                 "trusted_ip_header",
                 "jetpack_protect_key",
                 "jetpack_protect_blocked_attempts",
-                "jetpack_protect_error"
+                "jetpack_protect_error",
+                "$name",
+                "jetpack_{$name}"
             ],
             "usermeta": [
                 "jetpack_tracks_wpcom_id",
