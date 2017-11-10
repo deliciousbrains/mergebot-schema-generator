@@ -787,12 +787,22 @@ class Schema extends Abstract_Element {
 			preg_match_all( $pattern, $content, $matches );
 
 			if ( $matches && is_array( $matches[2] ) && ! empty( $matches[2] ) ) {
-				if ( in_array( $matches[2][0], array( '"', "'" ) ) || false !== strpos( $matches[2][0], '$' ) || false !== strpos( $matches[2][0], '%' ) ) {
+				if ( in_array( $matches[2][0], array( '"', "'" ) ) || ( false !== strpos( $matches[2][0], '$' ) && false === strpos( $matches[2][0], '$wpdb->' ) ) || false !== strpos( $matches[2][0], '%' ) ) {
 					// Tables names defined in variables.
 					$force_use_table_prefix = true;
 					continue;
 				}
-				$tables     = $matches[2];
+
+				$tables = $matches[2];
+
+				foreach ( $tables as $key => $table ) {
+					if ( ! preg_match_all( '/[A-Za-z0-9_]+/', $table ) ) {
+						unset( $tables[ $key ] );
+						continue;
+					}
+					$tables[ $key ] = str_replace( '$wpdb->', '', $table );
+				}
+
 				$all_tables = array_merge( $all_tables, $tables );
 			}
 		}
@@ -806,7 +816,7 @@ class Schema extends Abstract_Element {
 
 		}
 
-		return $all_tables;
+		return array_unique( $all_tables );
 	}
 
 	/**
