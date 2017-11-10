@@ -214,9 +214,7 @@ class Installer {
 	 */
 	protected function install() {
 		if ( 'wordpress' === $this->type ) {
-			$this->wp_version = $this->get_installed_core_version();
-
-			$this->install_wp( $this->wp_version );
+			$this->install_wp( $this->version );
 
 			return;
 		}
