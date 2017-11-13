@@ -1,0 +1,68 @@
+{
+    "table_prefix": "icl",
+    "relationships": {
+        "ignore": {
+            "commentmeta": [
+                "$value->meta_key"
+            ],
+            "options": [
+                "wpml_config_index",
+                "wpml_config_files_arr",
+                "self::settings_slug",
+                "self::notices_option_key",
+                "self::dismissed_option_key",
+                "page_on_front",
+                "page_for_posts",
+                "$hash_url",
+                "self::update_statuses_key",
+                "$option",
+                "_icl_cache",
+                "icl_sitepress_settings",
+                "recently_activated",
+                "active_plugins",
+                "icl_admin_messages",
+                "sticky_posts",
+                "$wpdb->prefix . 'icl_translators_cached",
+                "icl_temp_upgrade_data",
+                "widget_recent-comments",
+                "widget_icl_lang_sel_widget",
+                "sidebars_widgets",
+                "nav_menu_options",
+                "$otgs_twig_cache_disable_key",
+                "wplang",
+                "$this->installer_themes_option[$this->installer_theme_active_tab]",
+                "installer_repositories_with_theme",
+                "$this->installer_themes_available_updates[$repo_slug]",
+                "wp_installer_clientside_active_tab",
+                "wp_installer_settings",
+                "$this->data_key . 'installed_plugins",
+                "$this->data_key . 'valid_plugins",
+                "$this->data_key . 'invalid_plugins"
+            ],
+            "postmeta": [
+                "_icl_translator_note",
+                "$meta_key",
+                "$key",
+                "_avialayoutbuildercleandata",
+                "_alp_broken_links",
+                "_wp_page_template",
+                "_menu_item_url",
+                "_wpml_language",
+                "_wpml_trid",
+                "_wpml_translations"
+            ],
+            "sitemeta": [
+                "wp_installer_network"
+            ],
+            "usermeta": [
+                "locale",
+                "icl_admin_language",
+                "$wpdb->prefix . 'language_pairs",
+                "_icl_preferences",
+                "icl_show_hidden_languages",
+                "icl_admin_language_for_edit"
+            ]
+        }
+    },
+    "slug": "sitepress-multilingual-cms"
+}
