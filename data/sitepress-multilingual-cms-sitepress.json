@@ -47,9 +47,7 @@
                 "_alp_broken_links",
                 "_wp_page_template",
                 "_menu_item_url",
-                "_wpml_language",
-                "_wpml_trid",
-                "_wpml_translations"
+                "_wpml_language"
             ],
             "sitemeta": [
                 "wp_installer_network"
