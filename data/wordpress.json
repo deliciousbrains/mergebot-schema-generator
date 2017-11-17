@@ -110,10 +110,13 @@
                 "$transient_timeout",
                 "$option",
                 "{$scheme}_{$type}",
-                "secret_key"
+                "secret_key",
+                "admin_email",
+                "network_admin_hash"
             ],
             "termmeta": [
-                "$meta_key"
+                "$meta_key",
+                "$meta['key']"
             ],
             "usermeta": [
                 "show_welcome_panel",
