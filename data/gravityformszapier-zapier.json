@@ -1,0 +1,12 @@
+{
+    "table_prefix": "rg",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "recently_activated",
+                "gf_zapier_version"
+            ]
+        }
+    },
+    "slug": "gravityformszapier"
+}
