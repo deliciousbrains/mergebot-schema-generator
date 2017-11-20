@@ -1,0 +1,44 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->option_name",
+                "wpseo_local"
+            ],
+            "postmeta": [
+                "_wpseo_coordinates_lat",
+                "_wpseo_coordinates_long",
+                "_thumbnail_id",
+                "_wpseo_business_name",
+                "_wpseo_business_address",
+                "_wpseo_business_address_2",
+                "_wpseo_business_city",
+                "_wpseo_business_state",
+                "_wpseo_business_zipcode",
+                "_wpseo_business_country",
+                "_wpseo_business_phone",
+                "_wpseo_business_fax",
+                "_wpseo_business_email",
+                "_wpseo_business_vat_id",
+                "_wpseo_business_tax_id",
+                "_wpseo_business_coc_id",
+                "_wpseo_business_notes_1",
+                "_wpseo_business_notes_2",
+                "_wpseo_business_notes_3",
+                "_wpseo_business_phone_2nd",
+                "_wpseo_business_type",
+                "_wpseo_business_url",
+                "_wpseo_business_notes_' . $n",
+                "_wpseo_opening_hours_' . $key . '_from",
+                "_wpseo_opening_hours_' . $key . '_to",
+                "_wpseo_opening_hours_' . $key . '_second_from",
+                "_wpseo_opening_hours_' . $key . '_second_to",
+                "_wpseo_business_location_logo",
+                "_wpseo_business_location_custom_marker",
+                "$key",
+                "_wpseo_business_timezone"
+            ]
+        }
+    },
+    "slug": "wpseo-local"
+}
