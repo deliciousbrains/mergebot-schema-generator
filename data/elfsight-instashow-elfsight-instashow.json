@@ -1,0 +1,16 @@
+{
+    "table_prefix": "elfsight_instashow",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "elfsight_instashow_purchase_code",
+                "elfsight_instashow_activated",
+                "elfsight_instashow_force_script_add",
+                "elfsight_instashow_custom_api_url",
+                "elfsight_instashow_other_products_hidden",
+                "str_replace('-', '_', $this->slug) . '_latest_version"
+            ]
+        }
+    },
+    "slug": "elfsight-instashow"
+}
