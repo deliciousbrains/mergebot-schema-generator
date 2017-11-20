@@ -1,0 +1,12 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "wpmandrill",
+                "wpmandrill-stats",
+                "dashboard_widget_options"
+            ]
+        }
+    },
+    "slug": "wpmandrill"
+}
