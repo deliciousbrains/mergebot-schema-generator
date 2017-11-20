@@ -1,0 +1,10 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->prefix . '_rating_date"
+            ]
+        }
+    },
+    "slug": "wp-retina-2x"
+}
