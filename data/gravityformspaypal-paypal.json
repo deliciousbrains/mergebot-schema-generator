@@ -1,0 +1,10 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "can_verify_ipn"
+            ]
+        }
+    },
+    "slug": "gravityformspaypal"
+}
