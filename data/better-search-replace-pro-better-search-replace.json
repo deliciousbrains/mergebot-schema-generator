@@ -1,0 +1,13 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "bsr_profiles",
+                "bsr_license_status",
+                "bsr_update_site_url",
+                "siteurl"
+            ]
+        }
+    },
+    "slug": "better-search-replace-pro"
+}
