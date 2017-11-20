@@ -1,0 +1,28 @@
+{
+    "table_prefix": "mc4wp_",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "mc4wp",
+                "mc4wp_ecommerce",
+                "mc4wp_email_notifications_version",
+                "$this->option_name",
+                "mc4wp_log_version",
+                "mc4wp_styles_builder_version",
+                "mc4wp_form_styles"
+            ],
+            "postmeta": [
+                "mc_cid",
+                "mc_eid",
+                "mc_tc",
+                "mc_landing_site",
+                "_mc4wp_settings",
+                "$meta_key"
+            ],
+            "sitemeta": [
+                "$this->option_name"
+            ]
+        }
+    },
+    "slug": "mc4wp-premium"
+}
