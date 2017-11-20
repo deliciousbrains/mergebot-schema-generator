@@ -363,10 +363,27 @@ class Installer {
 	 *
 	 * @return bool|string
 	 */
-	public static function get_installed_plugin_version( $basename ) {
+	public static function get_installed_plugin_data( $basename ) {
 		$data = get_plugin_data( self::dir( $basename ) );
 
-		if ( ! isset( $data['Version'] ) || empty( $data['Version'] ) ) {
+		if ( empty( $data ) ) {
+			return false;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Get the installed version of a plugin
+	 *
+	 * @param string $basename
+	 *
+	 * @return bool|string
+	 */
+	public static function get_installed_plugin_version( $basename ) {
+		$data = self::get_installed_plugin_data( $basename );
+
+		if ( false === $data || ! isset( $data['Version'] ) || empty( $data['Version'] ) ) {
 			return false;
 		}
 

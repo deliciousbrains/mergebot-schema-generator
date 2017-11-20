@@ -320,10 +320,21 @@ class Schema extends Abstract_Element {
 
 		$data = Installer::get_latest_plugin_data( $this->slug );
 		if ( false === $data ) {
+			// get info from plugin header
+			$data = Installer::get_installed_plugin_data( $this->basename );
+
+			if ( false !== $data && isset( $data['Name'] ) && isset( $data['PluginURI'] ) ) {
+				$this->name = $data['Name'];
+				$this->url  = $data['PluginURI'];
+
+				return;
+			}
+
 			// Ask for name and URL
 			$info       = Info::ask();
 			$this->name = $info->name;
 			$this->url  = $info->url;
+
 
 			return;
 		}
