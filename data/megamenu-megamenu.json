@@ -1,0 +1,24 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "megamenu_settings",
+                "megamenu_locations",
+                "widget_' . $id_base",
+                "megamenu_version",
+                "megamenu_themes",
+                "megamenu_themes_last_updated",
+                "megamenu_toggle_blocks"
+            ],
+            "postmeta": [
+                "_megamenu"
+            ],
+            "sitemeta": [
+                "megamenu_themes",
+                "megamenu_themes_last_updated",
+                "megamenu_toggle_blocks"
+            ]
+        }
+    },
+    "slug": "megamenu"
+}
