@@ -1,0 +1,10 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->settings_field"
+            ]
+        }
+    },
+    "slug": "genesis-simple-sidebars"
+}
