@@ -1,0 +1,10 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$cache_key"
+            ]
+        }
+    },
+    "slug": "wp-retina-2x-pro"
+}
