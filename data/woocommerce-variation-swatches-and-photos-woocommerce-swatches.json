@@ -1,0 +1,11 @@
+{
+    "relationships": {
+        "ignore": {
+            "postmeta": [
+                "_swatch_type_options",
+                "_swatch_type"
+            ]
+        }
+    },
+    "slug": "woocommerce-variation-swatches-and-photos"
+}
