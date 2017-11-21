@@ -1,0 +1,53 @@
+{
+    "table_prefix": "yoast_seo",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "wpseo",
+                "yst_ga",
+                "wpseo_titles",
+                "$this->get_option_name()",
+                "self::option_name",
+                "wpseo_social",
+                "$option",
+                "$option[0]",
+                "wpseo_xml",
+                "blog_public",
+                "$this->option_name",
+                "$option_name",
+                "$wpseo_options_group_name",
+                "self::$name",
+                "$key",
+                "self::version_option_key",
+                "wpseo_redirect_option::option_plain",
+                "wpseo_redirect_option::option_regex",
+                "self::option",
+                "$this->option_refresh_token",
+                "$this->optionname"
+            ],
+            "postmeta": [
+                "$meta_key",
+                "self::meta_name",
+                "self::$meta_prefix . $key",
+                "$new_metakey",
+                "wpseo_meta::$meta_prefix . 'primary_' . $this->taxonomy_name"
+            ],
+            "sitemeta": [
+                "$this->option_name",
+                "$option_name"
+            ],
+            "usermeta": [
+                "$this->option_name",
+                "wpseo_title",
+                "wpseo_metadesc",
+                "wpseo_metakey",
+                "wpseo_excludeauthorsitemap",
+                "wpseo_content_analysis_disable",
+                "wpseo_keyword_analysis_disable",
+                "$notification->get_dismissal_key()",
+                "_yoast_wpseo_profile_updated"
+            ]
+        }
+    },
+    "slug": "wordpress-seo-premium"
+}
