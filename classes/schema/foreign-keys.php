@@ -35,7 +35,7 @@ class Foreign_Keys {
 					continue;
 				}
 
-				$entity = str_replace( array( 'ID', 'Id', 'id' ), '', $column->Field );
+				$entity = str_replace( array( '_ID', '_Id', '_id' ), '', $column->Field );
 				$entity = rtrim( $entity, '_' );
 				
 				$foreign_key = $table . ':' . $column->Field;
