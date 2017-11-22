@@ -67,7 +67,7 @@ class Generator {
 			return;
 		}
 
-		if ( false === $this->latest_schema ) {
+		if ( empty( $this->latest_schema ) ) {
 			return;
 		}
 
