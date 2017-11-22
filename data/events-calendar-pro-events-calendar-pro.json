@@ -1,0 +1,23 @@
+{
+    "relationships": {
+        "ignore": {
+            "postmeta": [
+                "$searchable_field_name",
+                "$ordinary_field_name",
+                "self::lat",
+                "self::lng",
+                "self::address",
+                "$meta_key",
+                "_eventstartdate",
+                "_eventstartdateutc",
+                "_eventenddate",
+                "_eventenddateutc",
+                "_eventduration",
+                "_eventsequence",
+                "_eventrecurrence",
+                "tribe_flash_message"
+            ]
+        }
+    },
+    "slug": "events-calendar-pro"
+}
