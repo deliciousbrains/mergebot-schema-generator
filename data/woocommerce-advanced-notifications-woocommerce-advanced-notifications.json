@@ -1,0 +1,11 @@
+{
+    "table_prefix": "prefixadvanced",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "active_plugins"
+            ]
+        }
+    },
+    "slug": "woocommerce-advanced-notifications"
+}
