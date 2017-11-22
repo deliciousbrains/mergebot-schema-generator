@@ -1,0 +1,11 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "active_plugins",
+                "wc_usps_version"
+            ]
+        }
+    },
+    "slug": "woocommerce-shipping-usps"
+}
