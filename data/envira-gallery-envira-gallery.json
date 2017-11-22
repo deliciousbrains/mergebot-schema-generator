@@ -1,0 +1,22 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "envira_gallery",
+                "envira_gallery_license_updates",
+                "envira_gallery_notices",
+                "envira_gallery_review",
+                "envira-' . $slug . '-slug",
+                "$key"
+            ],
+            "postmeta": [
+                "_eg_gallery_data",
+                "_eg_has_gallery",
+                "_eg_gallery_old_slug",
+                "_wp_attachment_image_alt",
+                "envira_gallery_slug"
+            ]
+        }
+    },
+    "slug": "envira-gallery"
+}
