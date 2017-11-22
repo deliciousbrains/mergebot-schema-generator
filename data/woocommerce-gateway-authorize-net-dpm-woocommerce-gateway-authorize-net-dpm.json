@@ -1,0 +1,13 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "active_plugins"
+            ],
+            "postmeta": [
+                "_transaction_id"
+            ]
+        }
+    },
+    "slug": "woocommerce-gateway-authorize-net-dpm"
+}
