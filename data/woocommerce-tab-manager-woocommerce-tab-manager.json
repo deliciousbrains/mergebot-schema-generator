@@ -1,0 +1,23 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "wc_tab_manager_default_layout",
+                "wc_tab_manager_searchable_tabs",
+                "relevanssi_index_post_types",
+                "relevanssi_index_fields",
+                "$this->get_plugin_version_name()",
+                "$setting['id']"
+            ],
+            "postmeta": [
+                "_override_tab_layout",
+                "$meta_key",
+                "$key"
+            ],
+            "usermeta": [
+                "_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages"
+            ]
+        }
+    },
+    "slug": "woocommerce-tab-manager"
+}
