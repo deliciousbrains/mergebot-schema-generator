@@ -1,0 +1,37 @@
+{
+    "table_prefix": "revslider",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "revslider-notices-dc",
+                "rs_cache_overlay",
+                "twitter_bearer_token",
+                "tp_colorpicker_presets",
+                "$handle",
+                "revslider_servers",
+                "revslider_update_version",
+                "revslider-global-settings",
+                "revslider-update-check",
+                "revslider-stable-version",
+                "revslider-latest-version",
+                "$this->option",
+                "revslider-update-check-short",
+                "revslider-notices",
+                "revslider-dashboard",
+                "revslider-addons",
+                "revslider-activate-temp-short",
+                "revslider-nav-preset-default",
+                "rs-library",
+                "rs_obj_favorites",
+                "revslider-code"
+            ],
+            "postmeta": [
+                "$name"
+            ],
+            "sitemeta": [
+                "revslider-static-css"
+            ]
+        }
+    },
+    "slug": "revslider"
+}
