@@ -1,0 +1,10 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "active_plugins"
+            ]
+        }
+    },
+    "slug": "woocommerce-shipping-ups"
+}
