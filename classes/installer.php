@@ -94,6 +94,10 @@ class Installer {
 	protected function pre_clean() {
 		$this->disable_mergebot();
 
+		if ( 'plugin' != $this->type) {
+			return;
+		}
+
 		if ( ! file_exists( $this->get_plugin_bk_dir() ) ) {
 			return;
 		}
@@ -115,7 +119,7 @@ class Installer {
 	}
 
 	protected function disable_mergebot() {
-		if ( false === $this->is_plugin_installed( $this->mergebot_slug ) ) {
+		if ( false === $this->is_plugin_or_theme_installed( $this->mergebot_slug ) ) {
 			// Mergebot plugin not installed
 			return;
 		}
@@ -177,7 +181,11 @@ class Installer {
 			return $this->get_installed_core_version() != $this->version;
 		}
 
-		if ( false === $this->is_plugin_installed( $this->slug ) ) {
+		if ( 'theme' === $this->type ) {
+			return false;
+		}
+
+		if ( false === $this->is_plugin_or_theme_installed( $this->slug ) ) {
 			$this->uninstall = true;
 
 			return true;
@@ -258,7 +266,7 @@ class Installer {
 			return true;
 		}
 
-		return $this->is_plugin_installed( $this->slug );
+		return $this->is_plugin_or_theme_installed( $this->slug );
 	}
 
 	/**
@@ -268,8 +276,8 @@ class Installer {
 	 *
 	 * @return bool
 	 */
-	protected function is_plugin_installed( $slug ) {
-		return file_exists( self::dir( $slug ) );
+	protected function is_plugin_or_theme_installed( $slug ) {
+		return file_exists( self::dir( $slug,  $this->type )  );
 	}
 
 	/**
@@ -536,11 +544,16 @@ class Installer {
 	/**
 	 * Get a plugin directory.
 	 *
-	 * @param $slug
+	 * @param        $slug
+	 * @param string $type
 	 *
 	 * @return string
 	 */
-	public static function dir( $slug ) {
+	public static function dir( $slug, $type = 'plugin' ) {
+		if ( 'theme' === $type ) {
+			return WP_CONTENT_DIR . '/themes/' . $slug;
+		}
+
 		return WP_PLUGIN_DIR . '/' . $slug;
 	}
 
