@@ -318,6 +318,14 @@ class Schema extends Abstract_Element {
 			return;
 		}
 
+		if ( 'theme' === $this->type ) {
+			$data       = wp_get_theme( $this->slug );
+			$this->name = $data->get( 'Name' );
+			$this->url  = $data->get( 'ThemeURI' );
+
+			return;
+		}
+
 		$data = Installer::get_latest_plugin_data( $this->slug );
 		if ( false === $data ) {
 			// get info from plugin header
@@ -721,11 +729,11 @@ class Schema extends Abstract_Element {
 	 * @return string
 	 */
 	protected function get_files_path() {
-		$path = Installer::dir( $this->slug );
-
 		if ( 'wordpress' === $this->type ) {
-			$path = ABSPATH;
+			return ABSPATH;
 		}
+
+		$path = Installer::dir( $this->slug, $this->type );
 
 		return $path;
 	}

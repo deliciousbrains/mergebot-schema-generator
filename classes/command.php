@@ -32,6 +32,9 @@ class Command extends \WP_CLI_Command {
 	 * [--plugin]
 	 * : Plugin slug.
 	 *
+	 * [--theme]
+	 * : Theme slug.
+	 *
 	 * [--version]
 	 * : Version of plugin. Defaults to latest if not already installed, or version of installation
 	 *
@@ -61,6 +64,7 @@ class Command extends \WP_CLI_Command {
 	 *     wp mergebot-schema generate --plugin=woocommerce
 	 *     wp mergebot-schema generate --plugin=woocommerce --version=2.5.5
 	 *     wp mergebot-schema generate --plugin=woocommerce --version=2.5.5 --scratch
+	 *     wp mergebot-schema generate --theme=twentysixteen
 	 *
 	 */
 	public function generate( $args, $assoc_args ) {
@@ -171,6 +175,11 @@ class Command extends \WP_CLI_Command {
 			$version = Installer::get_installed_plugin_version( Installer::get_plugin_basename( $slug ) );
 		}
 
+		if ( 'theme' === $this->type && 'latest' === $version ) {
+			// Get installed version if we don't know it.
+			$version = wp_get_theme( $slug )->get('Version');
+		}
+
 		// Generate the schema.
 		$generator = new Generator( $slug, $version, $this->type );
 		$generator->generate( $create_from_scratch );
@@ -216,6 +225,12 @@ class Command extends \WP_CLI_Command {
 			return $assoc_args['plugin'];
 		}
 
+		if ( isset( $assoc_args['theme'] ) && ! empty( $assoc_args['theme'] ) ) {
+			$this->type = 'theme';
+
+			return $assoc_args['theme'];
+		}
+
 		$slug       = 'wordpress';
 		$this->type = $slug;
 
@@ -241,6 +256,11 @@ class Command extends \WP_CLI_Command {
 
 		if ( 'wordpress' === $this->type ) {
 			return Installer::get_latest_core_version();
+		}
+
+		if ( 'theme' === $this->type) {
+			// Use theme header version
+			return 'latest';
 		}
 
 		$latest_version = Installer::get_latest_plugin_version( $slug );
@@ -473,7 +493,7 @@ class Command extends \WP_CLI_Command {
 		}
 
 		if ( ! \WP_CLI\Utils\get_flag_value( $assoc_args, 'yes' ) ) {
-			fwrite( STDOUT, 'Enter plugin ' . $key . ": " );
+			fwrite( STDOUT, 'Enter ' . $key . ": " );
 
 			$answer = trim( fgets( STDIN ) );
 
