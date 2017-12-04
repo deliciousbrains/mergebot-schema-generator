@@ -180,7 +180,8 @@
                 "_wc_rating_count",
                 "attribute_' . $key",
                 "_paypal_status",
-                "_wc_attachment_source"
+                "_wc_attachment_source",
+                "$new_slug"
             ],
             "sitemeta": [
                 "$key"
