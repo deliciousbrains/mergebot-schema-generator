@@ -247,9 +247,6 @@ class Command extends \WP_CLI_Command {
 	 */
 	protected function get_version( $assoc_args, $slug ) {
 		if ( isset( $assoc_args['version'] ) ) {
-			if ( ! Installer::is_valid_version( $assoc_args['version'] ) ) {
-				\WP_CLI::warning( 'Only major or minor versions of schemas are recommended.' );
-			}
 
 			return $assoc_args['version'];
 		}
