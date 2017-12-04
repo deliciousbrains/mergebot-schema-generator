@@ -133,7 +133,9 @@
                 "videopress_status",
                 "self::$wp_revision_history",
                 "self::$wp_original_media",
-                "jetpack_media::$wp_attachment_image_alt"
+                "jetpack_media::$wp_attachment_image_alt",
+                "_g_feedback_shortcode_{$hash}",
+                "_g_feedback_shortcode_atts_{$hash}"
             ],
             "sitemeta": [
                 "$this->settings_name",
