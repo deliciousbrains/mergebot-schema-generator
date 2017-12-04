@@ -55,7 +55,12 @@
                 "relevanssi_throttle_limit",
                 "relevanssi_wpml_only_current",
                 "relevanssi_word_boundaries",
-                "relevanssi_default_orderby"
+                "relevanssi_default_orderby",
+                "relevanssi_content_boost",
+                "relevanssi_punctuation",
+                "relevanssi_trim_logs",
+                "relevanssi_polylang_all_languages",
+                "relevanssi_excerpt_custom_fields"
             ]
         }
     }
