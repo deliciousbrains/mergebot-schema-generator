@@ -102,7 +102,12 @@
                 "jetpack_content_blog_display",
                 "self::updates_checksum_option_name",
                 "$opts['callback'][0]->option_name",
-                "jetpack-sitemap-state"
+                "jetpack-sitemap-state",
+                "show_on_front",
+                "page_on_front",
+                "page_for_posts",
+                "site_logo",
+                "widget_media_image"
             ],
             "postmeta": [
                 "_wp_attachment_image_alt",
