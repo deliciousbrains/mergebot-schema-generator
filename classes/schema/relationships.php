@@ -190,6 +190,10 @@ class Relationships extends Abstract_Element {
 					continue;
 				}
 
+				if ( '?' === strtolower( $result ) ) {
+					continue;
+				}
+
 				if ( 'y' !== strtolower( $result ) ) {
 					$ignored[ $entity ][] = $key;
 					continue;

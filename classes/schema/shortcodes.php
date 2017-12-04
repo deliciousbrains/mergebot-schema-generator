@@ -176,6 +176,10 @@ class Shortcodes extends Abstract_Element {
 				continue;
 			}
 
+			if ( '?' === strtolower( $result ) ) {
+				continue;
+			}
+
 			$parameters = array( 'parameters' => array() );
 
 			$attributes = explode( ',', $result );
