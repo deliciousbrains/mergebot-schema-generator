@@ -24,12 +24,25 @@
                 "monsterinsights_pro_access_token",
                 "monsterinsights_lite_access_token",
                 "monsterinsights_pro_refresh_token",
-                "monsterinsights_lite_refresh_token"
+                "monsterinsights_lite_refresh_token",
+                "mi_tracking_last_send"
             ],
             "sitemeta": [
                 "$option_name",
                 "monsterinsights_license",
-                "monsterinsights_settings"
+                "monsterinsights_settings",
+                "monsterinsights_network_manual_ua_code"
+            ],
+            "postmeta": [
+                "notification_id",
+                "type",
+                "dismissable",
+                "location",
+                "plugins",
+                "theme",
+                "version",
+                "expiration",
+                "plans"
             ]
         }
     }
