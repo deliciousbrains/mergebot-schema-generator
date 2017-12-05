@@ -107,7 +107,12 @@
                 "page_on_front",
                 "page_for_posts",
                 "site_logo",
-                "widget_media_image"
+                "widget_media_image",
+                "jetpack_connection_banner_ab",
+                "$setting",
+                "sidebars_widgets",
+                "$widget_option_name",
+                "jetpack_plugin_api_action_links"
             ],
             "postmeta": [
                 "_wp_attachment_image_alt",
