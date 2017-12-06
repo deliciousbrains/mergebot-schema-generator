@@ -204,7 +204,7 @@ class Relationships extends Abstract_Element {
 					$new_key = Command::meta_key( $key );
 					if ( $new_key ) {
 						// Store original key and new key
-						self::write_key_translation( $schema, $entity, $entities[ $entity ]['columns']['key'] , $key, $new_key );
+						$content = self::write_key_translation( $content, $entity, $entities[ $entity ]['columns']['key'] , $key, $new_key );
 
 						$key = $new_key;
 					}
@@ -269,8 +269,9 @@ class Relationships extends Abstract_Element {
 
 		if ( ! empty( $ignored ) ) {
 			$content['relationships']['ignore'] = $ignored;
-			$schema->write_data_file( $content );
 		}
+
+		$schema->write_data_file( $content );
 
 		return $relationships;
 	}
@@ -654,19 +655,17 @@ class Relationships extends Abstract_Element {
 	}
 
 	/**
-	 * @param Schema $schema
-	 * @param        $entity
-	 * @param        $key_name
-	 * @param        $old_key
-	 * @param        $new_key
+	 * @param           $content
+	 * @param           $entity
+	 * @param           $key_name
+	 * @param           $old_key
+	 * @param           $new_key
 	 *
 	 * @return int
 	 */
-	protected static function write_key_translation( $schema, $entity, $key_name, $old_key, $new_key ) {
-		$content = $schema->read_data_file();
-
+	protected static function write_key_translation( $content, $entity, $key_name, $old_key, $new_key ) {
 		$content['relationships']['key_translation'][ $entity ][ $key_name ][ $old_key ] = $new_key;
 
-		return $schema->write_data_file( $content );
+		return $content;
 	}
 }
