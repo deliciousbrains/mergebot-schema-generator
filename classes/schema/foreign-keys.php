@@ -19,6 +19,7 @@ class Foreign_Keys {
 
 		$content = $schema->read_data_file();
 		$persist = isset( $content['foreignKeys']['persist'] ) ? $content['foreignKeys']['persist'] : array();
+		$entity_translation = isset( $content['foreignKeys']['entityTranslation'] ) ? $content['foreignKeys']['entityTranslation'] : array();
 
 		foreach ( $schema->table_columns as $table => $columns ) {
 			foreach ( $columns as $column ) {
@@ -35,8 +36,15 @@ class Foreign_Keys {
 					continue;
 				}
 
-				$entity = str_replace( array( '_ID', '_Id', '_id' ), '', $column->Field );
-				$entity = rtrim( $entity, '_' );
+				$entity = false;
+				if ( isset( $entity_translation[$column->Field] ) ) {
+					$entity = $entity_translation[$column->Field];
+				}
+
+				if ( empty( $entity ) ) {
+					$entity = str_replace( array( '_ID', '_Id', '_id' ), '', $column->Field );
+					$entity = rtrim( $entity, '_' );
+				}
 				
 				$foreign_key = $table . ':' . $column->Field;
 
