@@ -1,0 +1,94 @@
+{
+    "table_prefix": "wp_pro_quiz,learndash",
+    "foreignKeys": {
+        "entityTranslation": {
+            "quiz_id": "wp_pro_quiz_master"
+        }
+    },
+    "shortcodes": {
+        "ignore": [
+            "ld_lesson_list",
+            "ld_quiz_list",
+            "ld_topic_list",
+            "LDAdvQuiz",
+            "LDAdvQuiz_toplist",
+            "ldadvquiz"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$options_key",
+                "learndash_data_settings",
+                "$option",
+                "nss_plugin_remote_version_' . $this->slug",
+                "nss_plugin_info_' . $this->slug",
+                "nss_plugin_remote_license_' . $this->slug",
+                "nss_plugin_license_' . $code",
+                "nss_plugin_license_email_' . $code",
+                "$this->setting_option_key",
+                "$this->settings_section_key",
+                "wpproquiz_toplistdataformat",
+                "wpproquiz_statistictimeformat",
+                "wpproquiz_dbversion",
+                "wpproquiz_addrawshortcode",
+                "wpproquiz_jsloadinhead",
+                "wpproquiz_touchlibrarydeactivate",
+                "wpproquiz_corsactivated",
+                "wpproquiz_emailsettings",
+                "wpproquiz_useremailsettings"
+            ],
+            "postmeta": [
+                "course_price_billing_p3",
+                "course_price_billing_t3",
+                "course_points",
+                "_' . $this->get_prefix($k) . $k",
+                "_sfwd-courses",
+                "_' . $dest_post->post_type",
+                "$key",
+                "sfwd_lessons-assignment",
+                "points",
+                "learndash_certificate_options",
+                "learndash_group_users_' . $group_id",
+                "_' . $post->post_type",
+                "$setting_key",
+                "_' . $object_post_type",
+                "quiz_id",
+                "upload",
+                "ld_essay_grading_response",
+                "$k",
+                "_timelimitcookie",
+                "_viewprofilestatistics"
+            ],
+            "sitemeta": [
+                "$option"
+            ],
+            "usermeta": [
+                "$screen_per_page_option",
+                "course_points",
+                "$this->meta_key",
+                "_sfwd-course_progress",
+                "$meta_key",
+                "_sfwd-quizzes",
+                "learndash_group_users_' . $group_id",
+                "learndash_group_leaders_' . $group_id",
+                "_sfwd-courses"
+            ]
+        },
+        "key_translation": {
+            "postmeta": {
+                "meta_key": {
+                    "quiz_pro_id_' . $quiz_pro_id": "quiz_pro_id_{posts:ID}",
+                    "quiz_pro_id_' . intval($quiz_id)": "quiz_pro_id_{posts:ID}"
+                }
+            },
+            "usermeta": {
+                "meta_key": {
+                    "course_\" . $course_id . \"_access_from": "course_{posts:ID}_access_from",
+                    "course_completed_' . $course_id": "course_completed_{posts:ID}"
+                }
+            }
+        }
+    },
+    "slug": "sfwd-lms"
+}
