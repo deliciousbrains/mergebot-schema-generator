@@ -1,0 +1,11 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "cptui_post_types",
+                "cptui_taxonomies"
+            ]
+        }
+    },
+    "slug": "custom-post-type-ui"
+}
