@@ -37,7 +37,8 @@
                 "wp_installer_settings",
                 "$this->data_key . 'installed_plugins",
                 "$this->data_key . 'valid_plugins",
-                "$this->data_key . 'invalid_plugins"
+                "$this->data_key . 'invalid_plugins",
+                "$option_key"
             ],
             "postmeta": [
                 "_icl_translator_note",
@@ -47,7 +48,8 @@
                 "_alp_broken_links",
                 "_wp_page_template",
                 "_menu_item_url",
-                "_wpml_language"
+                "_wpml_language",
+                "$this->mark_as_duplicate_meta_key"
             ],
             "sitemeta": [
                 "wp_installer_network"

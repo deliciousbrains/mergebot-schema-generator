@@ -2,7 +2,8 @@
     "relationships": {
         "ignore": {
             "options": [
-                "active_plugins"
+                "active_plugins",
+                "woocommerce_ups_' . $instance . '_settings"
             ]
         }
     },

@@ -3,7 +3,8 @@
         "ignore": {
             "options": [
                 "active_plugins",
-                "wc_usps_version"
+                "wc_usps_version",
+                "woocommerce_usps_' . $instance . '_settings"
             ]
         }
     },
