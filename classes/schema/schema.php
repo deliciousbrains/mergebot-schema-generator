@@ -592,6 +592,10 @@ class Schema extends Abstract_Element {
 			);
 		}
 
+		if ( 'plugin' === $this->type ) {
+			$info['basename'] = $this->get_basename();
+		}
+
 		$file_contents = array(
 			'primaryKeys'   => $this->primary_keys,
 			'foreignKeys'   => $this->foreign_keys,
