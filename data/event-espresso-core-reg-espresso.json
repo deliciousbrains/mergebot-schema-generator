@@ -1,0 +1,78 @@
+{
+    "table_prefix": "esp",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "ee_no_ticket_prices",
+                "timezone_string",
+                "ee_ueip_optin",
+                "$this->_get_mapping_option_name($old_table_name, $new_table_name)",
+                "my_option",
+                "ee_id_mapping_from' . sanitize_title($old_site_url)",
+                "ee_locked_transactions",
+                "$this->get_activation_history_option_name()",
+                "ee_config::option_name",
+                "$config_option_name",
+                "ee_config::log_name",
+                "ee_config::addon_option_names",
+                "ee_data_migration_manager::current_database_state",
+                "self::current_database_state",
+                "self::data_migration_script_option_prefix . $versions_migrated_to",
+                "$option_name",
+                "self::data_migrations_option_name",
+                "self::db_init_queue_option_name",
+                "ee_encryption::encryption_option_key",
+                "ee_notices",
+                "self::option_name_maintenance_mode",
+                "uxip_ee_active_theme",
+                "uxip_ee4_active_events_count",
+                "uxip_ee_all_dtts_count",
+                "uxip_ee_dtt_sold",
+                "uxip_ee_all_tkt_count",
+                "uxip_ee_free_tkt_count",
+                "uxip_ee_paid_tkt_count",
+                "uxip_ee_tkt_sold",
+                "ee_session::option_name_settings",
+                "espresso_db_update",
+                "ee_incompatible_addons",
+                "ee_plugin_activation_errors",
+                "$debug_key",
+                "$this->option_name()",
+                "self::models_to_process_option_key",
+                "self::offset_to_apply_option_key",
+                "self::option_key_offset_range_start_date",
+                "self::option_key_offset_range_end_date",
+                "ee_active_messengers",
+                "self::has_activated_message_type_for_messenger_option_name",
+                "_transient_' . $this->_get_rate_limit_key()",
+                "postrelatedcachemanager::post_cache_options_key",
+                "persistentadminnoticemanager::wp_option_key",
+                "$notice_ref",
+                "self::saved_routes_option_names",
+                "invalidcheckoutaccess::option_key",
+                "ee_debug_spco_' . ee_session::instance()->id()"
+            ],
+            "postmeta": [
+                "_thumbnail_id",
+                "_wp_page_template",
+                "$meta_key",
+                "alt_email",
+                "contact",
+                "$old_row['meta_key']"
+            ],
+            "sitemeta": [
+                "ee_network_config",
+                "$option_name",
+                "pue_force_upgrade_' . $this->_incoming_slug['free'][key($this->_incoming_slug['free'])]",
+                "$this->pue_install_key",
+                "$ver_option_key",
+                "$this->dismiss_upgrade",
+                "$this->optionname"
+            ],
+            "usermeta": [
+                "$option"
+            ]
+        }
+    },
+    "slug": "event-espresso-core-reg"
+}
