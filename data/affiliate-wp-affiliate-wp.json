@@ -1,0 +1,47 @@
+{
+    "table_prefix": "affiliate_wp",
+    "shortcodes": {
+        "ignore": [
+            "affiliate_login",
+            "affiliate_registration",
+            "affiliate_referral_url"
+        ]
+    },
+    "relationships": {
+        "key_translation": {
+            "usermeta": {
+                "meta_key": {
+                    "affwp_discount_rcp_' . $discount_id": "affwp_discount_rcp_' . $discount_id"
+                }
+            }
+        },
+        "ignore": {
+            "affiliatemeta": [
+                "$meta_key"
+            ],
+            "options": [
+                "$cache_key",
+                "affwp_version_upgraded_from",
+                "affwp_settings",
+                "affwp_migrate_direct_affiliates",
+                "affwp_alltime_earnings",
+                "$this->table_name . '_db_version",
+                "affwp_completed_upgrades",
+                "_affwp_pmp_product_settings_{$level_id}",
+                "affwp_rcp_level_rate_' . $level_id"
+            ],
+            "postmeta": [
+                "_affwp_enable_referral_overrides",
+                "_affwp_disable_referrals",
+                "_affwp_' . $this->context . '_product_rate",
+                "_affwp_pms_subscription_rate",
+                "_affwp_it-exchange_product_rate",
+                "_affwp_it-exchange_referrals_disabled"
+            ],
+            "usermeta": [
+                "affwp_promotion_method"
+            ]
+        }
+    },
+    "slug": "affiliate-wp"
+}
