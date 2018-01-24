@@ -1,0 +1,25 @@
+{
+    "relationships": {
+        "key_translation": {
+            "usermeta": {
+                "meta_key": {
+                    "$key . get_current_blog_id()": "(.*){blogs:blog_id}"
+                }
+            }
+        },
+        "ignore": {
+            "options": [
+                "cpac_options_{$storage_key}",
+                "self::version_key",
+                "self::options_key . $this->get_storage_key()",
+                "$this->get_default_key()",
+                "$row->option_name",
+                "$this->get_version_key()"
+            ],
+            "usermeta": [
+                "$new"
+            ]
+        }
+    },
+    "slug": "codepress-admin-columns"
+}
