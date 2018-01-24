@@ -71,5 +71,6 @@
             ]
         }
     },
-    "slug": "the-events-calendar"
+    "slug": "the-events-calendar",
+    "table_prefix": "rows"
 }
