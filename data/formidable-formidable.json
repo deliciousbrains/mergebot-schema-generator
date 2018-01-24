@@ -1,0 +1,23 @@
+{
+    "table_prefix": "frm",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->option_name . 'key",
+                "$this->option_name . 'active",
+                "frm_db_version",
+                "widget_frm_show_form",
+                "$this->option_name",
+                "frm_options",
+                "frmpro_css"
+            ],
+            "postmeta": [
+                "$k"
+            ],
+            "sitemeta": [
+                "frm_admin_menu_name"
+            ]
+        }
+    },
+    "slug": "formidable"
+}
