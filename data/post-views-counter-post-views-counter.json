@@ -1,0 +1,13 @@
+{
+    "table_prefix": "post",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "post_views_counter_settings_general",
+                "post_views_counter_settings_display",
+                "post_views_counter_version"
+            ]
+        }
+    },
+    "slug": "post-views-counter"
+}
