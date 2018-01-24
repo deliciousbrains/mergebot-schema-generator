@@ -1,0 +1,26 @@
+{
+    "table_prefix": "mailchimp",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->plugin_name . '-' . $key",
+                "mailchimp-woocommerce-sync.orders.prevent",
+                "$this->plugin_name",
+                "mailchimp-woocommerce-cart-error",
+                "mailchimp-woocommerce-' . $key",
+                "mailchimp-woocommerce-script_url",
+                "mailchimp-woocommerce-script_fragment"
+            ],
+            "postmeta": [
+                "mailchimp_woocommerce_is_subscribed"
+            ],
+            "sitemeta": [
+                "mailchimp_woocommerce_version"
+            ],
+            "usermeta": [
+                "mailchimp_woocommerce_is_subscribed"
+            ]
+        }
+    },
+    "slug": "mailchimp-for-woocommerce"
+}
