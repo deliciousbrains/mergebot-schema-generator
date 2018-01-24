@@ -1,0 +1,20 @@
+{
+    "shortcodes": {
+        "ignore": [
+            "addthis"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->settingsvariablename",
+                "widget_' . $newwidgetsname",
+                "sidebars_widgets",
+                "smart_layer_profile",
+                "addthis_settings",
+                "widget_addthis_tool_by_class_name_widget"
+            ]
+        }
+    },
+    "slug": "addthis"
+}
