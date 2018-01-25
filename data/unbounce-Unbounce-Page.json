@@ -1,0 +1,10 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "ubconfig::ub_authorized_domains_key"
+            ]
+        }
+    },
+    "slug": "unbounce"
+}
