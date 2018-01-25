@@ -1,0 +1,14 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "default_role",
+                "self::option_name",
+                "$backup_roles_key",
+                "$option_name",
+                "$wp_roles->role_key"
+            ]
+        }
+    },
+    "slug": "user-role-editor"
+}
