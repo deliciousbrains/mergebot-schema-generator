@@ -1,0 +1,16 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "wp_rocket_slug"
+            ],
+            "sitemeta": [
+                "$key"
+            ],
+            "usermeta": [
+                "rocket_boxes"
+            ]
+        }
+    },
+    "slug": "wp-rocket"
+}
