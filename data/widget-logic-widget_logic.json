@@ -1,0 +1,13 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "wpchefgadget_alert",
+                "widget_logic",
+                "widget_' . $widget_class",
+                "widget_' . $widget_id"
+            ]
+        }
+    },
+    "slug": "widget-logic"
+}
