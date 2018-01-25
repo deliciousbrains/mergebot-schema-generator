@@ -1,0 +1,26 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "template",
+                "$option",
+                "cctm_data",
+                "et_images_temp_folder"
+            ],
+            "sitemeta": [
+                "updraft_ajax_restore_' . $restore_nonce",
+                "updraft_restore_in_progress",
+                "updraftcentral_client_log",
+                "updraft_jobdata_\" . $this->nonce",
+                "updraft_oneshotnonce",
+                "$this->key_option_name",
+                "updraft_ajax_restore_' . $nonce",
+                "updraftplus-addons_siteid"
+            ],
+            "usermeta": [
+                "updraftcentral_login_key"
+            ]
+        }
+    },
+    "slug": "updraftplus"
+}
