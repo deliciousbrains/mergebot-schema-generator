@@ -1,0 +1,14 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "self::get_option_key()",
+                "self::get_prefixed_name('api_key')"
+            ],
+            "postmeta": [
+                "self::meta_key"
+            ]
+        }
+    },
+    "slug": "tiny-compress-images"
+}
