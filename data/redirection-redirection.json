@@ -1,0 +1,13 @@
+{
+    "table_prefix": "redirection",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "active_plugins",
+                "redirection_version",
+                "redirection_option"
+            ]
+        }
+    },
+    "slug": "redirection"
+}
