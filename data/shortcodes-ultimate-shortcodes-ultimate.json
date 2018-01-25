@@ -1,0 +1,17 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "su_option_license_{$addon_id}",
+                "$this->option_name",
+                "$option",
+                "su_option_dismissed_notices",
+                "su_option_custom-css"
+            ],
+            "postmeta": [
+                "su_slide_link"
+            ]
+        }
+    },
+    "slug": "shortcodes-ultimate"
+}
