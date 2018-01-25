@@ -1,0 +1,11 @@
+{
+    "table_prefix": "prefixwpmmsubscribers",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "wpmm_settings"
+            ]
+        }
+    },
+    "slug": "wp-maintenance-mode"
+}
