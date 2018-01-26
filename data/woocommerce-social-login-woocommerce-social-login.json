@@ -1,0 +1,30 @@
+{
+    "shortcodes": {
+        "ignore": [
+            "woocommerce_social_login_buttons"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "wc_social_login_provider_order",
+                "$this->get_plugin_version_name()",
+                "$setting['id']"
+            ],
+            "postmeta": [
+                "$key"
+            ],
+            "usermeta": [
+                "_wc_social_login_' . $this->get_provider_id() . '_profile",
+                "_wc_social_login_' . $this->get_provider_id() . '_identifier",
+                "billing_' . $billing_field",
+                "_wc_social_login_' . $this->get_provider_id() . '_profile_image",
+                "_wc_social_login_profile_image",
+                "billing_postcode",
+                "_wc_plugin_framework_' . $this->get_plugin()->get_id() . '_dismissed_messages",
+                "_wc_social_login_' . $provider_id . '_profile"
+            ]
+        }
+    },
+    "slug": "woocommerce-social-login"
+}
