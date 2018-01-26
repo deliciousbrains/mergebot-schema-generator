@@ -209,4 +209,25 @@ abstract class Abstract_Element {
 
 		return false;
 	}
+
+	protected static function get_first_class_in_file( $file ) {
+		$code   = file_get_contents( $file );
+		$parser = ( new ParserFactory )->create( ParserFactory::PREFER_PHP7 );
+
+		try {
+			$statements = $parser->parse( $code );
+		} catch ( Error $e ) {
+			return false;
+		}
+
+		foreach ( $statements as $section ) {
+			if ( ! is_a( $section, 'PhpParser\Node\Stmt\Class_' ) ) {
+				continue;
+			}
+
+			return $section->name;
+		}
+
+		return false;
+	}
 }

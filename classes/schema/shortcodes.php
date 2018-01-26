@@ -226,7 +226,11 @@ class Shortcodes extends Abstract_Element {
 			);
 		} else if ( false !== strpos( $callback, '::' ) ) {
 			$callback_parts = explode( '::', $callback );
-			$func           = new \ReflectionMethod( $callback_parts[0], $callback_parts[1] );
+			$class          = $callback_parts[0];
+			if ( false !== strpos( $callback, '__CLASS__' ) ) {
+				$class = self::get_first_class_in_file( $file );
+			}
+			$func = new \ReflectionMethod( $class, $callback_parts[1] );
 		} else {
 			if ( ! function_exists( $callback) ) {
 				$body = self::get_function_code_from_file( $file->getRealPath(), $callback );
