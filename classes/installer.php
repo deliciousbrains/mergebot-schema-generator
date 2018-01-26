@@ -525,7 +525,7 @@ class Installer {
 		}
 
 		$data = json_decode( $json );
-		if ( is_null( $data ) ) {
+		if ( is_null( $data ) || isset( $data->error ) ) {
 			return false;
 		}
 
