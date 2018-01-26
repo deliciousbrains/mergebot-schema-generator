@@ -1,0 +1,98 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$setting['id']",
+                "woocommerce_subscriptions_cache_updates_failures",
+                "$meta_key",
+                "wcs_paypal_rt_enabled_accounts",
+                "wcs_fatal_error_handling_ipn",
+                "wcs_paypal_credentials_error_affected_profiles",
+                "wc_subscriptions_admin::$option_prefix . '_previous_version",
+                "wc_subscriptions_admin::$option_prefix . '_active_version",
+                "wcs_upgrade_initial_total_subscription_count",
+                "woocommerce_paypal_settings"
+            ],
+            "postmeta": [
+                "_subscription_price",
+                "_regular_price",
+                "_sale_price",
+                "_sale_price_dates_from",
+                "_sale_price_dates_to",
+                "_price",
+                "_subscription_trial_length",
+                "$field_name",
+                "_subscription_limit",
+                "_subscription_one_time_shipping",
+                "_subscription_sign_up_fee",
+                "_billing_interval",
+                "_billing_period",
+                "_order_total",
+                "_old_payment_method",
+                "_payment_method",
+                "_old_payment_method_title",
+                "_payment_method_title",
+                "_order_currency",
+                "_prices_include_tax",
+                "$meta_key",
+                "self::$post_meta_key",
+                "$token_meta_key",
+                "_old_paypal_subscriber_id",
+                "_paypal_failed_sign_up_recorded",
+                "_paypal_ipn_tracking_ids",
+                "_old_paypal_subscription_id",
+                "_switched_paypal_subscription_id",
+                "_paypal_subscription_id",
+                "_min_variation_price",
+                "_max_variation_price",
+                "_min_variation_regular_price",
+                "_max_variation_regular_price",
+                "_min_variation_sale_price",
+                "_max_variation_sale_price",
+                "_min_variation_period",
+                "_max_variation_period",
+                "_min_variation_period_interval",
+                "_max_variation_period_interval",
+                "_subscription_period",
+                "_subscription_period_interval",
+                "_subscription_trial_period",
+                "_subscription_length",
+                "_' . $prop",
+                "_paid_date",
+                "_date_paid",
+                "_completed_date",
+                "_date_completed",
+                "$key",
+                "$this->maybe_prefix_meta_key($key)",
+                "self::schedule_meta_key",
+                "_rule_' . $rule_key",
+                "_order_recurring_discount_cart",
+                "_order_recurring_discount_total",
+                "_order_recurring_shipping_tax_total",
+                "_order_recurring_tax_total",
+                "_order_recurring_total",
+                "_cart_discount",
+                "_order_discount",
+                "_order_tax",
+                "_order_recurring_taxes",
+                "_order_taxes",
+                "$subscription_meta_key",
+                "_created_via",
+                "_order_version",
+                "_order_items"
+            ],
+            "usermeta": [
+                "$meta_key",
+                "_paypal_subscription_id"
+            ]
+        },
+        "key_translation": {
+            "options": {
+                "option_name": {
+                    "self::$repaired_subscriptions_option": "wcs_2_2_9_repaired_subscriptions"
+                }
+            }
+        }
+    },
+    "slug": "woocommerce-subscriptions"
+}
