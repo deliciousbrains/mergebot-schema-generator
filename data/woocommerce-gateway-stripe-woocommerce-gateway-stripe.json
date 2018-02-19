@@ -1,0 +1,25 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "woocommerce_stripe_settings"
+            ],
+            "postmeta": [
+                "_stripe_charge_captured",
+                "self::meta_name_fee",
+                "self::meta_name_net",
+                "_transaction_id",
+                "_stripe_customer_id",
+                "_stripe_source_id",
+                "parent::meta_name_fee",
+                "parent::meta_name_net",
+                "_stripe_bitcoin"
+            ],
+            "usermeta": [
+                "_stripe_customer_id",
+                "_stripe_source_id"
+            ]
+        }
+    },
+    "slug": "woocommerce-gateway-stripe"
+}
