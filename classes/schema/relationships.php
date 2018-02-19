@@ -57,7 +57,8 @@ class Relationships extends Abstract_Element {
 						$key = rtrim( $key, '\'"' );
 
 						if ( ! isset( $args[ $value_pos ] ) && 'add_option' !== $function ) {
-							\WP_CLI::error( 'Could not get meta value from ' . $arguments );
+							\WP_CLI::warning( 'Could not get meta value from ' . $function . ' key: ' . $arguments );
+							continue;
 						}
 
 						$value = '';
