@@ -1,0 +1,33 @@
+{
+    "table_prefix": "decom",
+    "relationships": {
+        "ignore": {
+            "options": [
+                "decom_db_version_option_name",
+                "self::$notifications_option",
+                "$option_key",
+                "decomments_last_activate_message",
+                "decomments_site_url",
+                "decom_blocked_guests_leave_comment",
+                "$option"
+            ],
+            "commentmeta": [
+                "decom_comment_modified_date",
+                "decom_comment_modified_moderator",
+                "$meta_key"
+            ],
+            "postmeta": [
+                "_decom_subscribers",
+                "$meta_key"
+            ],
+            "sitemeta": [
+                "$option_key"
+            ],
+            "usermeta": [
+                "decom_comments_sort",
+                "count_user_posts"
+            ]
+        }
+    },
+    "slug": "decomments"
+}
