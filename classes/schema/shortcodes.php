@@ -23,8 +23,8 @@ class Shortcodes extends Abstract_Element {
 		// Shortcodes
 		$search = 'add_shortcode';
 		foreach ( $schema->files as $file ) {
-			$content = strtolower( file_get_contents( $file->getRealPath() ) );
-			preg_match_all( '/(?<!function)\s+' . $search . '\s*\(\s*(.*)(?=\)\s*\;)/', $content, $shortcode_matches );
+			$content =  file_get_contents( $file->getRealPath() );
+			preg_match_all( '/(?<!function)\s+' . $search . '\s*\(\s*(.*)(?=\)\s*\;)/i', $content, $shortcode_matches );
 			if ( empty( $shortcode_matches ) || empty( $shortcode_matches[0] ) ) {
 				continue;
 			}
@@ -230,6 +230,13 @@ class Shortcodes extends Abstract_Element {
 			if ( false !== strpos( $callback, '__CLASS__' ) ) {
 				$class = self::get_first_class_in_file( $file );
 			}
+
+			if ( ! class_exists( $class ) ) {
+				$declared_classes =  get_declared_classes();
+				sort($declared_classes);
+				$found_class_key  = array_search( strtolower( $class ), array_map( 'strtolower', $declared_classes ) );
+			}
+
 			$func = new \ReflectionMethod( $class, $callback_parts[1] );
 		} else {
 			if ( ! function_exists( $callback) ) {
