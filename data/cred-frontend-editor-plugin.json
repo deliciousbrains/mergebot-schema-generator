@@ -1,0 +1,74 @@
+{
+    "table_prefix": "toolset",
+    "shortcodes": {
+        "ignore": [
+            "cred-field",
+            "cred_field"
+        ]
+    },
+    "relationships": {
+        "key_translation": {
+            "options": {
+                "option_name": {
+                    "_' . $form_id . '_last_mail_error": "_{posts:ID}_last_mail_error"
+                }
+            }
+        },
+        "ignore": {
+            "options": [
+                "cred_dismiss_messages",
+                "cred_autodraft_clearance_job_lastrun",
+                "$this->_cron_settings_option",
+                "$context",
+                "$this->get_custom_fields_option_name()",
+                "$this->option_name",
+                "_cred_user_orders",
+                "wpv-dismissed-messages",
+                "$this->get_option_name()",
+                "self::post_types_option_name",
+                "self::database_version_option",
+                "self::is_m2m_enabled_option",
+                "self::multilingual_mode_option",
+                "self::is_interop_up_to_date_option",
+                "$option_name",
+                "self::option_name",
+                "self::id"
+            ],
+            "postmeta": [
+                "_price",
+                "_regular_price",
+                "_wp_attachment_image_alt",
+                "$meta->meta_key",
+                "$this->_post_expiration_time_field",
+                "$this->_post_expiration_action_field",
+                "$this->_post_expiration_notifications_field",
+                "$action['meta_key']",
+                "_thumbnail_id",
+                "$this->prefix . $meta_key",
+                "$this->prefix . $field",
+                "$meta_key",
+                "__cred_notification_data",
+                "$this->meta_key",
+                "self::postmeta_post_type_list",
+                "self::postmeta_associated_taxonomy",
+                "self::postmeta_field_slugs_list",
+                "self::postmeta_group_purpose",
+                "_toolset_user_editors_editor_choice",
+                "$this->editor->get_option_name()",
+                "_wpb_post_custom_css",
+                "$this->option_name_editor_choice",
+                "$this->manager->get_active_editor()->get_option_name()"
+            ],
+            "termmeta": [
+                "$this->meta_key"
+            ],
+            "usermeta": [
+                "$meta_key",
+                "__cred_user_notification_data",
+                "$mkey",
+                "self::id"
+            ]
+        }
+    },
+    "slug": "cred-frontend-editor"
+}
