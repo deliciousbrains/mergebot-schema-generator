@@ -1,0 +1,17 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->option_name",
+                "$this->global_pages_key",
+                "$this->global_messages_key"
+            ],
+            "usermeta": [
+                "frmreg_moderate",
+                "frmreg_future_role",
+                "$meta_key"
+            ]
+        }
+    },
+    "slug": "formidable-registration"
+}
