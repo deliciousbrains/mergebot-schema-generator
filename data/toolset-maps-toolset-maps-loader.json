@@ -1,0 +1,18 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "self::option_name",
+                "self::address_coordinates_option",
+                "recently_activated"
+            ],
+            "postmeta": [
+                "_wpv_settings"
+            ],
+            "sitemeta": [
+                "recently_activated"
+            ]
+        }
+    },
+    "slug": "toolset-maps"
+}
