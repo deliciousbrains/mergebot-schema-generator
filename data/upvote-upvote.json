@@ -1,0 +1,10 @@
+{
+    "relationships": {
+        "ignore": {
+            "postmeta": [
+                "_upvote_count"
+            ]
+        }
+    },
+    "slug": "upvote"
+}
