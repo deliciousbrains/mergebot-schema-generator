@@ -1,0 +1,11 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->option_name",
+                "$this->option_key"
+            ]
+        }
+    },
+    "slug": "formidable-mailchimp"
+}
