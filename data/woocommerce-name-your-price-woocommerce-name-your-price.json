@@ -1,0 +1,23 @@
+{
+    "relationships": {
+        "ignore": {
+            "postmeta": [
+                "_suggested_price",
+                "_min_price",
+                "_suggested_billing_period",
+                "_minimum_billing_period",
+                "_nyp",
+                "_price",
+                "_regular_price",
+                "_subscription_price",
+                "$meta_key",
+                "_min_variation_' . $price_type",
+                "_max_variation_' . $price_type",
+                "_min_' . $price_type . '_variation_id",
+                "_max_' . $price_type . '_variation_id",
+                "_has_nyp"
+            ]
+        }
+    },
+    "slug": "woocommerce-name-your-price"
+}
