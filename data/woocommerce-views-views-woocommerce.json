@@ -1,0 +1,31 @@
+{
+    "shortcodes": {
+        "ignore": [
+            "wpv-woo-productcategory-images",
+            "wpv-woo-buy-or-select",
+            "wpv-woo-product-image",
+            "wpv-woo-buy-options",
+            "wpv-woo-display-tabs"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "wpv_options",
+                "woocommerce_views_wrap_the_content",
+                "woocommerce_views_frontend_sorting_setting",
+                "woocommerce_views_theme_template_file",
+                "$key",
+                "wc_views_last_archive_template_used",
+                "wc_views_last_catarchive_template_used",
+                "wc_views_last_tagarchive_template_used"
+            ],
+            "postmeta": [
+                "$views_woo_on_sale",
+                "$views_woo_price",
+                "$views_woo_in_stock"
+            ]
+        }
+    },
+    "slug": "woocommerce-views"
+}
