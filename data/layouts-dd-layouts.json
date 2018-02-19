@@ -1,0 +1,65 @@
+{
+    "table_prefix": "toolsets",
+    "shortcodes": {
+        "ignore": [
+            "toolset-plugin-active",
+            "toolset-user-role-condition"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "ddlayout_settings",
+                "wpddl_framework_option_default_key",
+                "toolset_options",
+                "self::max_posts_option_name",
+                "wpddl_show_cell_details_on_insert",
+                "wpddl_versions_compare_option",
+                "wpddl_framework_option_key",
+                "wpv-dismissed-messages",
+                "$this->get_option_name()",
+                "self::post_types_option_name",
+                "self::database_version_option",
+                "self::option_name",
+                "self::is_m2m_enabled_option",
+                "self::multilingual_mode_option",
+                "self::is_interop_up_to_date_option",
+                "$option_name",
+                "self::id",
+                "toolset_theme_settings_cache_option",
+                "toolset_theme_settings_sources_option",
+                "$this->gobal_key"
+            ],
+            "postmeta": [
+                "wpddl_private_layouts_original_content_meta_key",
+                "toolset_edit_last",
+                "$meta_key",
+                "wpddl_private_layouts_in_use",
+                "wpddl_layouts_meta_key",
+                "_wp_page_template",
+                "_wpv_settings",
+                "$this->meta_key",
+                "self::postmeta_post_type_list",
+                "self::postmeta_associated_taxonomy",
+                "self::postmeta_field_slugs_list",
+                "self::postmeta_group_purpose",
+                "_toolset_user_editors_editor_choice",
+                "$this->editor->get_option_name()",
+                "_wpb_post_custom_css",
+                "$this->option_name_editor_choice",
+                "$this->manager->get_active_editor()->get_option_name()",
+                "_views_template_theme_settings",
+                "$this->name"
+            ],
+            "termmeta": [
+                "$this->meta_key"
+            ],
+            "usermeta": [
+                "$_post['option']",
+                "$_post['dismiss_dialog_option']",
+                "self::id"
+            ]
+        }
+    },
+    "slug": "layouts"
+}
