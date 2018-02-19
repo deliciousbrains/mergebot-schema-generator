@@ -1,0 +1,54 @@
+{
+    "table_prefix": "toolset",
+    "shortcodes": {
+        "ignore": [
+            "toolset_access"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "otg_access_advaced_mode",
+                "wpcf_access_custom_caps",
+                "toolset-access-options",
+                "wpcf_access_snapshot",
+                "wpcf-access-version-check",
+                "wpcf-access-roles",
+                "wpcf-custom-types",
+                "wpcf-custom-taxonomies",
+                "wpv-dismissed-messages",
+                "$this->get_option_name()",
+                "self::post_types_option_name",
+                "self::database_version_option",
+                "self::option_name",
+                "self::is_m2m_enabled_option",
+                "self::multilingual_mode_option",
+                "self::is_interop_up_to_date_option",
+                "$option_name",
+                "self::id"
+            ],
+            "postmeta": [
+                "_wpcf_access_group",
+                "_types_access",
+                "$this->meta_key",
+                "self::postmeta_post_type_list",
+                "self::postmeta_associated_taxonomy",
+                "self::postmeta_field_slugs_list",
+                "self::postmeta_group_purpose",
+                "_toolset_user_editors_editor_choice",
+                "$this->editor->get_option_name()",
+                "_wpb_post_custom_css",
+                "$this->option_name_editor_choice",
+                "$this->manager->get_active_editor()->get_option_name()"
+            ],
+            "termmeta": [
+                "$this->meta_key"
+            ],
+            "usermeta": [
+                "wpcf_access_section_status",
+                "self::id"
+            ]
+        }
+    },
+    "slug": "types-access"
+}
