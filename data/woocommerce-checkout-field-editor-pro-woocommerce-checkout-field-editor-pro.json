@@ -1,0 +1,22 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->ame_data_key",
+                "$key",
+                "self::option_key_advanced_settings",
+                "self::option_key_custom_sections",
+                "self::option_key_section_hook_map",
+                "thwepo_options_name_title_map"
+            ],
+            "postmeta": [
+                "_thwcfe_disabled_fields",
+                "$key"
+            ],
+            "usermeta": [
+                "$key"
+            ]
+        }
+    },
+    "slug": "woocommerce-checkout-field-editor-pro"
+}
