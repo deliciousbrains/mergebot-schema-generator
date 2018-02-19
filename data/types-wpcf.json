@@ -1,0 +1,107 @@
+{
+    "relationships": {
+        "key_translation": {
+            "postmeta": {
+                "meta_key": {
+                    "_wpcf_belongs_' . $parent->post_type . '_id": "_wpcf_belongs_{*.}_id",
+                    "_wpcf_belongs_{$post_type}_id": "_wpcf_belongs_{*.}_id"
+                }
+            }
+        },
+        "ignore": {
+            "options": [
+                "$setting",
+                "$option_name",
+                "self::types_database_version_option",
+                "types_messages",
+                "$this->installer_themes_option[$this->installer_theme_active_tab]",
+                "installer_repositories_with_theme",
+                "$this->installer_themes_available_updates[$repo_slug]",
+                "wp_installer_clientside_active_tab",
+                "wp_installer_settings",
+                "wpv-dismissed-messages",
+                "self::option_name",
+                "wpcf_settings",
+                "_wpcf_promo_tabs",
+                "wpcf_option_name_custom_taxonomies",
+                "wpcf_option_name_custom_types",
+                "wpcf-messages",
+                "wpcf_dismissed_messages",
+                "$this->get_option_name()",
+                "wpcf-types-embedded-import",
+                "$group",
+                "wpcf-fields",
+                "wpcf-usermeta",
+                "wpcf_post_relationship",
+                "wpcf_toggle",
+                "wpv_options",
+                "self::$users_settings_name",
+                "wpcf_checkbox_migration",
+                "wpcf_checkbox_migration_usermeta",
+                "wpcf_checkboxes_migration_usermeta",
+                "wpcf_checkboxes_migration",
+                "active_plugins",
+                "self::post_types_option_name",
+                "self::database_version_option",
+                "self::is_m2m_enabled_option",
+                "self::multilingual_mode_option",
+                "self::is_interop_up_to_date_option",
+                "self::id"
+            ],
+            "postmeta": [
+                "$meta_key",
+                "self::postmeta_post_type_list",
+                "self::postmeta_associated_taxonomy",
+                "self::postmeta_field_slugs_list",
+                "wpddl_layouts_meta_key",
+                "$this->editor->getoptionname()",
+                "$this->option_name_editor_choice",
+                "$this->manager->getactiveeditor()->getoptionname()",
+                "$this->slug",
+                "$this->order_meta_name",
+                "$slug",
+                "$cf->slug",
+                "wpcf_types_get_meta_prefix($field) . $field['wpcf-slug']",
+                "$field['meta_key']",
+                "wpcf-invalid-fields",
+                "_wp_types_group_admin_styles",
+                "sprintf('_wpcf_belongs_%s_id', $_request['post_type'])",
+                "_wp_types_group_showfor",
+                "_wpcf_conditional_display",
+                "_wp_types_group_fields",
+                "_wp_types_group_filters_association",
+                "_wp_types_group_post_types",
+                "_wp_types_group_terms",
+                "_wp_types_group_templates",
+                "$this->meta_key",
+                "self::postmeta_group_purpose",
+                "_toolset_user_editors_editor_choice",
+                "$this->editor->get_option_name()",
+                "_wpb_post_custom_css",
+                "$this->manager->get_active_editor()->get_option_name()",
+                "sprintf('_wpcf_belongs_%s_id', sanitize_text_field($_request['post_type']))",
+                "sprintf('_wpcf_belongs_%s_id', $parent_post_type)"
+            ],
+            "sitemeta": [
+                "wp_installer_network"
+            ],
+            "termmeta": [
+                "$this->meta_key",
+                "$this->slug"
+            ],
+            "usermeta": [
+                "wpcf-form-fieldsets-toggle",
+                "$this->slug",
+                "wpcf-field-settings",
+                "$field['meta_key']",
+                "wpcf-invalid-fields",
+                "wpcf-group-form-toggle",
+                "_types_notice_dismiss_permanent",
+                "_types_feedback_dont_show_until",
+                "self::id"
+            ]
+        }
+    },
+    "slug": "types",
+    "table_prefix": "toolset"
+}
