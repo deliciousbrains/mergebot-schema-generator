@@ -112,7 +112,11 @@
                 "$setting",
                 "sidebars_widgets",
                 "$widget_option_name",
-                "jetpack_plugin_api_action_links"
+                "jetpack_plugin_api_action_links",
+                "wplang",
+                "jpo_homepage_format",
+                "jpo_contact_page",
+                "jpo_business_address"
             ],
             "postmeta": [
                 "_wp_attachment_image_alt",
