@@ -9,7 +9,8 @@
                 "widget_frm_show_form",
                 "$this->option_name",
                 "frm_options",
-                "frmpro_css"
+                "frmpro_css",
+                "$cache_key"
             ],
             "postmeta": [
                 "$k"
