@@ -72,7 +72,15 @@
                 "woocommerce_store_city",
                 "woocommerce_store_postcode",
                 "woocommerce_product_type",
-                "woocommerce_setup_automated_taxes"
+                "woocommerce_setup_automated_taxes",
+                "woocommerce_sell_in_person",
+                "woocommerce_catalog_columns",
+                "woocommerce_catalog_rows",
+                "woocommerce_thumbnail_image_width",
+                "woocommerce_thumbnail_cropping_custom_width",
+                "woocommerce_thumbnail_cropping_custom_height",
+                "woocommerce_single_image_width",
+                "woocommerce_paypal_settings"
             ],
             "order_itemmeta": [
                 "$meta_key",
