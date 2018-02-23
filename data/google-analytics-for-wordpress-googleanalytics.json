@@ -25,13 +25,19 @@
                 "monsterinsights_lite_access_token",
                 "monsterinsights_pro_refresh_token",
                 "monsterinsights_lite_refresh_token",
-                "mi_tracking_last_send"
+                "mi_tracking_last_send",
+                "monsterinsights_site_tt",
+                "monsterinsights_usage_tracking_config",
+                "monsterinsights_site_profile"
             ],
             "sitemeta": [
                 "$option_name",
                 "monsterinsights_license",
                 "monsterinsights_settings",
-                "monsterinsights_network_manual_ua_code"
+                "monsterinsights_network_manual_ua_code",
+                "monsterinsights_network_tt",
+                "monsterinsights_network_profile",
+                "monsterinsights_network_license"
             ],
             "postmeta": [
                 "notification_id",
