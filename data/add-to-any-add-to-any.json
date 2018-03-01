@@ -1,0 +1,15 @@
+{
+    "shortcodes": {
+        "ignore": [
+            "addtoany"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "addtoany_options"
+            ]
+        }
+    },
+    "slug": "add-to-any"
+}
