@@ -1,0 +1,13 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "disable_comments_options"
+            ],
+            "sitemeta": [
+                "disable_comments_options"
+            ]
+        }
+    },
+    "slug": "disable-comments"
+}
