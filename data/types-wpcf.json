@@ -46,7 +46,9 @@
                 "self::is_m2m_enabled_option",
                 "self::multilingual_mode_option",
                 "self::is_interop_up_to_date_option",
-                "self::id"
+                "self::id",
+                "self::scheduled_events_option",
+                "$this->optionname"
             ],
             "postmeta": [
                 "$meta_key",
