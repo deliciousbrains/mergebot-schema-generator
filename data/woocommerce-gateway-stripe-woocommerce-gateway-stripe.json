@@ -13,7 +13,8 @@
                 "_stripe_source_id",
                 "parent::meta_name_fee",
                 "parent::meta_name_net",
-                "_stripe_bitcoin"
+                "_stripe_bitcoin",
+                "_stripe_refund_id"
             ],
             "usermeta": [
                 "_stripe_customer_id",
