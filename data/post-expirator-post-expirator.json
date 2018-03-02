@@ -1,0 +1,32 @@
+{
+    "table_prefix": "postexpirator",
+    "shortcodes": {
+        "ignore": [
+            "postexpirator"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "expirationdatedefaultdateformat",
+                "expirationdatedefaulttimeformat",
+                "expirationdatedisplayfooter",
+                "expirationdateemailnotification",
+                "expirationdateemailnotificationadmins",
+                "expirationdateemailnotificationlist",
+                "expirationdatefootercontents",
+                "expirationdatefooterstyle",
+                "expirationdatedefaultdate",
+                "expirationdatedefaultdatecustom",
+                "expirationdatedefaults' . ucfirst($type)",
+                "expirationdatedefaultspage",
+                "expirationdatedefaultspost"
+            ],
+            "postmeta": [
+                "_expiration-date",
+                "_expiration-date-options"
+            ]
+        }
+    },
+    "slug": "post-expirator"
+}
