@@ -1,0 +1,14 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "ucp_options_key",
+                "ucp_meta_key",
+                "ucp_pointers_key",
+                "ucp_surveys_key",
+                "ucp_notices_key"
+            ]
+        }
+    },
+    "slug": "under-construction-page"
+}
