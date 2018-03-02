@@ -2,7 +2,11 @@
     "relationships": {
         "ignore": {
             "options": [
-                "ubconfig::ub_authorized_domains_key"
+                "ubconfig::ub_authorized_domains_key",
+                "ubconfig::ub_routes_cache_key",
+                "ubconfig::ub_domain_id_key",
+                "ubconfig::ub_client_id_key",
+                "ubconfig::ub_proxy_error_message_key"
             ]
         }
     },
