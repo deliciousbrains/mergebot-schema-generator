@@ -6,7 +6,9 @@
                 "self::option_name",
                 "$backup_roles_key",
                 "$option_name",
-                "$wp_roles->role_key"
+                "$wp_roles->role_key",
+                "$this->options_id",
+                "self::storage_id"
             ]
         }
     },
