@@ -1,0 +1,10 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "uber_login_logo"
+            ]
+        }
+    },
+    "slug": "uber-login-logo"
+}
