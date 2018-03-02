@@ -1,0 +1,79 @@
+{
+    "table_prefix": "learnpress",
+    "shortcodes": {
+        "ignore": [
+            "learn_press_recent_courses",
+            "learn_press_featured_courses",
+            "learn_press_popular_courses"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "$this->_key",
+                "learn_press_permalink_structure",
+                "$k",
+                "learn_press_course_base",
+                "learnpress_db_version",
+                "learnpress_version",
+                "$option_name",
+                "learn_press_update_logs",
+                "learn_press_' . $o",
+                "learn_press_paypal_email",
+                "learn_press_paypal_sandbox_email",
+                "learn_press_paypal_sandbox",
+                "$emails[$email_type][0]",
+                "learn_press_emails_general",
+                "$option['id']"
+            ],
+            "postmeta": [
+                "_lp_type",
+                "_lp_preview",
+                "_admin_hidden_questions",
+                "_admin_hidden_sections",
+                "_lpr_quiz_questions",
+                "_lpr_question",
+                "_lp_attributes",
+                "_lp_' . $key",
+                "$k",
+                "_lp_course_status",
+                "$key",
+                "_transaction_fee",
+                "$name",
+                "_transaction_id",
+                "_payment_method",
+                "_payment_method_title",
+                "_user_agent",
+                "_created_via",
+                "_learn_press_transaction_method",
+                "_learn_press_order_items",
+                "_learn_press_transaction_method_id",
+                "_order_subtotal",
+                "_order_total",
+                "$new_key",
+                "_order_currency",
+                "_lp_cert_template",
+                "_lp_cert_layers",
+                "_learn_press_upgraded",
+                "_learn_press_upgraded_from",
+                "_learn_press_page",
+                "_lp_final_quiz",
+                "$field_id",
+                "$field['id']"
+            ],
+            "usermeta": [
+                "_learn_press_memorize_question_types",
+                "_lp_anonymous_user_expire",
+                "_lp_profile_picture"
+            ]
+        },
+        "key_translation": {
+            "options": {
+                "option_name": {
+                    "learn_press_{$page}_page_id": "learn_press_(.*)_page_id"
+                }
+            }
+        }
+    },
+    "slug": "learnpress"
+}
