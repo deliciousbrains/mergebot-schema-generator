@@ -5,7 +5,9 @@
                 "template",
                 "$option",
                 "cctm_data",
-                "et_images_temp_folder"
+                "et_images_temp_folder",
+                "$this->access_key",
+                "$key"
             ],
             "sitemeta": [
                 "updraft_ajax_restore_' . $restore_nonce",
