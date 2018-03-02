@@ -117,7 +117,7 @@ class Mergebot_Schema_Generator {
 
 	public function strip_prefix_from_table( $table ) {
 		global $wpdb;
-		$table = str_ireplace( array( '{', '}', '`', '([^', '$wpdb->prefix', '$wpdb->', $wpdb->prefix ), '', $table );
+		$table = str_ireplace( array( '{', '}', '`', '([^', '$wpdb->prefix', '$wpdb->', '{prefix}', $wpdb->prefix ), '', $table );
 		$table = ltrim( $table, '\'"' );
 		$table = rtrim( $table, '\'"' );
 
