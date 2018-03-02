@@ -1,0 +1,20 @@
+{
+    "shortcodes": {
+        "ignore": [
+            "siteorigin_widget"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "page_on_front",
+                "siteorigin_panels_settings"
+            ],
+            "postmeta": [
+                "panels_data",
+                "_wp_page_template"
+            ]
+        }
+    },
+    "slug": "siteorigin-panels"
+}
