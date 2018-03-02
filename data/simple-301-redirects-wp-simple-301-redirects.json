@@ -1,0 +1,10 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "301_redirects"
+            ]
+        }
+    },
+    "slug": "simple-301-redirects"
+}
