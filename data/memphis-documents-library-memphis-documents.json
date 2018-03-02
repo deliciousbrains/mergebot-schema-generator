@@ -1,0 +1,20 @@
+{
+    "relationships": {
+        "ignore": {
+            "options": [
+                "mdocs-list",
+                "mdocs-num-cats",
+                "mdocs-cats",
+                "mdocs-zip",
+                "mdocs-displayed-file-info",
+                "mdocs-view-private",
+                "mdocs-allowed-mime-types",
+                "mdocs-removed-mime-types",
+                "mdocs-last-updated",
+                "mdocs-top-rated",
+                "mdocs-top-downloads"
+            ]
+        }
+    },
+    "slug": "memphis-documents-library"
+}
