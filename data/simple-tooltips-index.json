@@ -1,3 +1,8 @@
 {
-    "slug": "simple-tooltips"
+    "slug": "simple-tooltips",
+    "shortcodes": {
+        "ignore": [
+            "simple_tooltip"
+        ]
+    }
 }
