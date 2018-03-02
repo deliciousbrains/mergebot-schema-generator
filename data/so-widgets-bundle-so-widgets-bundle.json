@@ -1,0 +1,25 @@
+{
+    "shortcodes": {
+        "ignore": [
+            "siteorigin_widget"
+        ]
+    },
+    "relationships": {
+        "ignore": {
+            "options": [
+                "so_widget_settings[' . $this->widget_class . ']",
+                "siteorigin_widgets_old_widgets",
+                "siteorigin_widgets_new_widgets",
+                "siteorigin_widgets_active",
+                "so_contact_hashes"
+            ],
+            "postmeta": [
+                "self::post_meta_key"
+            ],
+            "usermeta": [
+                "teasers_dismissed"
+            ]
+        }
+    },
+    "slug": "so-widgets-bundle"
+}
